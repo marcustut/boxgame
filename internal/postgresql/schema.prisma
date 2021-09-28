@@ -1,9 +1,9 @@
 datasource db {
     provider = "postgresql"
-    url      = env("DATABASE_URL")
+    url      = "postgresql://boxgame:boxgame@localhost:5432/boxgame"
 }
 
-generator db {
+generator client {
     provider = "go run github.com/prisma/prisma-client-go"
     output   = "."
     package  = "postgresql"
@@ -24,7 +24,7 @@ model User {
     name      String
     contact   String?
     dob       DateTime?
-    status    Role      @default(PLAYER)
+    role      Role      @default(PLAYER)
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
     Team      Team?     @relation(fields: [teamId], references: [id])
