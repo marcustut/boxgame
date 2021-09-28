@@ -1,0 +1,61 @@
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+generator db {
+    provider = "go run github.com/prisma/prisma-client-go"
+    output   = "."
+    package  = "postgresql"
+}
+
+enum Role {
+    PLAYER
+    TEAMLEADER
+    CLUSTERLEADER
+    CREW
+}
+
+model User {
+    id        String    @id @default(uuid()) @db.Uuid
+    username  String    @unique
+    email     String    @unique
+    password  String
+    name      String
+    contact   String?
+    dob       DateTime?
+    status    Role      @default(PLAYER)
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    Team      Team?     @relation(fields: [teamId], references: [id])
+    teamId    String?   @db.Uuid
+}
+
+model Team {
+    id        String    @id @default(uuid()) @db.Uuid
+    name      String?
+    color     String    @unique
+    points    Float     @default(0)
+    members   User[]
+    completed Mission[]
+    Cluster   Cluster?  @relation(fields: [clusterId], references: [id])
+    clusterId String?   @db.Uuid
+}
+
+model Cluster {
+    id    String @id @default(uuid()) @db.Uuid
+    name  String @unique
+    color String @unique
+    teams Team[]
+}
+
+model Mission {
+    id          String   @id @default(uuid()) @db.Uuid
+    title       String   @unique
+    description String?
+    points      Float
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    Team        Team?    @relation(fields: [teamId], references: [id])
+    teamId      String?  @db.Uuid
+}
