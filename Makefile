@@ -1,7 +1,8 @@
-.PHONY: pgcli prisma-studio
+.PHONY: pgcli prisma-studio graphql-run
 
 # variables
 PRISMA_SCHEMA_PATH="./internal/postgresql/schema.prisma"
+BUILD_DIR="./build"
 
 # load .env
 ifneq (,$(wildcard ./.env))
@@ -23,3 +24,12 @@ prisma-studio:
 
 gqlgen-generate:
 	go get github.com/99designs/gqlgen/cmd@v0.14.0 && go run github.com/99designs/gqlgen generate
+
+graphql-dev:
+	air -c .air.graphql.toml
+
+graphql-build:
+	go build -o $(BUILD_DIR)/graphql ./cmd/graphql
+
+graphql-run:
+	$(BUILD_DIR)/graphql
