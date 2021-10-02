@@ -1,6 +1,6 @@
 package graphql
 
-import "github.com/marcustut/boxgame/internal/graphql/model"
+import "github.com/marcustut/thebox/internal/graphql/model"
 
 // This file will not be regenerated automatically.
 //

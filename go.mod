@@ -1,4 +1,4 @@
-module github.com/marcustut/boxgame
+module github.com/marcustut/thebox
 
 go 1.17
 

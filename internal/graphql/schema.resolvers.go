@@ -6,9 +6,9 @@ package graphql
 import (
 	"context"
 
-	"github.com/marcustut/boxgame/internal/graphql/generated"
-	"github.com/marcustut/boxgame/internal/graphql/model"
-	"github.com/marcustut/boxgame/internal/postgresql"
+	"github.com/marcustut/thebox/internal/graphql/generated"
+	"github.com/marcustut/thebox/internal/graphql/model"
+	"github.com/marcustut/thebox/internal/postgresql"
 )
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
