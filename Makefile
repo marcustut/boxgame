@@ -14,7 +14,13 @@ pgcli:
 	pgcli $(DATABASE_URL)
 
 prisma-migrate-dev:
-	prisma migrate dev --name $(NAME) --schema $(PRISMA_SCHEMA_PATH)
+	go run github.com/prisma/prisma-client-go migrate dev --name $(NAME) --schema $(PRISMA_SCHEMA_PATH)
+
+prisma-db-push:
+	go run github.com/prisma/prisma-client-go db push --schema $(PRISMA_SCHEMA_PATH)
+
+prisma-db-pull:
+	go run github.com/prisma/prisma-client-go db pull --schema $(PRISMA_SCHEMA_PATH)
 
 prisma-generate:
 	go run github.com/prisma/prisma-client-go generate --schema $(PRISMA_SCHEMA_PATH)

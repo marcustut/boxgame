@@ -1,61 +1,68 @@
-datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
-}
-
 generator client {
-    provider = "go run github.com/prisma/prisma-client-go"
-    output   = "."
-    package  = "postgresql"
+  provider = "go run github.com/prisma/prisma-client-go"
+  output   = "."
+  package  = "postgresql"
 }
 
-enum Role {
-    PLAYER
-    TEAMLEADER
-    CLUSTERLEADER
-    CREW
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:EEmc~]szAE4tuXR-@db.gnbavzhblfvrsopphqja.supabase.co:5432/postgres"
 }
 
 model User {
-    id        String    @id @default(uuid()) @db.Uuid
-    username  String    @unique
-    email     String    @unique
-    password  String
-    name      String
-    contact   String?
-    dob       DateTime?
-    role      Role      @default(PLAYER)
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    Team      Team?     @relation(fields: [teamId], references: [id])
-    teamId    String?   @db.Uuid
+  id        String     @id @db.Uuid
+  username  String     @unique
+  name      String
+  contact   String?
+  dob       DateTime?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  teamId    String?    @db.Uuid
+  team      Team?      @relation(fields: [teamId], references: [id])
+  UserRole  UserRole[]
 }
 
 model Team {
-    id        String    @id @default(uuid()) @db.Uuid
-    name      String?
-    color     String    @unique
-    points    Float     @default(0)
-    members   User[]
-    completed Mission[]
-    Cluster   Cluster?  @relation(fields: [clusterId], references: [id])
-    clusterId String?   @db.Uuid
+  id        String    @id @db.Uuid
+  name      String?
+  color     String    @unique
+  points    Float     @default(0)
+  clusterId String?   @db.Uuid
+  cluster   Cluster?  @relation(fields: [clusterId], references: [id])
+  completed Mission[]
+  members   User[]
 }
 
 model Cluster {
-    id    String @id @default(uuid()) @db.Uuid
-    name  String @unique
-    color String @unique
-    teams Team[]
+  id    String @id @db.Uuid
+  name  String @unique
+  color String @unique
+  teams Team[]
 }
 
 model Mission {
-    id          String   @id @default(uuid()) @db.Uuid
-    title       String   @unique
-    description String?
-    points      Float
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    Team        Team?    @relation(fields: [teamId], references: [id])
-    teamId      String?  @db.Uuid
+  id          String   @id @db.Uuid
+  title       String   @unique
+  description String?
+  points      Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  teamId      String?  @db.Uuid
+  team        Team?    @relation(fields: [teamId], references: [id])
+}
+
+model UserRole {
+  id      String @id @db.Uuid
+  user_id String @db.Uuid
+  role    Role
+  User    User   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([user_id, role])
+}
+
+enum Role {
+  PLAYER
+  TEAMLEADER
+  CLUSTERLEADER
+  CREW
 }

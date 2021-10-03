@@ -35,9 +35,6 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 	if input.Dob != nil {
 		params = append(params, postgresql.User.Dob.Set(*input.Dob))
 	}
-	if input.Role != nil {
-		params = append(params, postgresql.User.Role.Set(postgresql.Role(*input.Role)))
-	}
 	if input.TeamID != nil {
 		params = append(params, postgresql.User.TeamID.Set(*input.TeamID))
 	}
@@ -45,8 +42,6 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 	// create one user
 	createdUser, err := client.User.CreateOne(
 		postgresql.User.Username.Set(input.Username),
-		postgresql.User.Email.Set(input.Email),
-		postgresql.User.Password.Set(input.Email),
 		postgresql.User.Name.Set(input.Name),
 		params...,
 	).Exec(ctx)
@@ -58,11 +53,9 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 	user := &model.User{
 		ID:        createdUser.ID,
 		Username:  createdUser.Username,
-		Email:     createdUser.Email,
 		Name:      createdUser.Name,
 		Contact:   createdUser.InnerUser.Contact,
 		Dob:       createdUser.InnerUser.Dob,
-		Role:      string(createdUser.InnerUser.Role),
 		CreatedAt: createdUser.CreatedAt,
 		UpdatedAt: createdUser.UpdatedAt,
 		TeamID:    createdUser.InnerUser.TeamID,

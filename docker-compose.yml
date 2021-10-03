@@ -7,15 +7,15 @@ services:
     ports:
       - "9234:9234"
     command: graphql
-    depends_on:
-      - postgres
+    # depends_on:
+    #   - postgres
 
-  postgres:
-    image: postgres:13-alpine
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: thebox
-      POSTGRES_USER: thebox
-      POSTGRES_DB: thebox
-    ports:
-      - 5432:5432
+  # postgres:
+  #   image: postgres:13-alpine
+  #   restart: always
+  #   environment:
+  #     POSTGRES_PASSWORD: thebox
+  #     POSTGRES_USER: thebox
+  #     POSTGRES_DB: thebox
+  #   ports:
+  #     - 5432:5432

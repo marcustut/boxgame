@@ -20,11 +20,9 @@ type NewUser struct {
 type User struct {
 	ID        string     `json:"id"`
 	Username  string     `json:"username"`
-	Email     string     `json:"email"`
 	Name      string     `json:"name"`
 	Contact   *string    `json:"contact"`
 	Dob       *time.Time `json:"dob"`
-	Role      string     `json:"role"`
 	CreatedAt time.Time  `json:"createdAt"`
 	UpdatedAt time.Time  `json:"updatedAt"`
 	TeamID    *string    `json:"teamId"`

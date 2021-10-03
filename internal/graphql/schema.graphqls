@@ -7,11 +7,9 @@ scalar Time
 type User {
   id: ID!
   username: String!
-  email: String!
   name: String!
   contact: String
   dob: Time
-  role: String!
   createdAt: Time!
   updatedAt: Time!
   teamId: String
