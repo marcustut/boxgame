@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { AppBar, Toolbar } from '@mui/material'
 
-import DarkModeToggle from './DarkModeToggle'
+import { DarkModeToggle } from '@/components/Elements'
 
 export const Header: FC = () => {
   return (

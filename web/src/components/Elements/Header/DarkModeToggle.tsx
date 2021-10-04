@@ -4,9 +4,9 @@ import LightModeIcon from '@mui/icons-material/WbSunny'
 import { styled } from '@mui/material'
 import isPropValid from '@emotion/is-prop-valid'
 
-import { ChosenTheme } from '@/providers'
+import { ChosenTheme } from '@/lib/theme'
 
-const DarkModeToggle: FC = () => {
+export const DarkModeToggle: FC = () => {
   const { theme, setTheme } = useContext(ChosenTheme)
   return (
     <Root>
@@ -91,5 +91,3 @@ const MoonIcon = styled('i')`
     font-size: 0.6em;
   }
 `
-
-export default DarkModeToggle
