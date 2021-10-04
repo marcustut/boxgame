@@ -23,14 +23,23 @@ model User {
 }
 
 model Team {
-  id        String    @id @db.Uuid
-  name      String?
-  color     String    @unique
-  points    Float     @default(0)
-  clusterId String?   @db.Uuid
-  cluster   Cluster?  @relation(fields: [clusterId], references: [id])
-  completed Mission[]
-  members   User[]
+  id          String        @id @db.Uuid
+  name        String?
+  color       String        @unique
+  points      Float         @default(0)
+  clusterId   String?       @db.Uuid
+  cluster     Cluster?      @relation(fields: [clusterId], references: [id])
+  members     User[]
+  TeamMission TeamMission[]
+}
+
+model TeamMission {
+  teamId    String  @db.Uuid
+  team      Team    @relation(fields: [teamId], references: [id])
+  missionId String  @db.Uuid
+  mission   Mission @relation(fields: [missionId], references: [id])
+
+  @@unique([teamId, missionId])
 }
 
 model Cluster {
@@ -41,14 +50,13 @@ model Cluster {
 }
 
 model Mission {
-  id          String   @id @db.Uuid
-  title       String   @unique
+  id          String        @id @db.Uuid
+  title       String        @unique
   description String?
   points      Float
-  createdAt   DateTime @default(now())
+  createdAt   DateTime      @default(now())
   updatedAt   DateTime
-  teamId      String?  @db.Uuid
-  team        Team?    @relation(fields: [teamId], references: [id])
+  TeamMission TeamMission[]
 }
 
 model UserRole {

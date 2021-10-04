@@ -14,7 +14,8 @@ type User struct {
 	Dob       *time.Time `json:"dob"`
 	CreatedAt time.Time  `json:"createdAt"`
 	UpdatedAt time.Time  `json:"updatedAt"`
-	TeamID    *string    `json:"teamId"`
+	TeamID    *string    `json:"team"`
+	RoleIDs   *[]*string `json:"roles"`
 }
 
 func MapToUser(dbUser *postgresql.UserModel) (*User, error) {

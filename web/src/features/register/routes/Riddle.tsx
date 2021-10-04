@@ -1,34 +1,17 @@
 import React from 'react'
+import { Button } from '@mui/material'
 
-import { useRiddle } from '@/hooks/stores/useRiddle'
+// import { useRiddle } from '@/hooks/stores/useRiddle'
 import { Layout } from '@/features/register'
-import { gql, useQuery } from '@apollo/client'
 
 export const Riddle: React.FC = () => {
-  const { setTimeUsed, setCompleted } = useRiddle()
-
-  const { loading, error, data } = useQuery(gql`
-    query TestData {
-      users {
-        id
-      }
-    }
-  `)
+  // const { setTimeUsed, setCompleted } = useRiddle()
 
   return (
     <Layout helmetProps={{ title: 'Riddle' }}>
-      <pre>{JSON.stringify(loading)}</pre>
-      <pre>{JSON.stringify(error)}</pre>
-      <pre>{JSON.stringify(data)}</pre>
-      <div>Riddle... (with countdown and stuff)</div>
-      <button
-        onClick={() => {
-          setTimeUsed(123)
-          setCompleted(true)
-        }}
-      >
-        Done
-      </button>
+      <div>Hii I am a Riddle</div>
+      <h1>Solve Me</h1>
+      <Button variant='contained'>Click Me</Button>
     </Layout>
   )
 }

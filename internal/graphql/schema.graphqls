@@ -4,6 +4,40 @@
 
 scalar Time
 
+enum Role {
+  PLAYER
+  TEAMLEADER
+  CLUSTERLEADER
+  CREW
+}
+
+type Cluster {
+  id: ID!
+  name: String!
+  color: String!
+  teams: [Team!]!
+}
+
+type Team {
+  id: ID!
+  name: String
+  color: String!
+  points: Float!
+  cluster: Cluster
+  completed: [Mission!]!
+  members: [User!]!
+}
+
+type Mission {
+  id: ID!
+  title: String!
+  description: String
+  points: Float!
+  createdAt: Time!
+  updatedAt: Time!
+  completedBy: [Team!]!
+}
+
 type User {
   id: ID!
   username: String!
@@ -12,7 +46,8 @@ type User {
   dob: Time
   createdAt: Time!
   updatedAt: Time!
-  teamId: String
+  team: Team
+  roles: [Role!]!
 }
 
 type Query {
