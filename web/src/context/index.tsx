@@ -5,17 +5,21 @@ import { HelmetProvider } from 'react-helmet-async'
 
 import { ErrorPage, LoadingPage } from '@/components/Misc'
 import { ChosenThemeProvider, ThemeProvider } from '@/lib/theme'
+import { ApolloProvider } from '@apollo/client'
+import { client } from '@/lib/apollo'
 
 export const AppProvider: React.FC = ({ children }) => {
   return (
     <React.Suspense fallback={<LoadingPage />}>
       <ErrorBoundary FallbackComponent={ErrorPage}>
         <HelmetProvider>
-          <ChosenThemeProvider>
-            <ThemeProvider>
-              <BrowserRouter>{children}</BrowserRouter>
-            </ThemeProvider>
-          </ChosenThemeProvider>
+          <ApolloProvider client={client}>
+            <ChosenThemeProvider>
+              <ThemeProvider>
+                <BrowserRouter>{children}</BrowserRouter>
+              </ThemeProvider>
+            </ChosenThemeProvider>
+          </ApolloProvider>
         </HelmetProvider>
       </ErrorBoundary>
     </React.Suspense>

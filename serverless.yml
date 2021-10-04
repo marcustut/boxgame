@@ -1,0 +1,18 @@
+service: thebox-golang-graphql
+
+provider:
+  name: aws
+  runtime: go1.x
+  lambdaHashingVersion: 20201221
+
+package:
+  patterns:
+    - "!./**"
+    - ./target/**
+
+functions:
+  graphql:
+    handler: target/graphql
+    events:
+      - http: ANY /{proxy+}
+      - http: ANY /

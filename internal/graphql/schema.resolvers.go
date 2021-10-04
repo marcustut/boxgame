@@ -8,72 +8,15 @@ import (
 
 	"github.com/marcustut/thebox/internal/graphql/generated"
 	"github.com/marcustut/thebox/internal/graphql/model"
+	"github.com/marcustut/thebox/internal/graphql/query"
 	"github.com/marcustut/thebox/internal/postgresql"
 )
 
-func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
-	// connect db
-	client := postgresql.NewClient()
-	if err := client.Prisma.Connect(); err != nil {
-		return nil, err
-	}
-
-	// disconnect from db
-	// TODO: use chan to return err instead of panic
-	defer func() {
-		if err := client.Prisma.Disconnect(); err != nil {
-			panic(err)
-		}
-	}()
-
-	// use dynamic params
-	var params []postgresql.UserSetParam
-
-	if input.Contact != nil {
-		params = append(params, postgresql.User.Contact.Set(*input.Contact))
-	}
-	if input.Dob != nil {
-		params = append(params, postgresql.User.Dob.Set(*input.Dob))
-	}
-	if input.TeamID != nil {
-		params = append(params, postgresql.User.TeamID.Set(*input.TeamID))
-	}
-
-	// create one user
-	createdUser, err := client.User.CreateOne(
-		postgresql.User.Username.Set(input.Username),
-		postgresql.User.Name.Set(input.Name),
-		params...,
-	).Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	// parse to the graphql type
-	user := &model.User{
-		ID:        createdUser.ID,
-		Username:  createdUser.Username,
-		Name:      createdUser.Name,
-		Contact:   createdUser.InnerUser.Contact,
-		Dob:       createdUser.InnerUser.Dob,
-		CreatedAt: createdUser.CreatedAt,
-		UpdatedAt: createdUser.UpdatedAt,
-		TeamID:    createdUser.InnerUser.TeamID,
-	}
-	r.users = append(r.users, user)
-
-	return user, nil
-}
-
 func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
-	return r.users, nil
+	return query.GetManyUser(ctx, r.db, postgresql.User.Not())
 }
-
-// Mutation returns generated.MutationResolver implementation.
-func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
-type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

@@ -19,17 +19,5 @@ type Query {
   users: [User!]!
 }
 
-input NewUser {
-  username: String!
-  email: String!
-  password: String!
-  name: String!
-  contact: String
-  dob: Time
-  role: String
-  teamId: String
-}
-
-type Mutation {
-  createUser(input: NewUser!): User!
-}
+# type Mutation {
+# }

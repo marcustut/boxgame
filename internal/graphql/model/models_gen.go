@@ -2,28 +2,4 @@
 
 package model
 
-import (
-	"time"
-)
-
-type NewUser struct {
-	Username string     `json:"username"`
-	Email    string     `json:"email"`
-	Password string     `json:"password"`
-	Name     string     `json:"name"`
-	Contact  *string    `json:"contact"`
-	Dob      *time.Time `json:"dob"`
-	Role     *string    `json:"role"`
-	TeamID   *string    `json:"teamId"`
-}
-
-type User struct {
-	ID        string     `json:"id"`
-	Username  string     `json:"username"`
-	Name      string     `json:"name"`
-	Contact   *string    `json:"contact"`
-	Dob       *time.Time `json:"dob"`
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt time.Time  `json:"updatedAt"`
-	TeamID    *string    `json:"teamId"`
-}
+import ()

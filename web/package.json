@@ -9,10 +9,12 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@apollo/client": "^3.4.15",
     "@emotion/react": "11.4.1",
     "@emotion/styled": "11.3.0",
     "@mui/icons-material": "^5.0.1",
     "@mui/material": "^5.0.1",
+    "graphql": "^15.6.0",
     "history": "^5.0.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",

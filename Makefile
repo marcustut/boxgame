@@ -10,6 +10,9 @@ ifneq (,$(wildcard ./.env))
     export
 endif
 
+clean:
+	rm -rf ./target
+
 pgcli:
 	pgcli $(DATABASE_URL)
 
@@ -39,3 +42,15 @@ graphql-build:
 
 graphql-run:
 	$(BUILD_DIR)/graphql
+
+graphql-deploy-dev: clean graphql-build
+	sls deploy --verbose --region ap-southeast-1 
+
+graphql-deploy-prod: clean graphql-build
+	sls deploy --verbose --region ap-southeast-1 --stage production
+
+docker-build-dev:
+	docker build -t thebox-graphql-lambda -f build/graphql/dev.Dockerfile .
+
+docker-build-prod:
+	docker build -t thebox-graphql-lambda -f build/graphql/prod.Dockerfile .
