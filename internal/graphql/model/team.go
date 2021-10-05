@@ -3,13 +3,13 @@ package model
 import "github.com/marcustut/thebox/internal/postgresql"
 
 type Team struct {
-	ID           string     `json:"id"`
-	Name         *string    `json:"name"`
-	Color        string     `json:"color"`
-	Points       float64    `json:"points"`
-	ClusterID    *string    `json:"cluster"`
-	CompletedIDs *[]*string `json:"completed"`
-	MembersIDs   *[]*string `json:"members"`
+	ID           string    `json:"id" fake:"{uuid}"`
+	Name         *string   `json:"name" fake:"{name}"`
+	Color        string    `json:"color" fake:"{hexcolor}"`
+	Points       float64   `json:"points" fake:"{float64:10,100}"`
+	ClusterID    *string   `json:"cluster" fake:"skip"`
+	CompletedIDs *[]string `json:"completed" fake:"skip"`
+	MemberIDs    *[]string `json:"members" fake:"skip"`
 }
 
 func MapToTeam(dbTeam *postgresql.TeamModel) (*Team, error) {
@@ -31,4 +31,16 @@ func MapToTeam(dbTeam *postgresql.TeamModel) (*Team, error) {
 	}
 
 	return team, nil
+}
+
+func MapToTeams(dbTeams []postgresql.TeamModel) ([]*Team, error) {
+	var teams []*Team
+	for _, dbTeam := range dbTeams {
+		team, err := MapToTeam(&dbTeam)
+		if err != nil {
+			return nil, err
+		}
+		teams = append(teams, team)
+	}
+	return teams, nil
 }

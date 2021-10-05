@@ -8,18 +8,6 @@ import (
 )
 
 func GetManyRoles(ctx context.Context, db *postgresql.PrismaClient, params ...postgresql.UserRoleWhereParam) ([]model.Role, error) {
-	// connect db
-	if err := db.Prisma.Connect(); err != nil {
-		return nil, err
-	}
-
-	// disconnect from db
-	defer func() {
-		if err := db.Prisma.Disconnect(); err != nil {
-			panic(err)
-		}
-	}()
-
 	// fetch the user
 	fetchedUserRoles, err := db.UserRole.FindMany(params...).Exec(ctx)
 	if err != nil {

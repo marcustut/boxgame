@@ -8,18 +8,6 @@ import (
 )
 
 func GetUniqueTeam(ctx context.Context, db *postgresql.PrismaClient, param postgresql.TeamEqualsUniqueWhereParam) (*model.Team, error) {
-	// connect db
-	if err := db.Prisma.Connect(); err != nil {
-		return nil, err
-	}
-
-	// disconnect from db
-	defer func() {
-		if err := db.Prisma.Disconnect(); err != nil {
-			panic(err)
-		}
-	}()
-
 	// fetch the team
 	fetchedTeam, err := db.Team.FindUnique(param).Exec(ctx)
 	if err != nil {
@@ -33,4 +21,20 @@ func GetUniqueTeam(ctx context.Context, db *postgresql.PrismaClient, param postg
 	}
 
 	return team, nil
+}
+
+func GetManyTeam(ctx context.Context, db *postgresql.PrismaClient, params ...postgresql.TeamWhereParam) ([]*model.Team, error) {
+	// fetch the team
+	fetchedTeams, err := db.Team.FindMany(params...).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// parse teams to graphql type
+	teams, err := model.MapToTeams(fetchedTeams)
+	if err != nil {
+		return nil, err
+	}
+
+	return teams, nil
 }

@@ -6,8 +6,9 @@ require (
 	github.com/99designs/gqlgen v0.14.0
 	github.com/aws/aws-lambda-go v1.27.0
 	github.com/awslabs/aws-lambda-go-api-proxy v0.11.0
+	github.com/brianvoe/gofakeit/v6 v6.9.0
 	github.com/iancoleman/strcase v0.0.0-20190422225806-e506e3ef7365
-	github.com/joho/godotenv v1.3.0
+	github.com/joho/godotenv v1.4.0
 	github.com/labstack/echo/v4 v4.6.1
 	github.com/prisma/prisma-client-go v0.11.0
 	github.com/shopspring/decimal v1.2.0

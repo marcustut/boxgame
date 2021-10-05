@@ -6,24 +6,100 @@ import (
 	"fmt"
 	"io"
 	"strconv"
-	"time"
 )
 
-type Cluster struct {
-	ID    string  `json:"id"`
-	Name  string  `json:"name"`
-	Color string  `json:"color"`
-	Teams []*Team `json:"teams"`
+type Gender string
+
+const (
+	GenderMale   Gender = "MALE"
+	GenderFemale Gender = "FEMALE"
+)
+
+var AllGender = []Gender{
+	GenderMale,
+	GenderFemale,
 }
 
-type Mission struct {
-	ID          string    `json:"id"`
-	Title       string    `json:"title"`
-	Description *string   `json:"description"`
-	Points      float64   `json:"points"`
-	CreatedAt   time.Time `json:"createdAt"`
-	UpdatedAt   time.Time `json:"updatedAt"`
-	CompletedBy []*Team   `json:"completedBy"`
+func (e Gender) IsValid() bool {
+	switch e {
+	case GenderMale, GenderFemale:
+		return true
+	}
+	return false
+}
+
+func (e Gender) String() string {
+	return string(e)
+}
+
+func (e *Gender) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Gender(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Gender", str)
+	}
+	return nil
+}
+
+func (e Gender) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type PastoralStatus string
+
+const (
+	PastoralStatusPastor PastoralStatus = "PASTOR"
+	PastoralStatusScgl   PastoralStatus = "SCGL"
+	PastoralStatusCgl    PastoralStatus = "CGL"
+	PastoralStatusPcgl   PastoralStatus = "PCGL"
+	PastoralStatusAcgl   PastoralStatus = "ACGL"
+	PastoralStatusOm     PastoralStatus = "OM"
+	PastoralStatusNb     PastoralStatus = "NB"
+	PastoralStatusNf     PastoralStatus = "NF"
+)
+
+var AllPastoralStatus = []PastoralStatus{
+	PastoralStatusPastor,
+	PastoralStatusScgl,
+	PastoralStatusCgl,
+	PastoralStatusPcgl,
+	PastoralStatusAcgl,
+	PastoralStatusOm,
+	PastoralStatusNb,
+	PastoralStatusNf,
+}
+
+func (e PastoralStatus) IsValid() bool {
+	switch e {
+	case PastoralStatusPastor, PastoralStatusScgl, PastoralStatusCgl, PastoralStatusPcgl, PastoralStatusAcgl, PastoralStatusOm, PastoralStatusNb, PastoralStatusNf:
+		return true
+	}
+	return false
+}
+
+func (e PastoralStatus) String() string {
+	return string(e)
+}
+
+func (e *PastoralStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = PastoralStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid PastoralStatus", str)
+	}
+	return nil
+}
+
+func (e PastoralStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 type Role string

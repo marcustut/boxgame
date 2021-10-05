@@ -11,6 +11,22 @@ enum Role {
   CREW
 }
 
+enum PastoralStatus {
+  PASTOR
+  SCGL
+  CGL
+  PCGL
+  ACGL
+  OM
+  NB
+  NF
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
 type Cluster {
   id: ID!
   name: String!
@@ -41,18 +57,53 @@ type Mission {
 type User {
   id: ID!
   username: String!
-  name: String!
-  contact: String
-  dob: Time
+  email: String!
   createdAt: Time!
   updatedAt: Time!
+  profile: Profile!
   team: Team
   roles: [Role!]!
 }
 
+type Profile {
+  id: ID!
+  status: PastoralStatus!
+  gender: Gender!
+  name: String!
+  contact: String!
+  dob: Time!
+  tngReceiptUrl: String
+  avatarUrl: String
+  createdAt: Time!
+  updatedAt: Time!
+  address: Address
+}
+
+type Address {
+  id: ID!
+  city: String!
+  line1: String!
+  line2: String
+  state: String!
+  country: String!
+  postalCode: String!
+}
+
 type Query {
-  users: [User!]!
+  user(user_id: ID!): User
+  team(team_id: ID!): Team
+  cluster(cluster_id: ID!): Cluster
+  mission(mission_id: ID!): Mission
 }
 
 # type Mutation {
+#   createUser(param: NewUser): User
+# }
+
+# input NewUser {
+#   username: String!
+#   name: String!
+#   contact: String
+#   dob: Time
+#   teamId: ID
 # }

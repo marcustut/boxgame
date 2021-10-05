@@ -7,27 +7,18 @@ import (
 )
 
 type User struct {
-	ID        string     `json:"id"`
-	Username  string     `json:"username"`
-	Name      string     `json:"name"`
-	Contact   *string    `json:"contact"`
-	Dob       *time.Time `json:"dob"`
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt time.Time  `json:"updatedAt"`
-	TeamID    *string    `json:"team"`
-	RoleIDs   *[]*string `json:"roles"`
+	ID        string    `json:"id" fake:"{uuid}"`
+	Username  string    `json:"username" fake:"{username}"`
+	Email     string    `json:"email" fake:"{email}"`
+	CreatedAt time.Time `json:"createdAt" fake:"{date}"`
+	UpdatedAt time.Time `json:"updatedAt" fake:"{date}"`
+	ProfileID string    `json:"profile" fake:"skip"`
+	TeamID    *string   `json:"team" fake:"skip"`
+	RoleIDs   *[]string `json:"roles" fake:"skip"`
 }
 
 func MapToUser(dbUser *postgresql.UserModel) (*User, error) {
-	var contact *string
-	var dob *time.Time
 	var teamID *string
-	if res, ok := dbUser.Contact(); ok {
-		contact = &res
-	}
-	if res, ok := dbUser.Dob(); ok {
-		dob = &res
-	}
 	if res, ok := dbUser.TeamID(); ok {
 		teamID = &res
 	}
@@ -35,11 +26,10 @@ func MapToUser(dbUser *postgresql.UserModel) (*User, error) {
 	user := &User{
 		ID:        dbUser.ID,
 		Username:  dbUser.Username,
-		Name:      dbUser.Name,
-		Contact:   contact,
-		Dob:       dob,
+		Email:     dbUser.Email,
 		CreatedAt: dbUser.CreatedAt,
 		UpdatedAt: dbUser.UpdatedAt,
+		ProfileID: dbUser.ProfileID,
 		TeamID:    teamID,
 	}
 

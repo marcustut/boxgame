@@ -8,18 +8,6 @@ import (
 )
 
 func GetUniqueUser(ctx context.Context, db *postgresql.PrismaClient, param postgresql.UserEqualsUniqueWhereParam) (*model.User, error) {
-	// connect db
-	if err := db.Prisma.Connect(); err != nil {
-		return nil, err
-	}
-
-	// disconnect from db
-	defer func() {
-		if err := db.Prisma.Disconnect(); err != nil {
-			panic(err)
-		}
-	}()
-
 	// fetch the user
 	fetchedUser, err := db.User.FindUnique(param).Exec(ctx)
 	if err != nil {
@@ -36,18 +24,6 @@ func GetUniqueUser(ctx context.Context, db *postgresql.PrismaClient, param postg
 }
 
 func GetManyUser(ctx context.Context, db *postgresql.PrismaClient, params ...postgresql.UserWhereParam) ([]*model.User, error) {
-	// connect db
-	if err := db.Prisma.Connect(); err != nil {
-		return nil, err
-	}
-
-	// disconnect from db
-	defer func() {
-		if err := db.Prisma.Disconnect(); err != nil {
-			panic(err)
-		}
-	}()
-
 	// fetch the user
 	fetchedUsers, err := db.User.FindMany(params...).Exec(ctx)
 	if err != nil {

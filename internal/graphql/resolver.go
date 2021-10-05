@@ -13,8 +13,13 @@ type Resolver struct {
 }
 
 func NewResolver() *Resolver {
+	client := postgresql.NewClient()
+	if err := client.Connect(); err != nil {
+		panic(err)
+	}
+
 	r := &Resolver{
-		db: postgresql.NewClient(),
+		db: client,
 	}
 
 	return r
