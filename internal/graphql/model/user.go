@@ -12,27 +12,29 @@ type User struct {
 	Email     string    `json:"email" fake:"{email}"`
 	CreatedAt time.Time `json:"createdAt" fake:"{date}"`
 	UpdatedAt time.Time `json:"updatedAt" fake:"{date}"`
-	ProfileID string    `json:"profile" fake:"skip"`
+	ProfileID *string   `json:"profile" fake:"skip"`
 	TeamID    *string   `json:"team" fake:"skip"`
 	RoleIDs   *[]string `json:"roles" fake:"skip"`
 }
 
 func MapToUser(dbUser *postgresql.UserModel) (*User, error) {
+	var profileID *string
+	if res, ok := dbUser.ProfileID(); ok {
+		profileID = &res
+	}
 	var teamID *string
 	if res, ok := dbUser.TeamID(); ok {
 		teamID = &res
 	}
-
 	user := &User{
 		ID:        dbUser.ID,
 		Username:  dbUser.Username,
 		Email:     dbUser.Email,
 		CreatedAt: dbUser.CreatedAt,
 		UpdatedAt: dbUser.UpdatedAt,
-		ProfileID: dbUser.ProfileID,
+		ProfileID: profileID,
 		TeamID:    teamID,
 	}
-
 	return user, nil
 }
 

@@ -33,7 +33,6 @@ func MapToProfile(dbProfile *postgresql.ProfileModel) (*Profile, error) {
 	if res, ok := dbProfile.AddressID(); ok {
 		addressID = &res
 	}
-
 	profile := &Profile{
 		ID:            dbProfile.ID,
 		Status:        PastoralStatus(dbProfile.Status),

@@ -6,7 +6,36 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+	"time"
 )
+
+type NewAddress struct {
+	City       string  `json:"city"`
+	Line1      string  `json:"line1"`
+	Line2      *string `json:"line2"`
+	State      string  `json:"state"`
+	Country    string  `json:"country"`
+	PostalCode string  `json:"postalCode"`
+}
+
+type NewProfile struct {
+	Status        PastoralStatus `json:"status"`
+	Gender        Gender         `json:"gender"`
+	Name          string         `json:"name"`
+	Contact       string         `json:"contact"`
+	Dob           time.Time      `json:"dob"`
+	TngReceiptURL *string        `json:"tngReceiptUrl"`
+	AvatarURL     *string        `json:"avatarUrl"`
+	Address       *NewAddress    `json:"address"`
+}
+
+type NewUser struct {
+	Username string      `json:"username"`
+	Email    string      `json:"email"`
+	Profile  *NewProfile `json:"profile"`
+	Roles    []Role      `json:"roles"`
+	TeamID   *string     `json:"teamId"`
+}
 
 type Gender string
 

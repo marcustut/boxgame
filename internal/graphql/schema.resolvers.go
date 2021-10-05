@@ -21,6 +21,10 @@ func (r *missionResolver) CompletedBy(ctx context.Context, obj *model.Mission) (
 	return query.GetManyTeam(ctx, r.db, postgresql.Team.TeamMission.Some(postgresql.TeamMission.MissionID.Equals(obj.ID)))
 }
 
+func (r *mutationResolver) CreateUser(ctx context.Context, param *model.NewUser) (*model.User, error) {
+	return query.CreateUserWithTxUnsafe(ctx, r.db, param)
+}
+
 func (r *profileResolver) Address(ctx context.Context, obj *model.Profile) (*model.Address, error) {
 	if obj.AddressID == nil {
 		return nil, fmt.Errorf("profile %s does not have an address", obj.ID)
@@ -60,7 +64,10 @@ func (r *teamResolver) Members(ctx context.Context, obj *model.Team) ([]*model.U
 }
 
 func (r *userResolver) Profile(ctx context.Context, obj *model.User) (*model.Profile, error) {
-	return query.GetUniqueProfile(ctx, r.db, postgresql.Profile.ID.Equals(obj.ProfileID))
+	if obj.ProfileID == nil {
+		return nil, fmt.Errorf("user %s does not have a profile", obj.ID)
+	}
+	return query.GetUniqueProfile(ctx, r.db, postgresql.Profile.ID.Equals(*obj.ProfileID))
 }
 
 func (r *userResolver) Team(ctx context.Context, obj *model.User) (*model.Team, error) {
@@ -80,6 +87,9 @@ func (r *Resolver) Cluster() generated.ClusterResolver { return &clusterResolver
 // Mission returns generated.MissionResolver implementation.
 func (r *Resolver) Mission() generated.MissionResolver { return &missionResolver{r} }
 
+// Mutation returns generated.MutationResolver implementation.
+func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
+
 // Profile returns generated.ProfileResolver implementation.
 func (r *Resolver) Profile() generated.ProfileResolver { return &profileResolver{r} }
 
@@ -94,6 +104,7 @@ func (r *Resolver) User() generated.UserResolver { return &userResolver{r} }
 
 type clusterResolver struct{ *Resolver }
 type missionResolver struct{ *Resolver }
+type mutationResolver struct{ *Resolver }
 type profileResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type teamResolver struct{ *Resolver }

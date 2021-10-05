@@ -60,7 +60,7 @@ type User {
   email: String!
   createdAt: Time!
   updatedAt: Time!
-  profile: Profile!
+  profile: Profile
   team: Team
   roles: [Role!]!
 }
@@ -96,14 +96,34 @@ type Query {
   mission(mission_id: ID!): Mission
 }
 
-# type Mutation {
-#   createUser(param: NewUser): User
-# }
+type Mutation {
+  createUser(param: NewUser): User
+}
 
-# input NewUser {
-#   username: String!
-#   name: String!
-#   contact: String
-#   dob: Time
-#   teamId: ID
-# }
+input NewUser {
+  username: String!
+  email: String!
+  profile: NewProfile!
+  roles: [Role!]!
+  teamId: ID
+}
+
+input NewProfile {
+  status: PastoralStatus!
+  gender: Gender!
+  name: String!
+  contact: String!
+  dob: Time!
+  tngReceiptUrl: String
+  avatarUrl: String
+  address: NewAddress
+}
+
+input NewAddress {
+  city: String!
+  line1: String!
+  line2: String
+  state: String!
+  country: String!
+  postalCode: String!
+}
