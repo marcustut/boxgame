@@ -17,12 +17,60 @@ func (r *clusterResolver) Teams(ctx context.Context, obj *model.Cluster) ([]*mod
 	return query.GetManyTeam(ctx, r.db, postgresql.Team.ClusterID.Equals(obj.ID))
 }
 
+func (r *commentResolver) User(ctx context.Context, obj *model.Comment) (*model.User, error) {
+	return query.GetUniqueUser(ctx, r.db, postgresql.User.ID.Equals(obj.UserID))
+}
+
+func (r *commentResolver) Post(ctx context.Context, obj *model.Comment) (*model.Post, error) {
+	return query.GetUniquePost(ctx, r.db, postgresql.Post.ID.Equals(obj.PostID))
+}
+
+func (r *commentResolver) Likes(ctx context.Context, obj *model.Comment) (int, error) {
+	return query.GetUniqueCommentLikeCount(ctx, r.db, obj.ID)
+}
+
 func (r *missionResolver) CompletedBy(ctx context.Context, obj *model.Mission) ([]*model.Team, error) {
 	return query.GetManyTeam(ctx, r.db, postgresql.Team.TeamMission.Some(postgresql.TeamMission.MissionID.Equals(obj.ID)))
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, param *model.NewUser) (*model.User, error) {
 	return query.CreateUserWithTxUnsafe(ctx, r.db, param)
+}
+
+func (r *mutationResolver) CreatePost(ctx context.Context, param *model.NewPost) (*model.Post, error) {
+	return query.CreatePost(ctx, r.db, param)
+}
+
+func (r *mutationResolver) CreateComment(ctx context.Context, param *model.NewComment) (*model.Comment, error) {
+	return query.CreateComment(ctx, r.db, param)
+}
+
+func (r *mutationResolver) LikePost(ctx context.Context, param *model.PostLikeInput) (*bool, error) {
+	return query.CreatePostLike(ctx, r.db, param)
+}
+
+func (r *mutationResolver) UnlikePost(ctx context.Context, param *model.PostLikeInput) (*bool, error) {
+	return query.DeletePostLike(ctx, r.db, param)
+}
+
+func (r *mutationResolver) LikeComment(ctx context.Context, param *model.CommentLikeInput) (*bool, error) {
+	return query.CreateCommentLike(ctx, r.db, param)
+}
+
+func (r *mutationResolver) UnlikeComment(ctx context.Context, param *model.CommentLikeInput) (*bool, error) {
+	return query.DeleteCommentLike(ctx, r.db, param)
+}
+
+func (r *postResolver) User(ctx context.Context, obj *model.Post) (*model.User, error) {
+	return query.GetUniqueUser(ctx, r.db, postgresql.User.ID.Equals(obj.UserID))
+}
+
+func (r *postResolver) Likes(ctx context.Context, obj *model.Post) (int, error) {
+	return query.GetUniquePostLikeCount(ctx, r.db, obj.ID)
+}
+
+func (r *postResolver) Comments(ctx context.Context, obj *model.Post, page model.PaginationInput) ([]*model.Comment, error) {
+	return query.GetManyComment(ctx, r.db, page, postgresql.Comment.PostID.Equals(obj.ID))
 }
 
 func (r *profileResolver) Address(ctx context.Context, obj *model.Profile) (*model.Address, error) {
@@ -48,6 +96,18 @@ func (r *queryResolver) Mission(ctx context.Context, missionID string) (*model.M
 	return query.GetUniqueMission(ctx, r.db, postgresql.Mission.ID.Equals(missionID))
 }
 
+func (r *queryResolver) Missions(ctx context.Context, page model.PaginationInput) ([]*model.Mission, error) {
+	return query.GetManyMission(ctx, r.db, page)
+}
+
+func (r *queryResolver) Post(ctx context.Context, postID string) (*model.Post, error) {
+	return query.GetUniquePost(ctx, r.db, postgresql.Post.ID.Equals(postID))
+}
+
+func (r *queryResolver) Posts(ctx context.Context, page model.PaginationInput) ([]*model.Post, error) {
+	return query.GetManyPost(ctx, r.db, page)
+}
+
 func (r *teamResolver) Cluster(ctx context.Context, obj *model.Team) (*model.Cluster, error) {
 	if obj.ClusterID == nil {
 		return nil, fmt.Errorf("team %s does not have a cluster", obj.ID)
@@ -55,8 +115,8 @@ func (r *teamResolver) Cluster(ctx context.Context, obj *model.Team) (*model.Clu
 	return query.GetUniqueCluster(ctx, r.db, postgresql.Cluster.ID.Equals(*obj.ClusterID))
 }
 
-func (r *teamResolver) Completed(ctx context.Context, obj *model.Team) ([]*model.Mission, error) {
-	return query.GetManyMission(ctx, r.db, postgresql.Mission.TeamMission.Some(postgresql.TeamMission.TeamID.Equals(obj.ID)))
+func (r *teamResolver) Completed(ctx context.Context, obj *model.Team, page model.PaginationInput) ([]*model.Mission, error) {
+	return query.GetManyMission(ctx, r.db, page, postgresql.Mission.TeamMission.Some(postgresql.TeamMission.TeamID.Equals(obj.ID)))
 }
 
 func (r *teamResolver) Members(ctx context.Context, obj *model.Team) ([]*model.User, error) {
@@ -64,10 +124,7 @@ func (r *teamResolver) Members(ctx context.Context, obj *model.Team) ([]*model.U
 }
 
 func (r *userResolver) Profile(ctx context.Context, obj *model.User) (*model.Profile, error) {
-	if obj.ProfileID == nil {
-		return nil, fmt.Errorf("user %s does not have a profile", obj.ID)
-	}
-	return query.GetUniqueProfile(ctx, r.db, postgresql.Profile.ID.Equals(*obj.ProfileID))
+	return query.GetUniqueProfile(ctx, r.db, postgresql.Profile.ID.Equals(obj.ProfileID))
 }
 
 func (r *userResolver) Team(ctx context.Context, obj *model.User) (*model.Team, error) {
@@ -84,11 +141,17 @@ func (r *userResolver) Roles(ctx context.Context, obj *model.User) ([]model.Role
 // Cluster returns generated.ClusterResolver implementation.
 func (r *Resolver) Cluster() generated.ClusterResolver { return &clusterResolver{r} }
 
+// Comment returns generated.CommentResolver implementation.
+func (r *Resolver) Comment() generated.CommentResolver { return &commentResolver{r} }
+
 // Mission returns generated.MissionResolver implementation.
 func (r *Resolver) Mission() generated.MissionResolver { return &missionResolver{r} }
 
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
+
+// Post returns generated.PostResolver implementation.
+func (r *Resolver) Post() generated.PostResolver { return &postResolver{r} }
 
 // Profile returns generated.ProfileResolver implementation.
 func (r *Resolver) Profile() generated.ProfileResolver { return &profileResolver{r} }
@@ -103,8 +166,10 @@ func (r *Resolver) Team() generated.TeamResolver { return &teamResolver{r} }
 func (r *Resolver) User() generated.UserResolver { return &userResolver{r} }
 
 type clusterResolver struct{ *Resolver }
+type commentResolver struct{ *Resolver }
 type missionResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
+type postResolver struct{ *Resolver }
 type profileResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type teamResolver struct{ *Resolver }

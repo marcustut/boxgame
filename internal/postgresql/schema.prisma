@@ -6,20 +6,66 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:EEmc~]szAE4tuXR-@db.gnbavzhblfvrsopphqja.supabase.co:6543/postgres"
+  url      = "postgresql://postgres:EEmc~]szAE4tuXR-@db.gnbavzhblfvrsopphqja.supabase.co:6543/postgres?pgbouncer=true"
 }
 
 model User {
-  id        String     @id @db.Uuid
-  username  String     @unique
-  email     String     @unique
-  createdAt DateTime   @default(now())
-  updatedAt DateTime
-  profileId String?    @unique @db.Uuid
-  profile   Profile?   @relation(fields: [profileId], references: [id])
-  teamId    String?    @db.Uuid
-  team      Team?      @relation(fields: [teamId], references: [id])
-  userRole  UserRole[]
+  id          String        @id @db.Uuid
+  username    String        @unique
+  email       String        @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime
+  profileId   String        @unique @db.Uuid
+  profile     Profile       @relation(fields: [profileId], references: [id])
+  teamId      String?       @db.Uuid
+  team        Team?         @relation(fields: [teamId], references: [id])
+  userRole    UserRole[]
+  post        Post[]
+  like        PostLike[]
+  comment     Comment[]
+  commentLike CommentLike[]
+}
+
+model Post {
+  id         String     @id @db.Uuid
+  content    String
+  images     String[]
+  created_at DateTime   @default(now())
+  updated_at DateTime
+  userId     String     @db.Uuid
+  user       User       @relation(fields: [userId], references: [id])
+  like       PostLike[]
+  comment    Comment[]
+}
+
+model Comment {
+  id          String        @id @db.Uuid
+  content     String
+  created_at  DateTime      @default(now())
+  updated_at  DateTime
+  postId      String        @db.Uuid
+  post        Post          @relation(fields: [postId], references: [id])
+  userId      String        @db.Uuid
+  user        User          @relation(fields: [userId], references: [id])
+  commentLike CommentLike[]
+}
+
+model PostLike {
+  postId String @db.Uuid
+  userId String @db.Uuid
+  post   Post   @relation(fields: [postId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([postId, userId])
+}
+
+model CommentLike {
+  commentId String  @db.Uuid
+  userId    String  @db.Uuid
+  comment   Comment @relation(fields: [commentId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
+
+  @@id([commentId, userId])
 }
 
 model Profile {
@@ -66,7 +112,7 @@ model TeamMission {
   mission   Mission @relation(fields: [missionId], references: [id])
   team      Team    @relation(fields: [teamId], references: [id])
 
-  @@unique([teamId, missionId])
+  @@id([teamId, missionId])
 }
 
 model Cluster {

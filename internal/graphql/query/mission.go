@@ -23,9 +23,18 @@ func GetUniqueMission(ctx context.Context, db *postgresql.PrismaClient, param po
 	return mission, nil
 }
 
-func GetManyMission(ctx context.Context, db *postgresql.PrismaClient, params ...postgresql.MissionWhereParam) ([]*model.Mission, error) {
+func GetManyMission(ctx context.Context, db *postgresql.PrismaClient, page model.PaginationInput, params ...postgresql.MissionWhereParam) ([]*model.Mission, error) {
+	// build query
+	query := db.Mission.FindMany(params...)
+
+	// apply pagination
+	query = query.Take(page.First)
+	if page.Offset != nil {
+		query = query.Skip(*page.Offset)
+	}
+
 	// fetch the missions
-	fetchedMissions, err := db.Mission.FindMany(params...).Exec(ctx)
+	fetchedMissions, err := query.Exec(ctx)
 	if err != nil {
 		return nil, err
 	}

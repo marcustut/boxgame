@@ -40,7 +40,7 @@ type Team {
   color: String!
   points: Float!
   cluster: Cluster
-  completed: [Mission!]!
+  completed(page: PaginationInput!): [Mission!]!
   members: [User!]!
 }
 
@@ -89,15 +89,72 @@ type Address {
   postalCode: String!
 }
 
+type Post {
+  id: ID!
+  content: String!
+  images: [String!]!
+  createdAt: Time!
+  updatedAt: Time!
+  user: User!
+  likes: Int!
+  comments(page: PaginationInput!): [Comment!]!
+}
+
+type Comment {
+  id: ID!
+  content: String!
+  createdAt: Time!
+  updatedAt: Time!
+  user: User!
+  post: Post!
+  likes: Int!
+}
+
 type Query {
   user(user_id: ID!): User
   team(team_id: ID!): Team
   cluster(cluster_id: ID!): Cluster
   mission(mission_id: ID!): Mission
+  missions(page: PaginationInput!): [Mission!]!
+  post(post_id: ID!): Post
+  posts(page: PaginationInput!): [Post!]!
 }
 
 type Mutation {
   createUser(param: NewUser): User
+  createPost(param: NewPost): Post
+  createComment(param: NewComment): Comment
+  likePost(param: PostLikeInput): Boolean
+  unlikePost(param: PostLikeInput): Boolean
+  likeComment(param: CommentLikeInput): Boolean
+  unlikeComment(param: CommentLikeInput): Boolean
+}
+
+input PaginationInput {
+  first: Int!
+  offset: Int
+}
+
+input PostLikeInput {
+  postId: ID!
+  userId: ID!
+}
+
+input CommentLikeInput {
+  commentId: ID!
+  userId: ID!
+}
+
+input NewComment {
+  content: String!
+  postId: ID!
+  userId: ID!
+}
+
+input NewPost {
+  content: String!
+  images: [String!]!
+  userId: ID!
 }
 
 input NewUser {

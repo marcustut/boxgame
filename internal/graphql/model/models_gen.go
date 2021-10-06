@@ -9,6 +9,11 @@ import (
 	"time"
 )
 
+type CommentLikeInput struct {
+	CommentID string `json:"commentId"`
+	UserID    string `json:"userId"`
+}
+
 type NewAddress struct {
 	City       string  `json:"city"`
 	Line1      string  `json:"line1"`
@@ -16,6 +21,18 @@ type NewAddress struct {
 	State      string  `json:"state"`
 	Country    string  `json:"country"`
 	PostalCode string  `json:"postalCode"`
+}
+
+type NewComment struct {
+	Content string `json:"content"`
+	PostID  string `json:"postId"`
+	UserID  string `json:"userId"`
+}
+
+type NewPost struct {
+	Content string   `json:"content"`
+	Images  []string `json:"images"`
+	UserID  string   `json:"userId"`
 }
 
 type NewProfile struct {
@@ -35,6 +52,16 @@ type NewUser struct {
 	Profile  *NewProfile `json:"profile"`
 	Roles    []Role      `json:"roles"`
 	TeamID   *string     `json:"teamId"`
+}
+
+type PaginationInput struct {
+	First  int  `json:"first"`
+	Offset *int `json:"offset"`
+}
+
+type PostLikeInput struct {
+	PostID string `json:"postId"`
+	UserID string `json:"userId"`
 }
 
 type Gender string

@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "db.gnbavzhblfvrsopphqja.supabase.co",
+            "port": 6543,
+            "driver": "PostgreSQL",
+            "name": "thebox-supabase",
+            "database": "postgres",
+            "username": "postgres",
+            "password": "EEmc~]szAE4tuXR-"
+        }
+    ]
+}

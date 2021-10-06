@@ -96,6 +96,14 @@ func clean(ctx context.Context, client *postgresql.PrismaClient) {
 	client.Address.FindMany().Delete().Exec(ctx)
 	log.Printf("clean: deleting rows in UserRole\n")
 	client.UserRole.FindMany().Delete().Exec(ctx)
+	log.Printf("clean: deleting rows in Post\n")
+	client.Post.FindMany().Delete().Exec(ctx)
+	log.Printf("clean: deleting rows in Comment\n")
+	client.Comment.FindMany().Delete().Exec(ctx)
+	log.Printf("clean: deleting rows in PostLike\n")
+	client.PostLike.FindMany().Delete().Exec(ctx)
+	log.Printf("clean: deleting rows in CommentLike\n")
+	client.CommentLike.FindMany().Delete().Exec(ctx)
 }
 
 func seed(ctx context.Context, client *postgresql.PrismaClient) error {
@@ -107,6 +115,8 @@ func seed(ctx context.Context, client *postgresql.PrismaClient) error {
 	var addresses []string
 	var profiles []string
 	var users []string
+	var posts []string
+	var comments []string
 
 	for i := 0; i < 3; i++ {
 		var c model.Cluster
@@ -234,6 +244,60 @@ func seed(ctx context.Context, client *postgresql.PrismaClient) error {
 			continue
 		}
 		log.Printf("seed: created TeamMission %s,%s\n", res.TeamID, res.MissionID)
+	}
+
+	for i := 0; i < 100; i++ {
+		var p model.Post
+		gofakeit.Struct(&p)
+		posts = append(posts, p.ID)
+		gofakeit.Slice(p.Images)
+		res, err := client.Post.CreateOne(
+			postgresql.Post.ID.Set(p.ID),
+			postgresql.Post.Content.Set(p.Content),
+			postgresql.Post.UpdatedAt.Set(p.UpdatedAt),
+			postgresql.Post.User.Link(postgresql.User.ID.Equals(users[rand.Intn(len(users))])),
+			postgresql.Post.Images.Set(p.Images),
+		).Exec(ctx)
+		if err != nil {
+			return err
+		}
+		log.Printf("seed: created Post %s\n", res.ID)
+	}
+
+	for i := 0; i < 200; i++ {
+		var c model.Comment
+		gofakeit.Struct(&c)
+		comments = append(comments, c.ID)
+		res, err := client.Comment.CreateOne(
+			postgresql.Comment.ID.Set(c.ID),
+			postgresql.Comment.Content.Set(c.Content),
+			postgresql.Comment.UpdatedAt.Set(c.UpdatedAt),
+			postgresql.Comment.Post.Link(postgresql.Post.ID.Equals(posts[rand.Intn(len(posts))])),
+			postgresql.Comment.User.Link(postgresql.User.ID.Equals(users[rand.Intn(len(users))])),
+		).Exec(ctx)
+		if err != nil {
+			return err
+		}
+		log.Printf("seed: created Comment %s\n", res.ID)
+	}
+
+	for i := 0; i < 200; i++ {
+		res, err := client.PostLike.CreateOne(
+			postgresql.PostLike.Post.Link(postgresql.Post.ID.Equals(posts[rand.Intn(len(posts))])),
+			postgresql.PostLike.User.Link(postgresql.User.ID.Equals(users[rand.Intn(len(users))])),
+		).Exec(ctx)
+		if err != nil {
+			continue
+		}
+		res2, err := client.CommentLike.CreateOne(
+			postgresql.CommentLike.Comment.Link(postgresql.Comment.ID.Equals(comments[rand.Intn(len(comments))])),
+			postgresql.CommentLike.User.Link(postgresql.User.ID.Equals(users[rand.Intn(len(users))])),
+		).Exec(ctx)
+		if err != nil {
+			continue
+		}
+		log.Printf("seed: created PostLike %s,%s\n", res.PostID, res.UserID)
+		log.Printf("seed: created CommentLike %s,%s\n", res2.CommentID, res2.UserID)
 	}
 
 	return nil

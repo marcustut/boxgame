@@ -61,8 +61,8 @@ func CreateUserWithTxUnsafe(ctx context.Context, db *postgresql.PrismaClient, pa
 		postgresql.User.Username.Set(param.Username),
 		postgresql.User.Email.Set(param.Email),
 		postgresql.User.UpdatedAt.Set(time.Now()),
-		postgresql.User.ProfileID.Set(dbProfile.Result().ID),
-		postgresql.User.TeamID.SetIfPresent(param.TeamID),
+		postgresql.User.Profile.Link(postgresql.Profile.ID.Equals(dbProfile.Result().ID)),
+		postgresql.User.Team.Link(postgresql.Team.ID.EqualsIfPresent(param.TeamID)),
 	).Tx()
 
 	t2 = append(t2, updatedProfile, dbUser)
