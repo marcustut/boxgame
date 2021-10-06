@@ -8,10 +8,10 @@ import type { PageContext } from '@/types/ssr'
 import type { PageContextBuiltInClient } from 'vite-plugin-ssr/types'
 import type { NormalizedCacheObject } from '@apollo/client'
 
-const makeApolloClient = (apolloInitialState: NormalizedCacheObject) => {
+const makeApolloClient = (apolloInitialState?: NormalizedCacheObject) => {
   return new ApolloClient({
     uri: `${import.meta.env.VITE_API_URL}/${import.meta.env.DEV ? 'dev' : 'production'}/graphql`,
-    cache: new InMemoryCache().restore(apolloInitialState)
+    cache: apolloInitialState ? new InMemoryCache().restore(apolloInitialState) : new InMemoryCache()
   })
 }
 
@@ -20,7 +20,9 @@ const hydrate = async () => {
   // instead of `getPage()`, see https://vite-plugin-ssr.com/useClientRouter
   const pageContext = await getPage<PageContextBuiltInClient & PageContext>()
   const { Page, pageProps } = pageContext
-  const apolloClient = makeApolloClient(pageContext.apolloInitialState)
+  const apolloClient = pageContext.apolloInitialState
+    ? makeApolloClient(pageContext.apolloInitialState)
+    : makeApolloClient()
   const theme = createThemeHelper('dark')
   ReactDOM.hydrate(
     <AppProvider

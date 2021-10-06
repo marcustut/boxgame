@@ -8,6 +8,14 @@ import createEmotionServer from '@emotion/server/create-instance'
 import logoUrl from '/logo.svg'
 import type { PageContext } from '@/types/ssr'
 import type { PageContextBuiltIn } from 'vite-plugin-ssr/types'
+import { NormalizedCacheObject, ApolloClient, InMemoryCache } from '@apollo/client'
+
+const makeApolloClient = (apolloInitialState?: NormalizedCacheObject) => {
+  return new ApolloClient({
+    uri: `${import.meta.env.VITE_API_URL}/${import.meta.env.DEV ? 'dev' : 'production'}/graphql`,
+    cache: apolloInitialState ? new InMemoryCache().restore(apolloInitialState) : new InMemoryCache()
+  })
+}
 
 // See https://vite-plugin-ssr.com/data-fetching
 export const passToClient = ['pageProps', 'urlPathname', 'apolloInitialState', 'redirectTo']
@@ -20,7 +28,12 @@ export const render = async (pageContext: PageContextBuiltIn & PageContext) => {
   const { extractCriticalToChunks, constructStyleTagsFromChunks } = createEmotionServer(emotionCache)
   const theme = createThemeHelper('dark')
   const pageHtml = ReactDOMServer.renderToString(
-    <AppProvider apolloClient={apolloClient} pageContext={pageContext} emotionCache={emotionCache} theme={theme}>
+    <AppProvider
+      apolloClient={apolloClient ? apolloClient : makeApolloClient()}
+      pageContext={pageContext}
+      emotionCache={emotionCache}
+      theme={theme}
+    >
       <Page {...pageProps} />
     </AppProvider>
   )
@@ -58,7 +71,8 @@ export const render = async (pageContext: PageContextBuiltIn & PageContext) => {
 }
 
 export const onBeforeRender = async (pageContext: PageContext) => {
-  const { Page, pageProps, apolloClient } = pageContext
+  const { Page, pageProps } = pageContext
+  const apolloClient = pageContext.apolloClient ? pageContext.apolloClient : makeApolloClient()
   const theme = createThemeHelper('dark')
   const tree = (
     <AppProvider
