@@ -10,6 +10,7 @@ export type PageContext = {
     title?: string
     description?: string
   }
+  redirectTo: string
   apolloClient: ApolloClient<NormalizedCacheObject>
   apolloInitialState: NormalizedCacheObject
 }

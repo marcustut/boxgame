@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Container, Stack, Typography } from '@mui/material'
 import { useQuery } from '@apollo/client'
 
@@ -7,8 +7,12 @@ import { Layout } from '@/features/register'
 import { GET_REGISTERED_USER_COUNT, RegisteredUserCount } from '@/graphql'
 
 export const Riddle: React.FC = () => {
-  const { setTimeUsed, setCompleted } = useRiddle()
+  const { timeUsed, completed, setTimeUsed, setCompleted } = useRiddle()
   const { loading, error, data } = useQuery<RegisteredUserCount>(GET_REGISTERED_USER_COUNT)
+
+  useEffect(() => {
+    if (timeUsed && completed) window.location.href = '/register'
+  }, [timeUsed, completed])
 
   return (
     <Layout applyRootStyle={false} helmetProps={{ title: 'Riddle' }} style={{ minHeight: '100vh' }}>

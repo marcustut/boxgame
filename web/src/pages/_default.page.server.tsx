@@ -10,7 +10,7 @@ import type { PageContext } from '@/types/ssr'
 import type { PageContextBuiltIn } from 'vite-plugin-ssr/types'
 
 // See https://vite-plugin-ssr.com/data-fetching
-export const passToClient = ['pageProps', 'urlPathname', 'apolloInitialState']
+export const passToClient = ['pageProps', 'urlPathname', 'apolloInitialState', 'redirectTo']
 
 export const render = async (pageContext: PageContextBuiltIn & PageContext) => {
   // Get page context from server
