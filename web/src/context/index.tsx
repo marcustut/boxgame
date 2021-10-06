@@ -3,7 +3,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ApolloClient, ApolloProvider } from '@apollo/client'
 
 import { ErrorPage } from '@/components/Misc'
-import { ThemeProvider } from '@mui/material'
+import { CssBaseline, ThemeProvider } from '@mui/material'
 import { PageContextProvider } from '@/hooks/usePageContext'
 import { CacheProvider } from '@emotion/react'
 import type { EmotionCache } from '@emotion/react'
@@ -30,6 +30,7 @@ export const AppProvider: React.FC<AppProviderProps<unknown>> = ({
         <ApolloProvider client={apolloClient}>
           <CacheProvider value={emotionCache}>
             <ThemeProvider theme={theme}>
+              <CssBaseline />
               <PageContextProvider pageContext={pageContext}>{children}</PageContextProvider>
             </ThemeProvider>
           </CacheProvider>

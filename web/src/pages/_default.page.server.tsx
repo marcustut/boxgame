@@ -37,12 +37,12 @@ export const render = async (pageContext: PageContextBuiltIn & PageContext) => {
   const documentHtml = escapeInject`<!DOCTYPE html>
     <html lang="en">
       <head>
-        ${emotionCss}
         <meta charset="UTF-8" />
         <link rel="icon" href="${logoUrl as unknown as string}" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="${desc}" />
         <title>${title}</title>
+        ${dangerouslySkipEscape(emotionCss)}
       </head>
       <body>
         <div id="page-view">${dangerouslySkipEscape(pageHtml)}</div>
