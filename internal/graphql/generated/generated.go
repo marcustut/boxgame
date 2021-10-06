@@ -124,13 +124,14 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Cluster  func(childComplexity int, clusterID string) int
-		Mission  func(childComplexity int, missionID string) int
-		Missions func(childComplexity int, page model.PaginationInput) int
-		Post     func(childComplexity int, postID string) int
-		Posts    func(childComplexity int, page model.PaginationInput) int
-		Team     func(childComplexity int, teamID string) int
-		User     func(childComplexity int, userID string) int
+		Cluster   func(childComplexity int, clusterID string) int
+		Mission   func(childComplexity int, missionID string) int
+		Missions  func(childComplexity int, page model.PaginationInput) int
+		Post      func(childComplexity int, postID string) int
+		Posts     func(childComplexity int, page model.PaginationInput) int
+		Team      func(childComplexity int, teamID string) int
+		User      func(childComplexity int, userID string) int
+		UserCount func(childComplexity int) int
 	}
 
 	Team struct {
@@ -185,6 +186,7 @@ type ProfileResolver interface {
 }
 type QueryResolver interface {
 	User(ctx context.Context, userID string) (*model.User, error)
+	UserCount(ctx context.Context) (int, error)
 	Team(ctx context.Context, teamID string) (*model.Team, error)
 	Cluster(ctx context.Context, clusterID string) (*model.Cluster, error)
 	Mission(ctx context.Context, missionID string) (*model.Mission, error)
@@ -699,6 +701,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.User(childComplexity, args["user_id"].(string)), true
 
+	case "Query.userCount":
+		if e.complexity.Query.UserCount == nil {
+			break
+		}
+
+		return e.complexity.Query.UserCount(childComplexity), true
+
 	case "Team.cluster":
 		if e.complexity.Team.Cluster == nil {
 			break
@@ -987,6 +996,7 @@ type Comment {
 
 type Query {
   user(user_id: ID!): User
+  userCount: Int!
   team(team_id: ID!): Team
   cluster(cluster_id: ID!): Cluster
   mission(mission_id: ID!): Mission
@@ -3202,6 +3212,41 @@ func (ec *executionContext) _Query_user(ctx context.Context, field graphql.Colle
 	res := resTmp.(*model.User)
 	fc.Result = res
 	return ec.marshalOUser2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_userCount(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().UserCount(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_team(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -6015,6 +6060,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_user(ctx, field)
+				return res
+			})
+		case "userCount":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_userCount(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "team":

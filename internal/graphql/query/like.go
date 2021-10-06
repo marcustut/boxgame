@@ -2,7 +2,6 @@ package query
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/marcustut/thebox/internal/graphql/model"
 	"github.com/marcustut/thebox/internal/postgresql"
@@ -25,7 +24,6 @@ func GetUniqueCommentLikeCount(ctx context.Context, db *postgresql.PrismaClient,
 	if err != nil {
 		return 0, err
 	}
-	fmt.Println(res)
 	return res[0].Count, nil
 }
 

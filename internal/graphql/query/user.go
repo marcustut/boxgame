@@ -38,3 +38,17 @@ func GetManyUser(ctx context.Context, db *postgresql.PrismaClient, params ...pos
 
 	return users, nil
 }
+
+func GetTotalUserCount(ctx context.Context, db *postgresql.PrismaClient) (int, error) {
+	var res []countResult
+	err := db.Prisma.QueryRaw(`
+		SELECT
+			COUNT(*) 
+		FROM 
+			"User"
+	`).Exec(ctx, &res)
+	if err != nil {
+		return 0, err
+	}
+	return res[0].Count, nil
+}

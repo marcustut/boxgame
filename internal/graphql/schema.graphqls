@@ -112,6 +112,7 @@ type Comment {
 
 type Query {
   user(user_id: ID!): User
+  userCount: Int!
   team(team_id: ID!): Team
   cluster(cluster_id: ID!): Cluster
   mission(mission_id: ID!): Mission

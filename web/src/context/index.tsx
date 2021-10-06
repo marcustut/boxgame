@@ -1,27 +1,40 @@
-import * as React from 'react'
-import { BrowserRouter } from 'react-router-dom'
+import React from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { HelmetProvider } from 'react-helmet-async'
+import { ApolloClient, ApolloProvider } from '@apollo/client'
 
-import { ErrorPage, LoadingPage } from '@/components/Misc'
-import { ChosenThemeProvider, ThemeProvider } from '@/lib/theme'
-import { ApolloProvider } from '@apollo/client'
-import { client } from '@/lib/apollo'
+import { ErrorPage } from '@/components/Misc'
+import { ThemeProvider } from '@mui/material'
+import { PageContextProvider } from '@/hooks/usePageContext'
+import { CacheProvider } from '@emotion/react'
+import type { EmotionCache } from '@emotion/react'
+import type { PageContext } from '@/types/ssr'
+import type { Theme } from '@mui/material'
 
-export const AppProvider: React.FC = ({ children }) => {
+type AppProviderProps<TCache> = {
+  apolloClient: ApolloClient<TCache>
+  pageContext: PageContext
+  emotionCache: EmotionCache
+  theme: Theme
+}
+
+export const AppProvider: React.FC<AppProviderProps<unknown>> = ({
+  apolloClient,
+  pageContext,
+  emotionCache,
+  theme,
+  children
+}) => {
   return (
-    <React.Suspense fallback={<LoadingPage />}>
+    <React.StrictMode>
       <ErrorBoundary FallbackComponent={ErrorPage}>
-        <HelmetProvider>
-          <ApolloProvider client={client}>
-            <ChosenThemeProvider>
-              <ThemeProvider>
-                <BrowserRouter>{children}</BrowserRouter>
-              </ThemeProvider>
-            </ChosenThemeProvider>
-          </ApolloProvider>
-        </HelmetProvider>
+        <ApolloProvider client={apolloClient}>
+          <CacheProvider value={emotionCache}>
+            <ThemeProvider theme={theme}>
+              <PageContextProvider pageContext={pageContext}>{children}</PageContextProvider>
+            </ThemeProvider>
+          </CacheProvider>
+        </ApolloProvider>
       </ErrorBoundary>
-    </React.Suspense>
+    </React.StrictMode>
   )
 }

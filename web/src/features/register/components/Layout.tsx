@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { styled } from '@mui/material'
-import { HelmetHandler, HelmetHandlerProps } from '@/components/Misc'
+import { HelmetHandlerProps } from '@/components/Misc'
 
 const Root = styled('div')`
   display: flex;
@@ -12,14 +12,18 @@ const Root = styled('div')`
 `
 
 type LayoutProps = {
+  applyRootStyle?: boolean
   helmetProps?: HelmetHandlerProps
+  style?: React.CSSProperties
 }
 
-export const Layout: React.FC<LayoutProps> = ({ helmetProps, children }) => {
-  return (
-    <Root>
-      {helmetProps && <HelmetHandler title={helmetProps.title} link={helmetProps.link} meta={helmetProps.meta} />}
+export const Layout: React.FC<LayoutProps> = ({ applyRootStyle = true, helmetProps, style, children }) => {
+  const inner = (
+    <div style={style}>
+      {/* {helmetProps && <HelmetHandler title={helmetProps.title} link={helmetProps.link} meta={helmetProps.meta} />} */}
       {children}
-    </Root>
+    </div>
   )
+
+  return <>{applyRootStyle ? <Root>{inner}</Root> : inner}</>
 }

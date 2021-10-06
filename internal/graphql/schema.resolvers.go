@@ -84,6 +84,10 @@ func (r *queryResolver) User(ctx context.Context, userID string) (*model.User, e
 	return query.GetUniqueUser(ctx, r.db, postgresql.User.ID.Equals(userID))
 }
 
+func (r *queryResolver) UserCount(ctx context.Context) (int, error) {
+	return query.GetTotalUserCount(ctx, r.db)
+}
+
 func (r *queryResolver) Team(ctx context.Context, teamID string) (*model.Team, error) {
 	return query.GetUniqueTeam(ctx, r.db, postgresql.Team.ID.Equals(teamID))
 }

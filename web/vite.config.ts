@@ -1,5 +1,6 @@
 import reactRefresh from '@vitejs/plugin-react-refresh'
-import Checker from 'vite-plugin-checker'
+import checker from 'vite-plugin-checker'
+import ssr from 'vite-plugin-ssr/plugin'
 import { resolve } from 'path'
 
 function pathResolve(dir: string) {
@@ -18,11 +19,12 @@ const config = () => ({
   },
   plugins: [
     reactRefresh(),
-    Checker({
+    ssr(),
+    checker({
       typescript: true,
       overlay: true,
       eslint: {
-        files: 'src',
+        files: ['src', 'server'],
         extensions: ['.ts', '.tsx']
       }
     })
