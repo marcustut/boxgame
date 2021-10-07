@@ -48,7 +48,7 @@ function makeApolloClient() {
   const apolloClient = new ApolloClient({
     ssrMode: true,
     link: createHttpLink({
-      uri: `${process.env.VITE_API_URL}/${process.env.NODE_ENV !== 'production' ? 'dev' : 'production'}/graphql`,
+      uri: `${process.env.VITE_API_URL}/graphql`,
       fetch
     }),
     cache: new InMemoryCache()

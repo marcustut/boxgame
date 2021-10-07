@@ -1,5 +1,5 @@
 .env
-.env.prod
+.env.production
 .serverless/
 tmp/
 target/

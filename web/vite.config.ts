@@ -1,6 +1,7 @@
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import checker from 'vite-plugin-checker'
 import ssr from 'vite-plugin-ssr/plugin'
+import WindiCSS from 'vite-plugin-windicss'
 import { resolve } from 'path'
 
 function pathResolve(dir: string) {
@@ -20,6 +21,12 @@ const config = () => ({
   plugins: [
     reactRefresh(),
     ssr(),
+    WindiCSS({
+      scan: {
+        // We only have to specify the file extensions we actually use.
+        fileExtensions: ['js', 'jsx', 'tsx', 'html']
+      }
+    }),
     checker({
       typescript: true,
       overlay: true,

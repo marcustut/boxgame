@@ -21,12 +21,19 @@ var ACTIONS map[string]bool = map[string]bool{
 }
 
 func init() {
-	if err := godotenv.Load(); err != nil {
-		panic(err)
+	if os.Getenv("APP_ENV") != "development" && os.Getenv("APP_ENV") != "production" {
+		panic(fmt.Errorf("APP_ENV is not set or not one of `development` or `production`"))
 	}
 
-	if os.Getenv("APP_ENV") != "development" {
-		panic(fmt.Errorf("not in development environment"))
+	var err error
+	if os.Getenv("APP_ENV") == "development" {
+		err = godotenv.Load(".env.local")
+	} else if os.Getenv("APP_ENV") == "production" {
+		err = godotenv.Load(".env.production")
+	}
+
+	if err != nil {
+		panic(err)
 	}
 }
 
@@ -61,7 +68,9 @@ func main() {
 	switch arg {
 	case "clean":
 		// clean previous records
-		clean(ctx, client)
+		if err := clean(ctx, client); err != nil {
+			panic(fmt.Errorf("error cleaning db: %s", err))
+		}
 	case "seed":
 		// seed new data
 		if err := seed(ctx, client); err != nil {
@@ -69,7 +78,9 @@ func main() {
 		}
 	case "both":
 		// clean previous records
-		clean(ctx, client)
+		if err := clean(ctx, client); err != nil {
+			panic(fmt.Errorf("error cleaning db: %s", err))
+		}
 		// seed new data
 		if err := seed(ctx, client); err != nil {
 			panic(fmt.Errorf("error seeding db: %s", err))
@@ -79,31 +90,80 @@ func main() {
 	}
 }
 
-func clean(ctx context.Context, client *postgresql.PrismaClient) {
-	log.Printf("clean: deleting rows in Team\n")
-	client.Team.FindMany().Delete().Exec(ctx)
-	log.Printf("clean: deleting rows in Cluster\n")
-	client.Cluster.FindMany().Delete().Exec(ctx)
-	log.Printf("clean: deleting rows in Mission\n")
-	client.Mission.FindMany().Delete().Exec(ctx)
-	log.Printf("clean: deleting rows in TeamMission\n")
-	client.TeamMission.FindMany().Delete().Exec(ctx)
-	log.Printf("clean: deleting rows in User\n")
-	client.User.FindMany().Delete().Exec(ctx)
-	log.Printf("clean: deleting rows in Profile\n")
-	client.Profile.FindMany().Delete().Exec(ctx)
-	log.Printf("clean: deleting rows in Address\n")
-	client.Address.FindMany().Delete().Exec(ctx)
-	log.Printf("clean: deleting rows in UserRole\n")
-	client.UserRole.FindMany().Delete().Exec(ctx)
-	log.Printf("clean: deleting rows in Post\n")
-	client.Post.FindMany().Delete().Exec(ctx)
-	log.Printf("clean: deleting rows in Comment\n")
-	client.Comment.FindMany().Delete().Exec(ctx)
-	log.Printf("clean: deleting rows in PostLike\n")
-	client.PostLike.FindMany().Delete().Exec(ctx)
-	log.Printf("clean: deleting rows in CommentLike\n")
-	client.CommentLike.FindMany().Delete().Exec(ctx)
+func clean(ctx context.Context, client *postgresql.PrismaClient) error {
+	res, err := client.TeamMission.FindMany().Delete().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	log.Printf("clean: deleted %d rows in TeamMission\n", res.Count)
+
+	res, err = client.Team.FindMany().Delete().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	log.Printf("clean: deleted %d rows in Team\n", res.Count)
+
+	res, err = client.Cluster.FindMany().Delete().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	log.Printf("clean: deleted %d rows in Cluster\n", res.Count)
+
+	res, err = client.Mission.FindMany().Delete().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	log.Printf("clean: deleted %d rows in Mission\n", res.Count)
+
+	res, err = client.PostLike.FindMany().Delete().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	log.Printf("clean: deleted %d rows in PostLike\n", res.Count)
+
+	res, err = client.CommentLike.FindMany().Delete().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	log.Printf("clean: deleted %d rows in CommentLike\n", res.Count)
+
+	res, err = client.Comment.FindMany().Delete().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	log.Printf("clean: deleted %d rows in Comment\n", res.Count)
+
+	res, err = client.Post.FindMany().Delete().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	log.Printf("clean: deleted %d rows in Post\n", res.Count)
+
+	res, err = client.User.FindMany().Delete().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	log.Printf("clean: deleted %d rows in User\n", res.Count)
+
+	res, err = client.Profile.FindMany().Delete().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	log.Printf("clean: deleted %d rows in Profile\n", res.Count)
+
+	res, err = client.Address.FindMany().Delete().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	log.Printf("clean: deleted %d rows in Address\n", res.Count)
+
+	res, err = client.UserRole.FindMany().Delete().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	log.Printf("clean: deleted %d rows in UserRole\n", res.Count)
+
+	return nil
 }
 
 func seed(ctx context.Context, client *postgresql.PrismaClient) error {

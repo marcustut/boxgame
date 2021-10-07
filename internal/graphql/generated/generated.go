@@ -1043,6 +1043,7 @@ input NewPost {
 }
 
 input NewUser {
+  id: ID
   username: String!
   email: String!
   profile: NewProfile!
@@ -5462,6 +5463,14 @@ func (ec *executionContext) unmarshalInputNewUser(ctx context.Context, obj inter
 
 	for k, v := range asMap {
 		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalOID2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "username":
 			var err error
 

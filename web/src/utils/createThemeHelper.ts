@@ -1,13 +1,13 @@
 import { createTheme } from '@mui/material'
 
-const brandColor = '#ff781f'
+const brandColor = '#37a18e'
 export const createThemeHelper = (theme: 'dark' | 'light') => {
   const isDark = theme === 'dark'
   return createTheme({
     palette: {
       mode: theme,
       background: {
-        default: isDark ? '#212121' : '#f0f0f0',
+        default: isDark ? '#202020' : '#f0f0f0',
         paper: isDark ? '#242526' : '#ffffff'
       },
       primary: {
@@ -19,6 +19,18 @@ export const createThemeHelper = (theme: 'dark' | 'light') => {
       success: {
         main: 'rgb(76,175,80)'
       }
+    },
+    typography: {
+      fontFamily: [
+        'Inter',
+        '-apple-system',
+        'BlinkMacSystemFont',
+        'Segoe UI',
+        'Roboto',
+        'Helvetica',
+        'Arial',
+        'sans-serif'
+      ].join(', ')
     }
   })
 }

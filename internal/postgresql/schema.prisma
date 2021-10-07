@@ -6,7 +6,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:EEmc~]szAE4tuXR-@db.gnbavzhblfvrsopphqja.supabase.co:6543/postgres?pgbouncer=true"
+  url      = "postgresql://postgres:%3C5%3D%3DjJ%5Bn%7D%60L%3Bf%2Ctp@db.vfqzgsbgmlvglbygosna.supabase.co:6543/postgres?pgbouncer=true"
 }
 
 model User {

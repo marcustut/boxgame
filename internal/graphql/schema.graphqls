@@ -122,13 +122,13 @@ type Query {
 }
 
 type Mutation {
-  createUser(param: NewUser): User
-  createPost(param: NewPost): Post
-  createComment(param: NewComment): Comment
-  likePost(param: PostLikeInput): Boolean
-  unlikePost(param: PostLikeInput): Boolean
-  likeComment(param: CommentLikeInput): Boolean
-  unlikeComment(param: CommentLikeInput): Boolean
+  createUser(param: NewUser!): User
+  createPost(param: NewPost!): Post
+  createComment(param: NewComment!): Comment
+  likePost(param: PostLikeInput!): Boolean
+  unlikePost(param: PostLikeInput!): Boolean
+  likeComment(param: CommentLikeInput!): Boolean
+  unlikeComment(param: CommentLikeInput!): Boolean
 }
 
 input PaginationInput {
@@ -159,6 +159,7 @@ input NewPost {
 }
 
 input NewUser {
+  id: ID
   username: String!
   email: String!
   profile: NewProfile!

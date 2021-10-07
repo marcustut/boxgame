@@ -56,8 +56,15 @@ func CreateUserWithTxUnsafe(ctx context.Context, db *postgresql.PrismaClient, pa
 
 	log.Println(dbProfile.Result().ID)
 
+	var userId string
+	if param.ID != nil {
+		userId = *param.ID
+	} else {
+		userId = gofakeit.UUID()
+	}
+
 	dbUser := db.User.CreateOne(
-		postgresql.User.ID.Set(gofakeit.UUID()),
+		postgresql.User.ID.Set(userId),
 		postgresql.User.Username.Set(param.Username),
 		postgresql.User.Email.Set(param.Email),
 		postgresql.User.UpdatedAt.Set(time.Now()),

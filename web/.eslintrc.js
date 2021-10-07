@@ -6,5 +6,6 @@ module.exports = {
   rules: {
     '@typescript-eslint/no-explicit-any': 2,
     'prettier/prettier': ['error', prettierrc]
-  }
+  },
+  ignorePatterns: ['node_modules/*', 'src/types/supabase.ts']
 }
