@@ -89,13 +89,13 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateComment func(childComplexity int, param *model.NewComment) int
-		CreatePost    func(childComplexity int, param *model.NewPost) int
-		CreateUser    func(childComplexity int, param *model.NewUser) int
-		LikeComment   func(childComplexity int, param *model.CommentLikeInput) int
-		LikePost      func(childComplexity int, param *model.PostLikeInput) int
-		UnlikeComment func(childComplexity int, param *model.CommentLikeInput) int
-		UnlikePost    func(childComplexity int, param *model.PostLikeInput) int
+		CreateComment func(childComplexity int, param model.NewComment) int
+		CreatePost    func(childComplexity int, param model.NewPost) int
+		CreateUser    func(childComplexity int, param model.NewUser) int
+		LikeComment   func(childComplexity int, param model.CommentLikeInput) int
+		LikePost      func(childComplexity int, param model.PostLikeInput) int
+		UnlikeComment func(childComplexity int, param model.CommentLikeInput) int
+		UnlikePost    func(childComplexity int, param model.PostLikeInput) int
 	}
 
 	Post struct {
@@ -117,7 +117,9 @@ type ComplexityRoot struct {
 		Dob           func(childComplexity int) int
 		Gender        func(childComplexity int) int
 		ID            func(childComplexity int) int
-		Name          func(childComplexity int) int
+		NameChi       func(childComplexity int) int
+		NameEng       func(childComplexity int) int
+		Satellite     func(childComplexity int) int
 		Status        func(childComplexity int) int
 		TngReceiptURL func(childComplexity int) int
 		UpdatedAt     func(childComplexity int) int
@@ -168,13 +170,13 @@ type MissionResolver interface {
 	CompletedBy(ctx context.Context, obj *model.Mission) ([]*model.Team, error)
 }
 type MutationResolver interface {
-	CreateUser(ctx context.Context, param *model.NewUser) (*model.User, error)
-	CreatePost(ctx context.Context, param *model.NewPost) (*model.Post, error)
-	CreateComment(ctx context.Context, param *model.NewComment) (*model.Comment, error)
-	LikePost(ctx context.Context, param *model.PostLikeInput) (*bool, error)
-	UnlikePost(ctx context.Context, param *model.PostLikeInput) (*bool, error)
-	LikeComment(ctx context.Context, param *model.CommentLikeInput) (*bool, error)
-	UnlikeComment(ctx context.Context, param *model.CommentLikeInput) (*bool, error)
+	CreateUser(ctx context.Context, param model.NewUser) (*model.User, error)
+	CreatePost(ctx context.Context, param model.NewPost) (*model.Post, error)
+	CreateComment(ctx context.Context, param model.NewComment) (*model.Comment, error)
+	LikePost(ctx context.Context, param model.PostLikeInput) (*bool, error)
+	UnlikePost(ctx context.Context, param model.PostLikeInput) (*bool, error)
+	LikeComment(ctx context.Context, param model.CommentLikeInput) (*bool, error)
+	UnlikeComment(ctx context.Context, param model.CommentLikeInput) (*bool, error)
 }
 type PostResolver interface {
 	User(ctx context.Context, obj *model.Post) (*model.User, error)
@@ -405,7 +407,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateComment(childComplexity, args["param"].(*model.NewComment)), true
+		return e.complexity.Mutation.CreateComment(childComplexity, args["param"].(model.NewComment)), true
 
 	case "Mutation.createPost":
 		if e.complexity.Mutation.CreatePost == nil {
@@ -417,7 +419,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreatePost(childComplexity, args["param"].(*model.NewPost)), true
+		return e.complexity.Mutation.CreatePost(childComplexity, args["param"].(model.NewPost)), true
 
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
@@ -429,7 +431,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateUser(childComplexity, args["param"].(*model.NewUser)), true
+		return e.complexity.Mutation.CreateUser(childComplexity, args["param"].(model.NewUser)), true
 
 	case "Mutation.likeComment":
 		if e.complexity.Mutation.LikeComment == nil {
@@ -441,7 +443,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.LikeComment(childComplexity, args["param"].(*model.CommentLikeInput)), true
+		return e.complexity.Mutation.LikeComment(childComplexity, args["param"].(model.CommentLikeInput)), true
 
 	case "Mutation.likePost":
 		if e.complexity.Mutation.LikePost == nil {
@@ -453,7 +455,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.LikePost(childComplexity, args["param"].(*model.PostLikeInput)), true
+		return e.complexity.Mutation.LikePost(childComplexity, args["param"].(model.PostLikeInput)), true
 
 	case "Mutation.unlikeComment":
 		if e.complexity.Mutation.UnlikeComment == nil {
@@ -465,7 +467,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UnlikeComment(childComplexity, args["param"].(*model.CommentLikeInput)), true
+		return e.complexity.Mutation.UnlikeComment(childComplexity, args["param"].(model.CommentLikeInput)), true
 
 	case "Mutation.unlikePost":
 		if e.complexity.Mutation.UnlikePost == nil {
@@ -477,7 +479,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UnlikePost(childComplexity, args["param"].(*model.PostLikeInput)), true
+		return e.complexity.Mutation.UnlikePost(childComplexity, args["param"].(model.PostLikeInput)), true
 
 	case "Post.comments":
 		if e.complexity.Post.Comments == nil {
@@ -589,12 +591,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Profile.ID(childComplexity), true
 
-	case "Profile.name":
-		if e.complexity.Profile.Name == nil {
+	case "Profile.nameChi":
+		if e.complexity.Profile.NameChi == nil {
 			break
 		}
 
-		return e.complexity.Profile.Name(childComplexity), true
+		return e.complexity.Profile.NameChi(childComplexity), true
+
+	case "Profile.nameEng":
+		if e.complexity.Profile.NameEng == nil {
+			break
+		}
+
+		return e.complexity.Profile.NameEng(childComplexity), true
+
+	case "Profile.satellite":
+		if e.complexity.Profile.Satellite == nil {
+			break
+		}
+
+		return e.complexity.Profile.Satellite(childComplexity), true
 
 	case "Profile.status":
 		if e.complexity.Profile.Status == nil {
@@ -911,6 +927,14 @@ enum Gender {
   FEMALE
 }
 
+enum Satellite {
+  FGASETAPAK
+  FGARAWANG
+  FGAPUCHONG
+  FGAPJ
+  FGAUSJ
+}
+
 type Cluster {
   id: ID!
   name: String!
@@ -951,9 +975,11 @@ type User {
 
 type Profile {
   id: ID!
-  status: PastoralStatus!
+  status: PastoralStatus
   gender: Gender!
-  name: String!
+  satellite: Satellite
+  nameEng: String!
+  nameChi: String
   contact: String!
   dob: Time!
   tngReceiptUrl: String
@@ -1006,13 +1032,13 @@ type Query {
 }
 
 type Mutation {
-  createUser(param: NewUser): User
-  createPost(param: NewPost): Post
-  createComment(param: NewComment): Comment
-  likePost(param: PostLikeInput): Boolean
-  unlikePost(param: PostLikeInput): Boolean
-  likeComment(param: CommentLikeInput): Boolean
-  unlikeComment(param: CommentLikeInput): Boolean
+  createUser(param: NewUser!): User
+  createPost(param: NewPost!): Post
+  createComment(param: NewComment!): Comment
+  likePost(param: PostLikeInput!): Boolean
+  unlikePost(param: PostLikeInput!): Boolean
+  likeComment(param: CommentLikeInput!): Boolean
+  unlikeComment(param: CommentLikeInput!): Boolean
 }
 
 input PaginationInput {
@@ -1052,9 +1078,11 @@ input NewUser {
 }
 
 input NewProfile {
-  status: PastoralStatus!
+  status: PastoralStatus
   gender: Gender!
-  name: String!
+  satellite: Satellite
+  nameEng: String!
+  nameChi: String
   contact: String!
   dob: Time!
   tngReceiptUrl: String
@@ -1081,10 +1109,10 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 func (ec *executionContext) field_Mutation_createComment_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.NewComment
+	var arg0 model.NewComment
 	if tmp, ok := rawArgs["param"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
-		arg0, err = ec.unmarshalONewComment2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewComment(ctx, tmp)
+		arg0, err = ec.unmarshalNNewComment2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewComment(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1096,10 +1124,10 @@ func (ec *executionContext) field_Mutation_createComment_args(ctx context.Contex
 func (ec *executionContext) field_Mutation_createPost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.NewPost
+	var arg0 model.NewPost
 	if tmp, ok := rawArgs["param"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
-		arg0, err = ec.unmarshalONewPost2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewPost(ctx, tmp)
+		arg0, err = ec.unmarshalNNewPost2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewPost(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1111,10 +1139,10 @@ func (ec *executionContext) field_Mutation_createPost_args(ctx context.Context, 
 func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.NewUser
+	var arg0 model.NewUser
 	if tmp, ok := rawArgs["param"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
-		arg0, err = ec.unmarshalONewUser2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewUser(ctx, tmp)
+		arg0, err = ec.unmarshalNNewUser2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewUser(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1126,10 +1154,10 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 func (ec *executionContext) field_Mutation_likeComment_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.CommentLikeInput
+	var arg0 model.CommentLikeInput
 	if tmp, ok := rawArgs["param"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
-		arg0, err = ec.unmarshalOCommentLikeInput2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐCommentLikeInput(ctx, tmp)
+		arg0, err = ec.unmarshalNCommentLikeInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐCommentLikeInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1141,10 +1169,10 @@ func (ec *executionContext) field_Mutation_likeComment_args(ctx context.Context,
 func (ec *executionContext) field_Mutation_likePost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.PostLikeInput
+	var arg0 model.PostLikeInput
 	if tmp, ok := rawArgs["param"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
-		arg0, err = ec.unmarshalOPostLikeInput2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPostLikeInput(ctx, tmp)
+		arg0, err = ec.unmarshalNPostLikeInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPostLikeInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1156,10 +1184,10 @@ func (ec *executionContext) field_Mutation_likePost_args(ctx context.Context, ra
 func (ec *executionContext) field_Mutation_unlikeComment_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.CommentLikeInput
+	var arg0 model.CommentLikeInput
 	if tmp, ok := rawArgs["param"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
-		arg0, err = ec.unmarshalOCommentLikeInput2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐCommentLikeInput(ctx, tmp)
+		arg0, err = ec.unmarshalNCommentLikeInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐCommentLikeInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1171,10 +1199,10 @@ func (ec *executionContext) field_Mutation_unlikeComment_args(ctx context.Contex
 func (ec *executionContext) field_Mutation_unlikePost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.PostLikeInput
+	var arg0 model.PostLikeInput
 	if tmp, ok := rawArgs["param"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
-		arg0, err = ec.unmarshalOPostLikeInput2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPostLikeInput(ctx, tmp)
+		arg0, err = ec.unmarshalNPostLikeInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPostLikeInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2265,7 +2293,7 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateUser(rctx, args["param"].(*model.NewUser))
+		return ec.resolvers.Mutation().CreateUser(rctx, args["param"].(model.NewUser))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2304,7 +2332,7 @@ func (ec *executionContext) _Mutation_createPost(ctx context.Context, field grap
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreatePost(rctx, args["param"].(*model.NewPost))
+		return ec.resolvers.Mutation().CreatePost(rctx, args["param"].(model.NewPost))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2343,7 +2371,7 @@ func (ec *executionContext) _Mutation_createComment(ctx context.Context, field g
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateComment(rctx, args["param"].(*model.NewComment))
+		return ec.resolvers.Mutation().CreateComment(rctx, args["param"].(model.NewComment))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2382,7 +2410,7 @@ func (ec *executionContext) _Mutation_likePost(ctx context.Context, field graphq
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().LikePost(rctx, args["param"].(*model.PostLikeInput))
+		return ec.resolvers.Mutation().LikePost(rctx, args["param"].(model.PostLikeInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2421,7 +2449,7 @@ func (ec *executionContext) _Mutation_unlikePost(ctx context.Context, field grap
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UnlikePost(rctx, args["param"].(*model.PostLikeInput))
+		return ec.resolvers.Mutation().UnlikePost(rctx, args["param"].(model.PostLikeInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2460,7 +2488,7 @@ func (ec *executionContext) _Mutation_likeComment(ctx context.Context, field gra
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().LikeComment(rctx, args["param"].(*model.CommentLikeInput))
+		return ec.resolvers.Mutation().LikeComment(rctx, args["param"].(model.CommentLikeInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2499,7 +2527,7 @@ func (ec *executionContext) _Mutation_unlikeComment(ctx context.Context, field g
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UnlikeComment(rctx, args["param"].(*model.CommentLikeInput))
+		return ec.resolvers.Mutation().UnlikeComment(rctx, args["param"].(model.CommentLikeInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2860,14 +2888,11 @@ func (ec *executionContext) _Profile_status(ctx context.Context, field graphql.C
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(model.PastoralStatus)
+	res := resTmp.(*model.PastoralStatus)
 	fc.Result = res
-	return ec.marshalNPastoralStatus2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPastoralStatus(ctx, field.Selections, res)
+	return ec.marshalOPastoralStatus2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPastoralStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Profile_gender(ctx context.Context, field graphql.CollectedField, obj *model.Profile) (ret graphql.Marshaler) {
@@ -2905,7 +2930,7 @@ func (ec *executionContext) _Profile_gender(ctx context.Context, field graphql.C
 	return ec.marshalNGender2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐGender(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Profile_name(ctx context.Context, field graphql.CollectedField, obj *model.Profile) (ret graphql.Marshaler) {
+func (ec *executionContext) _Profile_satellite(ctx context.Context, field graphql.CollectedField, obj *model.Profile) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2923,7 +2948,39 @@ func (ec *executionContext) _Profile_name(ctx context.Context, field graphql.Col
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
+		return obj.Satellite, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Satellite)
+	fc.Result = res
+	return ec.marshalOSatellite2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSatellite(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Profile_nameEng(ctx context.Context, field graphql.CollectedField, obj *model.Profile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Profile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NameEng, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2938,6 +2995,38 @@ func (ec *executionContext) _Profile_name(ctx context.Context, field graphql.Col
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Profile_nameChi(ctx context.Context, field graphql.CollectedField, obj *model.Profile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Profile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NameChi, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Profile_contact(ctx context.Context, field graphql.CollectedField, obj *model.Profile) (ret graphql.Marshaler) {
@@ -5388,7 +5477,7 @@ func (ec *executionContext) unmarshalInputNewProfile(ctx context.Context, obj in
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
-			it.Status, err = ec.unmarshalNPastoralStatus2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPastoralStatus(ctx, v)
+			it.Status, err = ec.unmarshalOPastoralStatus2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPastoralStatus(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5400,11 +5489,27 @@ func (ec *executionContext) unmarshalInputNewProfile(ctx context.Context, obj in
 			if err != nil {
 				return it, err
 			}
-		case "name":
+		case "satellite":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("satellite"))
+			it.Satellite, err = ec.unmarshalOSatellite2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSatellite(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "nameEng":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nameEng"))
+			it.NameEng, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "nameChi":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nameChi"))
+			it.NameChi, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5986,19 +6091,20 @@ func (ec *executionContext) _Profile(ctx context.Context, sel ast.SelectionSet, 
 			}
 		case "status":
 			out.Values[i] = ec._Profile_status(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "gender":
 			out.Values[i] = ec._Profile_gender(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "name":
-			out.Values[i] = ec._Profile_name(ctx, field, obj)
+		case "satellite":
+			out.Values[i] = ec._Profile_satellite(ctx, field, obj)
+		case "nameEng":
+			out.Values[i] = ec._Profile_nameEng(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "nameChi":
+			out.Values[i] = ec._Profile_nameChi(ctx, field, obj)
 		case "contact":
 			out.Values[i] = ec._Profile_contact(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -6652,6 +6758,11 @@ func (ec *executionContext) marshalNComment2ᚖgithubᚗcomᚋmarcustutᚋthebox
 	return ec._Comment(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNCommentLikeInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐCommentLikeInput(ctx context.Context, v interface{}) (model.CommentLikeInput, error) {
+	res, err := ec.unmarshalInputCommentLikeInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNFloat2float64(ctx context.Context, v interface{}) (float64, error) {
 	res, err := graphql.UnmarshalFloat(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -6761,24 +6872,29 @@ func (ec *executionContext) marshalNMission2ᚖgithubᚗcomᚋmarcustutᚋthebox
 	return ec._Mission(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNNewComment2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewComment(ctx context.Context, v interface{}) (model.NewComment, error) {
+	res, err := ec.unmarshalInputNewComment(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNNewPost2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewPost(ctx context.Context, v interface{}) (model.NewPost, error) {
+	res, err := ec.unmarshalInputNewPost(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNNewProfile2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewProfile(ctx context.Context, v interface{}) (*model.NewProfile, error) {
 	res, err := ec.unmarshalInputNewProfile(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNNewUser2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewUser(ctx context.Context, v interface{}) (model.NewUser, error) {
+	res, err := ec.unmarshalInputNewUser(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNPaginationInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPaginationInput(ctx context.Context, v interface{}) (model.PaginationInput, error) {
 	res, err := ec.unmarshalInputPaginationInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNPastoralStatus2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPastoralStatus(ctx context.Context, v interface{}) (model.PastoralStatus, error) {
-	var res model.PastoralStatus
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNPastoralStatus2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPastoralStatus(ctx context.Context, sel ast.SelectionSet, v model.PastoralStatus) graphql.Marshaler {
-	return v
 }
 
 func (ec *executionContext) marshalNPost2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPost(ctx context.Context, sel ast.SelectionSet, v model.Post) graphql.Marshaler {
@@ -6837,6 +6953,11 @@ func (ec *executionContext) marshalNPost2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋ
 		return graphql.Null
 	}
 	return ec._Post(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNPostLikeInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPostLikeInput(ctx context.Context, v interface{}) (model.PostLikeInput, error) {
+	res, err := ec.unmarshalInputPostLikeInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNRole2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐRole(ctx context.Context, v interface{}) (model.Role, error) {
@@ -7394,14 +7515,6 @@ func (ec *executionContext) marshalOComment2ᚖgithubᚗcomᚋmarcustutᚋthebox
 	return ec._Comment(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOCommentLikeInput2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐCommentLikeInput(ctx context.Context, v interface{}) (*model.CommentLikeInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputCommentLikeInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalOID2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
 	if v == nil {
 		return nil, nil
@@ -7447,28 +7560,20 @@ func (ec *executionContext) unmarshalONewAddress2ᚖgithubᚗcomᚋmarcustutᚋt
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalONewComment2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewComment(ctx context.Context, v interface{}) (*model.NewComment, error) {
+func (ec *executionContext) unmarshalOPastoralStatus2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPastoralStatus(ctx context.Context, v interface{}) (*model.PastoralStatus, error) {
 	if v == nil {
 		return nil, nil
 	}
-	res, err := ec.unmarshalInputNewComment(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
+	var res = new(model.PastoralStatus)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalONewPost2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewPost(ctx context.Context, v interface{}) (*model.NewPost, error) {
+func (ec *executionContext) marshalOPastoralStatus2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPastoralStatus(ctx context.Context, sel ast.SelectionSet, v *model.PastoralStatus) graphql.Marshaler {
 	if v == nil {
-		return nil, nil
+		return graphql.Null
 	}
-	res, err := ec.unmarshalInputNewPost(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalONewUser2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewUser(ctx context.Context, v interface{}) (*model.NewUser, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputNewUser(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
+	return v
 }
 
 func (ec *executionContext) marshalOPost2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPost(ctx context.Context, sel ast.SelectionSet, v *model.Post) graphql.Marshaler {
@@ -7478,19 +7583,27 @@ func (ec *executionContext) marshalOPost2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋ
 	return ec._Post(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOPostLikeInput2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPostLikeInput(ctx context.Context, v interface{}) (*model.PostLikeInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputPostLikeInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) marshalOProfile2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐProfile(ctx context.Context, sel ast.SelectionSet, v *model.Profile) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Profile(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOSatellite2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSatellite(ctx context.Context, v interface{}) (*model.Satellite, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.Satellite)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSatellite2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSatellite(ctx context.Context, sel ast.SelectionSet, v *model.Satellite) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

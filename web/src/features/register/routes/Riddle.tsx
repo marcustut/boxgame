@@ -5,13 +5,13 @@ import { useQuery } from '@apollo/client'
 
 import { useRiddle } from '@/hooks/stores/useRiddle'
 import { Layout } from '@/features/register'
-import { GET_REGISTERED_USER_COUNT, RegisteredUserCount } from '@/graphql'
+import { GET_REGISTERED_USER_COUNT, GetUserCount } from '@/graphql'
 import { supabase } from '@/lib/supabase'
 import { definitions } from '@/types/supabase'
 
 export const Riddle: React.FC = () => {
   const { timeUsed, completed, setTimeUsed, setCompleted } = useRiddle()
-  const { loading, error, data, refetch } = useQuery<RegisteredUserCount>(GET_REGISTERED_USER_COUNT)
+  const { loading, error, data, refetch } = useQuery<GetUserCount>(GET_REGISTERED_USER_COUNT)
 
   useEffectOnce(() => {
     const userSubscription = supabase

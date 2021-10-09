@@ -27,6 +27,14 @@ enum Gender {
   FEMALE
 }
 
+enum Satellite {
+  FGASETAPAK
+  FGARAWANG
+  FGAPUCHONG
+  FGAPJ
+  FGAUSJ
+}
+
 type Cluster {
   id: ID!
   name: String!
@@ -67,9 +75,11 @@ type User {
 
 type Profile {
   id: ID!
-  status: PastoralStatus!
+  status: PastoralStatus
   gender: Gender!
-  name: String!
+  satellite: Satellite
+  nameEng: String!
+  nameChi: String
   contact: String!
   dob: Time!
   tngReceiptUrl: String
@@ -168,9 +178,11 @@ input NewUser {
 }
 
 input NewProfile {
-  status: PastoralStatus!
+  status: PastoralStatus
   gender: Gender!
-  name: String!
+  satellite: Satellite
+  nameEng: String!
+  nameChi: String
   contact: String!
   dob: Time!
   tngReceiptUrl: String

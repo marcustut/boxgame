@@ -5,7 +5,6 @@ import { getDataFromTree } from '@apollo/client/react/ssr'
 import { AppProvider } from '@/context'
 import { createThemeHelper, createEmotionCache } from '@/utils'
 import createEmotionServer from '@emotion/server/create-instance'
-import logoUrl from '/logo.svg'
 import type { PageContext } from '@/types/ssr'
 import type { PageContextBuiltIn } from 'vite-plugin-ssr/types'
 import { NormalizedCacheObject, ApolloClient, InMemoryCache } from '@apollo/client'
@@ -51,7 +50,13 @@ export const render = async (pageContext: PageContextBuiltIn & PageContext) => {
     <html lang="en">
       <head>
         <meta charset="UTF-8" />
-        <link rel="icon" href="${logoUrl as unknown as string}" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#37a18e">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="${desc}" />
         <title>${title}</title>

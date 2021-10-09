@@ -27,7 +27,7 @@ func init() {
 
 	var err error
 	if os.Getenv("APP_ENV") == "development" {
-		err = godotenv.Load(".env.local")
+		err = godotenv.Load(".env")
 	} else if os.Getenv("APP_ENV") == "production" {
 		err = godotenv.Load(".env.production")
 	}
@@ -247,15 +247,17 @@ func seed(ctx context.Context, client *postgresql.PrismaClient) error {
 		}
 		res2, err := client.Profile.CreateOne(
 			postgresql.Profile.ID.Set(p.ID),
-			postgresql.Profile.Status.Set(postgresql.PastoralStatus(p.Status)),
 			postgresql.Profile.Gender.Set(postgresql.Gender(p.Gender)),
-			postgresql.Profile.Name.Set(p.Name),
+			postgresql.Profile.NameEng.Set(p.NameEng),
 			postgresql.Profile.Contact.Set(p.Contact),
 			postgresql.Profile.Dob.Set(p.Dob),
 			postgresql.Profile.UpdatedAt.Set(p.UpdatedAt),
-			postgresql.Profile.TngReceiptURL.Set(*p.TngReceiptURL),
-			postgresql.Profile.AvatarURL.Set(*p.TngReceiptURL),
 			postgresql.Profile.AddressID.Set(addresses[rand.Intn(len(addresses))]),
+			postgresql.Profile.NameEng.SetIfPresent(p.NameChi),
+			postgresql.Profile.TngReceiptURL.SetIfPresent(p.TngReceiptURL),
+			postgresql.Profile.AvatarURL.SetIfPresent(p.TngReceiptURL),
+			postgresql.Profile.Satellite.SetIfPresent((*postgresql.Satellite)(p.Satellite)),
+			postgresql.Profile.Status.SetIfPresent((*postgresql.PastoralStatus)(p.Status)),
 		).Exec(ctx)
 		if err != nil {
 			return err
@@ -271,8 +273,8 @@ func seed(ctx context.Context, client *postgresql.PrismaClient) error {
 		res, err := client.User.CreateOne(
 			postgresql.User.ID.Set(u.ID),
 			postgresql.User.Username.Set(u.Username),
-			postgresql.User.Email.Set(u.Email),
 			postgresql.User.UpdatedAt.Set(u.UpdatedAt),
+			postgresql.User.Email.Set(u.Email),
 			postgresql.User.Profile.Link(postgresql.Profile.ID.Equals(profiles[i])),
 			postgresql.User.Team.Link(postgresql.Team.ID.Equals(teams[rand.Intn(len(teams))])),
 		).Exec(ctx)

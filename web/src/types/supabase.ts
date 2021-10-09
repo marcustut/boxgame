@@ -703,7 +703,7 @@ export interface paths {
           id?: parameters["rowFilter.Profile.id"];
           status?: parameters["rowFilter.Profile.status"];
           gender?: parameters["rowFilter.Profile.gender"];
-          name?: parameters["rowFilter.Profile.name"];
+          nameEng?: parameters["rowFilter.Profile.nameEng"];
           contact?: parameters["rowFilter.Profile.contact"];
           dob?: parameters["rowFilter.Profile.dob"];
           tngReceiptUrl?: parameters["rowFilter.Profile.tngReceiptUrl"];
@@ -711,6 +711,8 @@ export interface paths {
           createdAt?: parameters["rowFilter.Profile.createdAt"];
           updatedAt?: parameters["rowFilter.Profile.updatedAt"];
           addressId?: parameters["rowFilter.Profile.addressId"];
+          satellite?: parameters["rowFilter.Profile.satellite"];
+          nameChi?: parameters["rowFilter.Profile.nameChi"];
           /** Filtering Columns */
           select?: parameters["select"];
           /** Ordering */
@@ -764,7 +766,7 @@ export interface paths {
           id?: parameters["rowFilter.Profile.id"];
           status?: parameters["rowFilter.Profile.status"];
           gender?: parameters["rowFilter.Profile.gender"];
-          name?: parameters["rowFilter.Profile.name"];
+          nameEng?: parameters["rowFilter.Profile.nameEng"];
           contact?: parameters["rowFilter.Profile.contact"];
           dob?: parameters["rowFilter.Profile.dob"];
           tngReceiptUrl?: parameters["rowFilter.Profile.tngReceiptUrl"];
@@ -772,6 +774,8 @@ export interface paths {
           createdAt?: parameters["rowFilter.Profile.createdAt"];
           updatedAt?: parameters["rowFilter.Profile.updatedAt"];
           addressId?: parameters["rowFilter.Profile.addressId"];
+          satellite?: parameters["rowFilter.Profile.satellite"];
+          nameChi?: parameters["rowFilter.Profile.nameChi"];
         };
         header: {
           /** Preference */
@@ -789,7 +793,7 @@ export interface paths {
           id?: parameters["rowFilter.Profile.id"];
           status?: parameters["rowFilter.Profile.status"];
           gender?: parameters["rowFilter.Profile.gender"];
-          name?: parameters["rowFilter.Profile.name"];
+          nameEng?: parameters["rowFilter.Profile.nameEng"];
           contact?: parameters["rowFilter.Profile.contact"];
           dob?: parameters["rowFilter.Profile.dob"];
           tngReceiptUrl?: parameters["rowFilter.Profile.tngReceiptUrl"];
@@ -797,6 +801,8 @@ export interface paths {
           createdAt?: parameters["rowFilter.Profile.createdAt"];
           updatedAt?: parameters["rowFilter.Profile.updatedAt"];
           addressId?: parameters["rowFilter.Profile.addressId"];
+          satellite?: parameters["rowFilter.Profile.satellite"];
+          nameChi?: parameters["rowFilter.Profile.nameChi"];
         };
         body: {
           /** Profile */
@@ -1415,9 +1421,9 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      */
     id: string;
-    status: "PASTOR" | "SCGL" | "CGL" | "PCGL" | "ACGL" | "OM" | "NB" | "NF";
+    status?: "PASTOR" | "SCGL" | "CGL" | "PCGL" | "ACGL" | "OM" | "NB" | "NF";
     gender: "MALE" | "FEMALE";
-    name: string;
+    nameEng: string;
     contact: string;
     dob: string;
     tngReceiptUrl?: string;
@@ -1429,6 +1435,8 @@ export interface definitions {
      * This is a Foreign Key to `Address.id`.<fk table='Address' column='id'/>
      */
     addressId?: string;
+    satellite?: "FGASETAPAK" | "FGARAWANG" | "FGAPUCHONG" | "FGAPJ" | "FGAUSJ";
+    nameChi?: string;
   };
   Team: {
     /**
@@ -1581,7 +1589,7 @@ export interface parameters {
   "rowFilter.Profile.id": string;
   "rowFilter.Profile.status": string;
   "rowFilter.Profile.gender": string;
-  "rowFilter.Profile.name": string;
+  "rowFilter.Profile.nameEng": string;
   "rowFilter.Profile.contact": string;
   "rowFilter.Profile.dob": string;
   "rowFilter.Profile.tngReceiptUrl": string;
@@ -1589,6 +1597,8 @@ export interface parameters {
   "rowFilter.Profile.createdAt": string;
   "rowFilter.Profile.updatedAt": string;
   "rowFilter.Profile.addressId": string;
+  "rowFilter.Profile.satellite": string;
+  "rowFilter.Profile.nameChi": string;
   /** Team */
   "body.Team": definitions["Team"];
   "rowFilter.Team.id": string;

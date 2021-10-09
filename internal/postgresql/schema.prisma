@@ -6,24 +6,24 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:%3C5%3D%3DjJ%5Bn%7D%60L%3Bf%2Ctp@db.vfqzgsbgmlvglbygosna.supabase.co:6543/postgres?pgbouncer=true"
+  url      = env("DATABASE_URL")
 }
 
 model User {
   id          String        @id @db.Uuid
   username    String        @unique
-  email       String        @unique
   createdAt   DateTime      @default(now())
   updatedAt   DateTime
+  teamId      String?       @db.Uuid
+  email       String        @unique
   profileId   String        @unique @db.Uuid
   profile     Profile       @relation(fields: [profileId], references: [id])
-  teamId      String?       @db.Uuid
   team        Team?         @relation(fields: [teamId], references: [id])
-  userRole    UserRole[]
-  post        Post[]
-  like        PostLike[]
   comment     Comment[]
   commentLike CommentLike[]
+  post        Post[]
+  like        PostLike[]
+  userRole    UserRole[]
 }
 
 model Post {
@@ -34,8 +34,8 @@ model Post {
   updated_at DateTime
   userId     String     @db.Uuid
   user       User       @relation(fields: [userId], references: [id])
-  like       PostLike[]
   comment    Comment[]
+  like       PostLike[]
 }
 
 model Comment {
@@ -43,9 +43,9 @@ model Comment {
   content     String
   created_at  DateTime      @default(now())
   updated_at  DateTime
+  userId      String        @db.Uuid
   postId      String        @db.Uuid
   post        Post          @relation(fields: [postId], references: [id])
-  userId      String        @db.Uuid
   user        User          @relation(fields: [userId], references: [id])
   commentLike CommentLike[]
 }
@@ -69,19 +69,21 @@ model CommentLike {
 }
 
 model Profile {
-  id            String         @id @db.Uuid
-  status        PastoralStatus
+  id            String          @id @db.Uuid
+  status        PastoralStatus?
   gender        Gender
-  name          String
+  nameEng       String
   contact       String
   dob           DateTime
   tngReceiptUrl String?
   avatarUrl     String?
-  createdAt     DateTime       @default(now())
+  createdAt     DateTime        @default(now())
   updatedAt     DateTime
-  addressId     String?        @db.Uuid
-  address       Address?       @relation(fields: [addressId], references: [id])
-  user          User[]
+  addressId     String?         @db.Uuid
+  satellite     Satellite?
+  nameChi       String?
+  address       Address?        @relation(fields: [addressId], references: [id])
+  user          User?
 }
 
 model Address {
@@ -134,8 +136,8 @@ model Mission {
 
 model UserRole {
   id     String @id @db.Uuid
-  userId String @db.Uuid
   role   Role
+  userId String @db.Uuid
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([userId, role])
@@ -162,4 +164,12 @@ enum PastoralStatus {
 enum Gender {
   MALE
   FEMALE
+}
+
+enum Satellite {
+  FGASETAPAK
+  FGARAWANG
+  FGAPUCHONG
+  FGAPJ
+  FGAUSJ
 }

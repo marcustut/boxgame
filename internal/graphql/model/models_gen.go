@@ -36,14 +36,16 @@ type NewPost struct {
 }
 
 type NewProfile struct {
-	Status        PastoralStatus `json:"status"`
-	Gender        Gender         `json:"gender"`
-	Name          string         `json:"name"`
-	Contact       string         `json:"contact"`
-	Dob           time.Time      `json:"dob"`
-	TngReceiptURL *string        `json:"tngReceiptUrl"`
-	AvatarURL     *string        `json:"avatarUrl"`
-	Address       *NewAddress    `json:"address"`
+	Status        *PastoralStatus `json:"status"`
+	Gender        Gender          `json:"gender"`
+	Satellite     *Satellite      `json:"satellite"`
+	NameEng       string          `json:"nameEng"`
+	NameChi       *string         `json:"nameChi"`
+	Contact       string          `json:"contact"`
+	Dob           time.Time       `json:"dob"`
+	TngReceiptURL *string         `json:"tngReceiptUrl"`
+	AvatarURL     *string         `json:"avatarUrl"`
+	Address       *NewAddress     `json:"address"`
 }
 
 type NewUser struct {
@@ -201,5 +203,52 @@ func (e *Role) UnmarshalGQL(v interface{}) error {
 }
 
 func (e Role) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Satellite string
+
+const (
+	SatelliteFgasetapak Satellite = "FGASETAPAK"
+	SatelliteFgarawang  Satellite = "FGARAWANG"
+	SatelliteFgapuchong Satellite = "FGAPUCHONG"
+	SatelliteFgapj      Satellite = "FGAPJ"
+	SatelliteFgausj     Satellite = "FGAUSJ"
+)
+
+var AllSatellite = []Satellite{
+	SatelliteFgasetapak,
+	SatelliteFgarawang,
+	SatelliteFgapuchong,
+	SatelliteFgapj,
+	SatelliteFgausj,
+}
+
+func (e Satellite) IsValid() bool {
+	switch e {
+	case SatelliteFgasetapak, SatelliteFgarawang, SatelliteFgapuchong, SatelliteFgapj, SatelliteFgausj:
+		return true
+	}
+	return false
+}
+
+func (e Satellite) String() string {
+	return string(e)
+}
+
+func (e *Satellite) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Satellite(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Satellite", str)
+	}
+	return nil
+}
+
+func (e Satellite) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

@@ -1,1 +1,5 @@
 export * from './queries'
+export * from './mutation'
+export * from './types/globalTypes'
+export * from './types/CreateNewUser'
+export * from './types/GetUserCount'

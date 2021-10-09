@@ -16,6 +16,15 @@ import (
 // hence 2 transaction is used to create user but this is unsafe as atomicity is not
 // guaranteed, as one transaction might be aborted and the other still remains intact.
 func CreateUserWithTxUnsafe(ctx context.Context, db *postgresql.PrismaClient, param *model.NewUser) (*model.User, error) {
+	var status *postgresql.PastoralStatus
+	if param.Profile.Status != nil {
+		status = (*postgresql.PastoralStatus)(param.Profile.Status)
+	}
+	var satellite *postgresql.Satellite
+	if param.Profile.Satellite != nil {
+		satellite = (*postgresql.Satellite)(param.Profile.Satellite)
+	}
+
 	var t1 []transaction.Param
 
 	dbAddress := db.Address.CreateOne(
@@ -30,14 +39,16 @@ func CreateUserWithTxUnsafe(ctx context.Context, db *postgresql.PrismaClient, pa
 
 	dbProfile := db.Profile.CreateOne(
 		postgresql.Profile.ID.Set(gofakeit.UUID()),
-		postgresql.Profile.Status.Set(postgresql.PastoralStatus(param.Profile.Status)),
 		postgresql.Profile.Gender.Set(postgresql.Gender(param.Profile.Gender)),
-		postgresql.Profile.Name.Set(param.Profile.Name),
+		postgresql.Profile.NameEng.Set(param.Profile.NameEng),
 		postgresql.Profile.Contact.Set(param.Profile.Contact),
 		postgresql.Profile.Dob.Set(param.Profile.Dob),
 		postgresql.Profile.UpdatedAt.Set(time.Now()),
+		postgresql.Profile.NameChi.SetIfPresent(param.Profile.NameChi),
 		postgresql.Profile.TngReceiptURL.SetIfPresent(param.Profile.TngReceiptURL),
 		postgresql.Profile.AvatarURL.SetIfPresent(param.Profile.AvatarURL),
+		postgresql.Profile.Satellite.SetIfPresent(satellite),
+		postgresql.Profile.Status.SetIfPresent(status),
 	).Tx()
 
 	t1 = append(t1, dbAddress, dbProfile)
@@ -66,8 +77,8 @@ func CreateUserWithTxUnsafe(ctx context.Context, db *postgresql.PrismaClient, pa
 	dbUser := db.User.CreateOne(
 		postgresql.User.ID.Set(userId),
 		postgresql.User.Username.Set(param.Username),
-		postgresql.User.Email.Set(param.Email),
 		postgresql.User.UpdatedAt.Set(time.Now()),
+		postgresql.User.Email.Set(param.Email),
 		postgresql.User.Profile.Link(postgresql.Profile.ID.Equals(dbProfile.Result().ID)),
 		postgresql.User.Team.Link(postgresql.Team.ID.EqualsIfPresent(param.TeamID)),
 	).Tx()

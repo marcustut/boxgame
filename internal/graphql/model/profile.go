@@ -7,23 +7,31 @@ import (
 )
 
 type Profile struct {
-	ID            string         `json:"id" fake:"{uuid}"`
-	Status        PastoralStatus `json:"status" fake:"{randomstring:[PASTOR,SCGL,CGL,PCGL,ACGL,OM,NB,NF]}"`
-	Gender        Gender         `json:"gender" fake:"{randomstring:[MALE,FEMALE]}"`
-	Name          string         `json:"name" fake:"{name}"`
-	Contact       string         `json:"contact" fake:"{phone}"`
-	Dob           time.Time      `json:"dob" fake:"{date}"`
-	TngReceiptURL *string        `json:"tngReceiptUrl" fake:"{url}"`
-	AvatarURL     *string        `json:"avatarUrl" fake:"{url}"`
-	CreatedAt     time.Time      `json:"createdAt" fake:"{date}"`
-	UpdatedAt     time.Time      `json:"updatedAt" fake:"{date}"`
-	AddressID     *string        `json:"address" fake:"skip"`
+	ID            string          `json:"id" fake:"{uuid}"`
+	Status        *PastoralStatus `json:"status" fake:"{randomstring:[PASTOR,SCGL,CGL,PCGL,ACGL,OM,NB,NF]}"`
+	Gender        Gender          `json:"gender" fake:"{randomstring:[MALE,FEMALE]}"`
+	Satellite     *Satellite      `json:"satellite" fake:"{randomstring:[FGAPUCHONG,FGASETAPAK,FGARAWANG,FGAPJ,FGAUSJ]}"`
+	NameEng       string          `json:"nameEng" fake:"{name}"`
+	NameChi       *string         `json:"nameChi" fake:"{name}"`
+	Contact       string          `json:"contact" fake:"{phone}"`
+	Dob           time.Time       `json:"dob" fake:"{date}"`
+	TngReceiptURL *string         `json:"tngReceiptUrl" fake:"{url}"`
+	AvatarURL     *string         `json:"avatarUrl" fake:"{url}"`
+	CreatedAt     time.Time       `json:"createdAt" fake:"{date}"`
+	UpdatedAt     time.Time       `json:"updatedAt" fake:"{date}"`
+	AddressID     *string         `json:"address" fake:"skip"`
 }
 
 func MapToProfile(dbProfile *postgresql.ProfileModel) (*Profile, error) {
+	var nameChi *string
 	var tngReceiptUrl *string
 	var avatarUrl *string
 	var addressID *string
+	var satellite *Satellite
+	var status *PastoralStatus
+	if res, ok := dbProfile.NameChi(); ok {
+		nameChi = &res
+	}
 	if res, ok := dbProfile.TngReceiptURL(); ok {
 		tngReceiptUrl = &res
 	}
@@ -33,11 +41,19 @@ func MapToProfile(dbProfile *postgresql.ProfileModel) (*Profile, error) {
 	if res, ok := dbProfile.AddressID(); ok {
 		addressID = &res
 	}
+	if res, ok := dbProfile.Status(); ok {
+		status = (*PastoralStatus)(&res)
+	}
+	if res, ok := dbProfile.Satellite(); ok {
+		satellite = (*Satellite)(&res)
+	}
 	profile := &Profile{
 		ID:            dbProfile.ID,
-		Status:        PastoralStatus(dbProfile.Status),
+		Status:        status,
 		Gender:        Gender(dbProfile.Gender),
-		Name:          dbProfile.Name,
+		Satellite:     satellite,
+		NameEng:       dbProfile.NameEng,
+		NameChi:       nameChi,
 		Contact:       dbProfile.Contact,
 		Dob:           dbProfile.Dob,
 		TngReceiptURL: tngReceiptUrl,

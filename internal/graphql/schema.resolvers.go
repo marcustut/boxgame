@@ -33,32 +33,32 @@ func (r *missionResolver) CompletedBy(ctx context.Context, obj *model.Mission) (
 	return query.GetManyTeam(ctx, r.db, postgresql.Team.TeamMission.Some(postgresql.TeamMission.MissionID.Equals(obj.ID)))
 }
 
-func (r *mutationResolver) CreateUser(ctx context.Context, param *model.NewUser) (*model.User, error) {
-	return query.CreateUserWithTxUnsafe(ctx, r.db, param)
+func (r *mutationResolver) CreateUser(ctx context.Context, param model.NewUser) (*model.User, error) {
+	return query.CreateUserWithTxUnsafe(ctx, r.db, &param)
 }
 
-func (r *mutationResolver) CreatePost(ctx context.Context, param *model.NewPost) (*model.Post, error) {
-	return query.CreatePost(ctx, r.db, param)
+func (r *mutationResolver) CreatePost(ctx context.Context, param model.NewPost) (*model.Post, error) {
+	return query.CreatePost(ctx, r.db, &param)
 }
 
-func (r *mutationResolver) CreateComment(ctx context.Context, param *model.NewComment) (*model.Comment, error) {
-	return query.CreateComment(ctx, r.db, param)
+func (r *mutationResolver) CreateComment(ctx context.Context, param model.NewComment) (*model.Comment, error) {
+	return query.CreateComment(ctx, r.db, &param)
 }
 
-func (r *mutationResolver) LikePost(ctx context.Context, param *model.PostLikeInput) (*bool, error) {
-	return query.CreatePostLike(ctx, r.db, param)
+func (r *mutationResolver) LikePost(ctx context.Context, param model.PostLikeInput) (*bool, error) {
+	return query.CreatePostLike(ctx, r.db, &param)
 }
 
-func (r *mutationResolver) UnlikePost(ctx context.Context, param *model.PostLikeInput) (*bool, error) {
-	return query.DeletePostLike(ctx, r.db, param)
+func (r *mutationResolver) UnlikePost(ctx context.Context, param model.PostLikeInput) (*bool, error) {
+	return query.DeletePostLike(ctx, r.db, &param)
 }
 
-func (r *mutationResolver) LikeComment(ctx context.Context, param *model.CommentLikeInput) (*bool, error) {
-	return query.CreateCommentLike(ctx, r.db, param)
+func (r *mutationResolver) LikeComment(ctx context.Context, param model.CommentLikeInput) (*bool, error) {
+	return query.CreateCommentLike(ctx, r.db, &param)
 }
 
-func (r *mutationResolver) UnlikeComment(ctx context.Context, param *model.CommentLikeInput) (*bool, error) {
-	return query.DeleteCommentLike(ctx, r.db, param)
+func (r *mutationResolver) UnlikeComment(ctx context.Context, param model.CommentLikeInput) (*bool, error) {
+	return query.DeleteCommentLike(ctx, r.db, &param)
 }
 
 func (r *postResolver) User(ctx context.Context, obj *model.Post) (*model.User, error) {
@@ -178,13 +178,3 @@ type profileResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type teamResolver struct{ *Resolver }
 type userResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *userResolver) Email(ctx context.Context, obj *model.User) (string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
