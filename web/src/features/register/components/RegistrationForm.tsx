@@ -9,7 +9,7 @@ import { DatePicker } from '@mui/lab'
 import { Switch } from '@headlessui/react'
 
 import { Select, InputField, Button } from '@/components/Elements'
-import { satellites, states, genders, roles } from '@/lib/data'
+import { satellites, states, genders, roles } from '@/lib/constant'
 import { supabase } from '@/lib/supabase'
 import {
   CREATE_NEW_USER,

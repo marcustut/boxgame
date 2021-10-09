@@ -39,3 +39,5 @@ export const states = [
   { id: 15, name: 'Sabah', value: 'Sabah' },
   { id: 16, name: 'Sarawak', value: 'Sarawak' }
 ] as SelectData[]
+
+export const bulbColors = ['#ffb5c1', '#67e0c6', '#7de1ff', '#ee96ff']
