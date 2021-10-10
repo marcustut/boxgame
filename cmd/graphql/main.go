@@ -12,6 +12,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	echoadapter "github.com/awslabs/aws-lambda-go-api-proxy/echo"
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/marcustut/thebox/internal/graphql"
@@ -22,8 +23,21 @@ const defaultPort = "8080"
 
 var echoApp *echo.Echo
 
+type CustomValidator struct {
+	validator *validator.Validate
+}
+
+func (cv *CustomValidator) Validate(i interface{}) error {
+	if err := cv.validator.Struct(i); err != nil {
+		return echo.NewHTTPError(echo.ErrBadRequest.Code, err)
+	}
+	return nil
+}
+
 func init() {
 	echoApp = echo.New()
+
+	echoApp.Validator = &CustomValidator{validator: validator.New()}
 
 	echoApp.Use(middleware.Recover())
 	echoApp.Use(middleware.Logger())
@@ -35,7 +49,7 @@ func init() {
 		AllowMethods: []string{http.MethodGet, http.MethodPatch, http.MethodPost, http.MethodDelete},
 	}))
 
-	schema := generated.NewExecutableSchema(generated.Config{Resolvers: graphql.NewResolver()})
+	schema := generated.NewExecutableSchema(generated.Config{Resolvers: graphql.NewResolver(echoApp)})
 	server := handler.NewDefaultServer(schema)
 	playground := playground.Handler("GraphQL playground", "/graphql")
 

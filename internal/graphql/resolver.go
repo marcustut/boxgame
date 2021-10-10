@@ -1,6 +1,7 @@
 package graphql
 
 import (
+	"github.com/labstack/echo/v4"
 	"github.com/marcustut/thebox/internal/postgresql"
 )
 
@@ -9,17 +10,19 @@ import (
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	db *postgresql.PrismaClient
+	db  *postgresql.PrismaClient
+	app *echo.Echo
 }
 
-func NewResolver() *Resolver {
+func NewResolver(app *echo.Echo) *Resolver {
 	client := postgresql.NewClient()
 	if err := client.Connect(); err != nil {
 		panic(err)
 	}
 
 	r := &Resolver{
-		db: client,
+		db:  client,
+		app: app,
 	}
 
 	return r
