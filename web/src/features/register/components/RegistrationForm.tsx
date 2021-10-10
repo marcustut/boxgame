@@ -91,14 +91,14 @@ export const RegistrationForm: React.FC = () => {
           },
           username: '',
           email: '',
-          roles: [Role.PLAYER],
+          roles: [null] as unknown as Role[],
           profile: {
             nameEng: '',
             nameChi: '',
             dob: '',
-            gender: Gender.MALE,
+            gender: null as unknown as Gender,
             contact: '',
-            satellite: Satellite.FGAPUCHONG,
+            satellite: null as unknown as Satellite,
             address: {
               city: '',
               line1: '',
@@ -254,7 +254,7 @@ export const RegistrationForm: React.FC = () => {
               </label>
               <Select<Gender>
                 value={values.profile.gender}
-                onChange={value => setValues({ ...values, profile: { ...values.profile, gender: value } })}
+                onChange={value => value && setValues({ ...values, profile: { ...values.profile, gender: value } })}
                 data={genders}
               />
 
@@ -352,12 +352,14 @@ export const RegistrationForm: React.FC = () => {
                   </Switch.Group>
                   {address}
                 </>
-              ) : (
+              ) : values.roles.find(r => r !== 'PLAYER') ? (
                 <>
                   <label className='mt-4 mb-1 font-bold text-sm'>Satellite</label>
                   {satellitePicker}
                   {address}
                 </>
+              ) : (
+                address
               )}
 
               <Button

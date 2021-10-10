@@ -138,9 +138,9 @@ export const Riddle: React.FC = () => {
               />
             ))}
           </div>
-          <div className='flex flex-col mt-auto px-4 pb-4'>
+          <div className='flex flex-col mt-auto px-4 pb-4 <sm:w-full w-[640px] mx-auto'>
             <div className='self-end'>
-              <Badge color='secondary' variant='dot' invisible={guideRead}>
+              <Badge color='secondary' variant='dot' invisible={guideRead} className='cursor-pointer'>
                 <Icon
                   icon='carbon:help-filled'
                   className='w-8 h-8 text-dark-50'
@@ -159,7 +159,7 @@ export const Riddle: React.FC = () => {
               onClick={async () => {
                 setDancing(true)
                 for (let i = 0; i < lightSequence.length; i++) {
-                  console.log(lightSequence[i])
+                  import.meta.env.DEV && console.log(lightSequence[i])
                   setLightState({ ...lightState, [lightSequence[i]]: true })
                   await new Promise(r => setTimeout(r, 1000))
                 }

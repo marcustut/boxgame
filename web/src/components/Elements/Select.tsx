@@ -13,10 +13,17 @@ export type SelectProps<TType = string> = {
   value: TType
   onChange(value: TType): void
   data: SelectData<TType>[]
+  placeholder?: string
   className?: string
 }
 
-export function Select<TType>({ value, onChange, data, className }: SelectProps<TType>) {
+export function Select<TType>({
+  value,
+  onChange,
+  data,
+  placeholder = 'Select a value',
+  className
+}: SelectProps<TType>) {
   const name = data.filter(d => d.value === value).length !== 0 ? data.filter(d => d.value === value)[0].name : null
 
   return (
@@ -24,7 +31,7 @@ export function Select<TType>({ value, onChange, data, className }: SelectProps<
       <Listbox.Button
         className={`relative text-left w-full py-2 px-4 rounded-lg bg-dark-100 text-true-gray-50 focus:outline-none hover:ring-2 focus:ring-2 ring-primary-ring transition duration-200 ease-in-out ${className}`}
       >
-        <span className='block truncate'>{name}</span>
+        <span className={`block truncate ${!value ? 'text-true-gray-500' : ''}`}>{value ? name : placeholder}</span>
         <span className='absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none'>
           <Icon icon='heroicons-outline:selector' className='w-5 h-5 text-gray-400' aria-hidden='true' />
         </span>
