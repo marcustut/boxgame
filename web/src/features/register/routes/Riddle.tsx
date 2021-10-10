@@ -183,7 +183,7 @@ export const Riddle: React.FC = () => {
             <div className='flex justify-between items-center'>
               {!loading && !error && data && data.userCount && (
                 <div className='font-bold text-2xl text-secondary'>
-                  {data.userCount}
+                  {400 - data.userCount}
                   <span className='text-sm text-true-gray-500'> seats remaining</span>
                 </div>
               )}
