@@ -8,8 +8,8 @@ export const genders = [
 
 export const roles = [
   { id: 1, name: 'Player', value: 'PLAYER' },
-  { id: 2, name: 'Team Leader', value: 'TEAMLEADER' },
-  { id: 3, name: 'Cluster Leader', value: 'CLUSTERLEADER' },
+  // { id: 2, name: 'Team Leader', value: 'TEAMLEADER' },
+  // { id: 3, name: 'Cluster Leader', value: 'CLUSTERLEADER' },
   { id: 4, name: 'Crew', value: 'CREW' }
 ] as SelectData<Role>[]
 

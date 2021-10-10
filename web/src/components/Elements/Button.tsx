@@ -57,7 +57,7 @@ export const Button: React.FC<ButtonProps> = ({
       </span>
       {loading ? (
         <span className={`absolute`}>
-          <Spinner size={size === 'small' ? '2' : '4'} />
+          <Spinner size={size === 'small' ? 'tiny' : 'small'} />
         </span>
       ) : null}
     </button>

@@ -13,6 +13,9 @@ export const createThemeHelper = (theme: 'dark' | 'light') => {
       primary: {
         main: brandColor
       },
+      secondary: {
+        main: '#df445c'
+      },
       error: {
         main: 'rgb(232, 51, 51)'
       },

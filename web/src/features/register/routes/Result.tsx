@@ -55,7 +55,7 @@ export const Result: React.FC = () => {
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
         <Dialog.Overlay className='inset-0 transition ease-in-out duration-200 fixed backdrop-filter backdrop-blur-sm backdrop-brightness-75' />
 
-        <div className='font-mono bg-dark-300 flex-col rounded-lg text-word-active-light p-8 transform transition top-[50%] ease-in-out left-[50%] shadow-2xl w-96 translate-x-[-50%] translate-y-[-50%] duration-200 fixed items-center ronded-2xl dark: flex dark:bg-dark-shade2 dark:text-word-active-dark'>
+        <div className='font-mono <sm:w-4/5 bg-dark-300 flex-col rounded-lg text-word-active-light p-8 transform transition top-[50%] ease-in-out left-[50%] shadow-2xl w-96 translate-x-[-50%] translate-y-[-50%] duration-200 fixed items-center ronded-2xl dark: flex dark:bg-dark-shade2 dark:text-word-active-dark'>
           {user && (
             <>
               <div className='font-bold text-xl'>Account Information</div>
