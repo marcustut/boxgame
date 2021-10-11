@@ -48,7 +48,7 @@ function makeApolloClient() {
   const apolloClient = new ApolloClient({
     ssrMode: true,
     link: createHttpLink({
-      uri: `${process.env.VITE_API_URL}/graphql`,
+      uri: `https://vyuf6xdigk.execute-api.ap-southeast-1.amazonaws.com/production/graphql`,
       fetch
     }),
     cache: new InMemoryCache()

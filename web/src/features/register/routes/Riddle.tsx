@@ -23,12 +23,13 @@ enum GameState {
 }
 
 const COUNTDOWN_TIME = 120
+const LIGHTBULB_NUMBER = 3
+const DANCE_COUNT = 5
 
 export const Riddle: React.FC = () => {
   const { setTimeUsed, setCompleted } = useRiddle()
   const { loading, error, data, refetch } = useQuery<GetUserCount>(GET_REGISTERED_USER_COUNT)
-  const [sequenceLength] = useState<number>(6)
-  const [lightState, setLightState] = useState<LightState>({ 0: false, 1: false, 2: false, 3: false })
+  const [lightState, setLightState] = useState<LightState>({ 0: false, 1: false, 2: false })
   const prevLightState = usePrevious(lightState)
   const [answer, setAnswer] = useState<number[]>([])
   const [lightOpen, setLightOpen] = useState<number>(-1)
@@ -41,11 +42,8 @@ export const Riddle: React.FC = () => {
   const [gameTimer, setGameTimer] = useState<number>(0)
   const [gameStart, setGameStart] = useState<boolean>(false)
 
-  const lightSequence = useMemo(
-    () => getRandomInts({ min: 0, max: 3 }, sequenceLength, { nonRepeat: true }),
-    [sequenceLength]
-  )
-  const wireLengths = useMemo(() => getRandomInts({ min: 200, max: 400 }, 4, { nonRepeat: true }), [])
+  const lightSequence = useMemo(() => getRandomInts({ min: 0, max: 2 }, DANCE_COUNT, { nonRepeat: true }), [])
+  const wireLengths = useMemo(() => getRandomInts({ min: 200, max: 400 }, LIGHTBULB_NUMBER, { nonRepeat: true }), [])
   const randomBulbColors = useMemo(() => bulbColors.sort(() => 0.5 - Math.random()), [])
 
   useEffectOnce(() => {
@@ -72,7 +70,7 @@ export const Riddle: React.FC = () => {
   }, [lightState])
 
   useEffect(() => {
-    if (gameStart && answer.length === sequenceLength) {
+    if (gameStart && answer.length === DANCE_COUNT) {
       setGameStart(false)
       if (JSON.stringify(answer) === JSON.stringify(lightSequence)) {
         setResultDialogOpen(true)
@@ -105,11 +103,10 @@ export const Riddle: React.FC = () => {
       <Layout applyRootStyle={false} helmetProps={{ title: 'Riddle' }}>
         <div className='h-[100vh] flex flex-col font-mono'>
           <div className='flex justify-center'>
-            {Array.from(Array(4).keys()).map((v, i) => (
+            {Array.from(Array(LIGHTBULB_NUMBER).keys()).map((v, i) => (
               <Lightbulb
                 key={v}
                 button
-                animate
                 wire
                 wireLength={`${wireLengths[i]}px`}
                 glow={lightState[i]}
@@ -234,18 +231,7 @@ export const Riddle: React.FC = () => {
               ? 'Congratulations! You won the game'
               : 'Sorry, you lost.\n2 minutes cooldown starts now'}
           </div>
-          <Button
-            className='mt-4 text-xs w-full'
-            size='small'
-            onClick={() => {
-              setLightState({ 0: false, 1: false, 2: false, 4: false })
-              setAnswer([])
-              setResultDialogOpen(false)
-            }}
-          >
-            Try again <Icon icon='mdi:refresh' className='ml-1' />
-          </Button>
-          {gameState === GameState.WIN && (
+          {gameState === GameState.WIN ? (
             <Button
               color='secondary'
               className='mt-2 text-xs w-full'
@@ -253,6 +239,18 @@ export const Riddle: React.FC = () => {
               onClick={() => (window.location.href = '/register')}
             >
               Proceed to Registration <Icon icon='emojione:clipboard' className='ml-2' />
+            </Button>
+          ) : (
+            <Button
+              className='mt-4 text-xs w-full'
+              size='small'
+              onClick={() => {
+                setLightState({ 0: false, 1: false, 2: false })
+                setAnswer([])
+                setResultDialogOpen(false)
+              }}
+            >
+              Try again <Icon icon='mdi:refresh' className='ml-1' />
             </Button>
           )}
         </div>
