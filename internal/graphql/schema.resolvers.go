@@ -80,6 +80,10 @@ func (r *profileResolver) Address(ctx context.Context, obj *model.Profile) (*mod
 	return query.GetUniqueAddress(ctx, r.db, postgresql.Address.ID.Equals(*obj.AddressID))
 }
 
+func (r *profileResolver) InvitedBy(ctx context.Context, obj *model.Profile) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *queryResolver) User(ctx context.Context, userID string) (*model.User, error) {
 	return query.GetUniqueUser(ctx, r.db, postgresql.User.ID.Equals(userID))
 }

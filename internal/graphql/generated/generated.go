@@ -117,6 +117,7 @@ type ComplexityRoot struct {
 		Dob           func(childComplexity int) int
 		Gender        func(childComplexity int) int
 		ID            func(childComplexity int) int
+		InvitedBy     func(childComplexity int) int
 		NameChi       func(childComplexity int) int
 		NameEng       func(childComplexity int) int
 		Satellite     func(childComplexity int) int
@@ -185,6 +186,7 @@ type PostResolver interface {
 }
 type ProfileResolver interface {
 	Address(ctx context.Context, obj *model.Profile) (*model.Address, error)
+	InvitedBy(ctx context.Context, obj *model.Profile) (*string, error)
 }
 type QueryResolver interface {
 	User(ctx context.Context, userID string) (*model.User, error)
@@ -591,6 +593,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Profile.ID(childComplexity), true
 
+	case "Profile.invitedBy":
+		if e.complexity.Profile.InvitedBy == nil {
+			break
+		}
+
+		return e.complexity.Profile.InvitedBy(childComplexity), true
+
 	case "Profile.nameChi":
 		if e.complexity.Profile.NameChi == nil {
 			break
@@ -987,6 +996,7 @@ type Profile {
   createdAt: Time!
   updatedAt: Time!
   address: Address
+  invitedBy: String
 }
 
 type Address {
@@ -1088,6 +1098,7 @@ input NewProfile {
   tngReceiptUrl: String
   avatarUrl: String
   address: NewAddress
+  invitedBy: String
 }
 
 input NewAddress {
@@ -3263,6 +3274,38 @@ func (ec *executionContext) _Profile_address(ctx context.Context, field graphql.
 	res := resTmp.(*model.Address)
 	fc.Result = res
 	return ec.marshalOAddress2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐAddress(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Profile_invitedBy(ctx context.Context, field graphql.CollectedField, obj *model.Profile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Profile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Profile().InvitedBy(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_user(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5553,6 +5596,14 @@ func (ec *executionContext) unmarshalInputNewProfile(ctx context.Context, obj in
 			if err != nil {
 				return it, err
 			}
+		case "invitedBy":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("invitedBy"))
+			it.InvitedBy, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -6138,6 +6189,17 @@ func (ec *executionContext) _Profile(ctx context.Context, sel ast.SelectionSet, 
 					}
 				}()
 				res = ec._Profile_address(ctx, field, obj)
+				return res
+			})
+		case "invitedBy":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Profile_invitedBy(ctx, field, obj)
 				return res
 			})
 		default:

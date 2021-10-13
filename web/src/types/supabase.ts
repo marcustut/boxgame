@@ -713,6 +713,7 @@ export interface paths {
           addressId?: parameters["rowFilter.Profile.addressId"];
           satellite?: parameters["rowFilter.Profile.satellite"];
           nameChi?: parameters["rowFilter.Profile.nameChi"];
+          invitedBy?: parameters["rowFilter.Profile.invitedBy"];
           /** Filtering Columns */
           select?: parameters["select"];
           /** Ordering */
@@ -776,6 +777,7 @@ export interface paths {
           addressId?: parameters["rowFilter.Profile.addressId"];
           satellite?: parameters["rowFilter.Profile.satellite"];
           nameChi?: parameters["rowFilter.Profile.nameChi"];
+          invitedBy?: parameters["rowFilter.Profile.invitedBy"];
         };
         header: {
           /** Preference */
@@ -803,6 +805,7 @@ export interface paths {
           addressId?: parameters["rowFilter.Profile.addressId"];
           satellite?: parameters["rowFilter.Profile.satellite"];
           nameChi?: parameters["rowFilter.Profile.nameChi"];
+          invitedBy?: parameters["rowFilter.Profile.invitedBy"];
         };
         body: {
           /** Profile */
@@ -1110,6 +1113,58 @@ export interface paths {
       responses: {
         /** No Content */
         204: never;
+      };
+    };
+  };
+  "/UserDetailsView": {
+    get: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.UserDetailsView.id"];
+          username?: parameters["rowFilter.UserDetailsView.username"];
+          email?: parameters["rowFilter.UserDetailsView.email"];
+          nameEng?: parameters["rowFilter.UserDetailsView.nameEng"];
+          nameChi?: parameters["rowFilter.UserDetailsView.nameChi"];
+          contact?: parameters["rowFilter.UserDetailsView.contact"];
+          dob?: parameters["rowFilter.UserDetailsView.dob"];
+          gender?: parameters["rowFilter.UserDetailsView.gender"];
+          status?: parameters["rowFilter.UserDetailsView.status"];
+          satellite?: parameters["rowFilter.UserDetailsView.satellite"];
+          tngReceiptUrl?: parameters["rowFilter.UserDetailsView.tngReceiptUrl"];
+          avatarUrl?: parameters["rowFilter.UserDetailsView.avatarUrl"];
+          city?: parameters["rowFilter.UserDetailsView.city"];
+          line1?: parameters["rowFilter.UserDetailsView.line1"];
+          line2?: parameters["rowFilter.UserDetailsView.line2"];
+          state?: parameters["rowFilter.UserDetailsView.state"];
+          country?: parameters["rowFilter.UserDetailsView.country"];
+          postalCode?: parameters["rowFilter.UserDetailsView.postalCode"];
+          createdAt?: parameters["rowFilter.UserDetailsView.createdAt"];
+          updatedAt?: parameters["rowFilter.UserDetailsView.updatedAt"];
+          /** Filtering Columns */
+          select?: parameters["select"];
+          /** Ordering */
+          order?: parameters["order"];
+          /** Limiting and Pagination */
+          offset?: parameters["offset"];
+          /** Limiting and Pagination */
+          limit?: parameters["limit"];
+        };
+        header: {
+          /** Limiting and Pagination */
+          Range?: parameters["range"];
+          /** Limiting and Pagination */
+          "Range-Unit"?: parameters["rangeUnit"];
+          /** Preference */
+          Prefer?: parameters["preferCount"];
+        };
+      };
+      responses: {
+        /** OK */
+        200: {
+          schema: definitions["UserDetailsView"][];
+        };
+        /** Partial Content */
+        206: unknown;
       };
     };
   };
@@ -1437,6 +1492,7 @@ export interface definitions {
     addressId?: string;
     satellite?: "FGASETAPAK" | "FGARAWANG" | "FGAPUCHONG" | "FGAPJ" | "FGAUSJ";
     nameChi?: string;
+    invitedBy?: string;
   };
   Team: {
     /**
@@ -1487,6 +1543,32 @@ export interface definitions {
      * This is a Foreign Key to `Profile.id`.<fk table='Profile' column='id'/>
      */
     profileId: string;
+  };
+  UserDetailsView: {
+    /**
+     * Note:
+     * This is a Primary Key.<pk/>
+     */
+    id?: string;
+    username?: string;
+    email?: string;
+    nameEng?: string;
+    nameChi?: string;
+    contact?: string;
+    dob?: string;
+    gender?: "MALE" | "FEMALE";
+    status?: "PASTOR" | "SCGL" | "CGL" | "PCGL" | "ACGL" | "OM" | "NB" | "NF";
+    satellite?: "FGASETAPAK" | "FGARAWANG" | "FGAPUCHONG" | "FGAPJ" | "FGAUSJ";
+    tngReceiptUrl?: string;
+    avatarUrl?: string;
+    city?: string;
+    line1?: string;
+    line2?: string;
+    state?: string;
+    country?: string;
+    postalCode?: string;
+    createdAt?: string;
+    updatedAt?: string;
   };
   UserRole: {
     /**
@@ -1599,6 +1681,7 @@ export interface parameters {
   "rowFilter.Profile.addressId": string;
   "rowFilter.Profile.satellite": string;
   "rowFilter.Profile.nameChi": string;
+  "rowFilter.Profile.invitedBy": string;
   /** Team */
   "body.Team": definitions["Team"];
   "rowFilter.Team.id": string;
@@ -1619,6 +1702,28 @@ export interface parameters {
   "rowFilter.User.teamId": string;
   "rowFilter.User.email": string;
   "rowFilter.User.profileId": string;
+  /** UserDetailsView */
+  "body.UserDetailsView": definitions["UserDetailsView"];
+  "rowFilter.UserDetailsView.id": string;
+  "rowFilter.UserDetailsView.username": string;
+  "rowFilter.UserDetailsView.email": string;
+  "rowFilter.UserDetailsView.nameEng": string;
+  "rowFilter.UserDetailsView.nameChi": string;
+  "rowFilter.UserDetailsView.contact": string;
+  "rowFilter.UserDetailsView.dob": string;
+  "rowFilter.UserDetailsView.gender": string;
+  "rowFilter.UserDetailsView.status": string;
+  "rowFilter.UserDetailsView.satellite": string;
+  "rowFilter.UserDetailsView.tngReceiptUrl": string;
+  "rowFilter.UserDetailsView.avatarUrl": string;
+  "rowFilter.UserDetailsView.city": string;
+  "rowFilter.UserDetailsView.line1": string;
+  "rowFilter.UserDetailsView.line2": string;
+  "rowFilter.UserDetailsView.state": string;
+  "rowFilter.UserDetailsView.country": string;
+  "rowFilter.UserDetailsView.postalCode": string;
+  "rowFilter.UserDetailsView.createdAt": string;
+  "rowFilter.UserDetailsView.updatedAt": string;
   /** UserRole */
   "body.UserRole": definitions["UserRole"];
   "rowFilter.UserRole.id": string;

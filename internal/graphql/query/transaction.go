@@ -49,6 +49,7 @@ func CreateUserWithTxUnsafe(ctx context.Context, db *postgresql.PrismaClient, pa
 		postgresql.Profile.AvatarURL.SetIfPresent(param.Profile.AvatarURL),
 		postgresql.Profile.Satellite.SetIfPresent(satellite),
 		postgresql.Profile.Status.SetIfPresent(status),
+		postgresql.Profile.InvitedBy.SetIfPresent(param.Profile.InvitedBy),
 	).Tx()
 
 	t1 = append(t1, dbAddress, dbProfile)

@@ -46,6 +46,7 @@ type NewProfile struct {
 	TngReceiptURL *string         `json:"tngReceiptUrl"`
 	AvatarURL     *string         `json:"avatarUrl"`
 	Address       *NewAddress     `json:"address"`
+	InvitedBy     *string         `json:"invitedBy"`
 }
 
 type NewUser struct {

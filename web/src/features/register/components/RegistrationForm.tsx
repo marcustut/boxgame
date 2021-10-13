@@ -142,7 +142,8 @@ export const RegistrationForm: React.FC = () => {
                     nameEng: values.profile.nameEng,
                     nameChi: values.profile.nameChi,
                     satellite: values.profile.satellite,
-                    address: values.profile.address
+                    address: values.profile.address,
+                    invitedBy: values.extra.invitedBy
                   }
                 }
               }

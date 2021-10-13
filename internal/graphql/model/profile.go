@@ -20,6 +20,7 @@ type Profile struct {
 	CreatedAt     time.Time       `json:"createdAt" fake:"{date}"`
 	UpdatedAt     time.Time       `json:"updatedAt" fake:"{date}"`
 	AddressID     *string         `json:"address" fake:"skip"`
+	InvitedBy     *string         `json:"invitedBy" fake:"{firstname}"`
 }
 
 func MapToProfile(dbProfile *postgresql.ProfileModel) (*Profile, error) {
@@ -27,6 +28,7 @@ func MapToProfile(dbProfile *postgresql.ProfileModel) (*Profile, error) {
 	var tngReceiptUrl *string
 	var avatarUrl *string
 	var addressID *string
+	var invitedBy *string
 	var satellite *Satellite
 	var status *PastoralStatus
 	if res, ok := dbProfile.NameChi(); ok {
@@ -40,6 +42,9 @@ func MapToProfile(dbProfile *postgresql.ProfileModel) (*Profile, error) {
 	}
 	if res, ok := dbProfile.AddressID(); ok {
 		addressID = &res
+	}
+	if res, ok := dbProfile.InvitedBy(); ok {
+		invitedBy = &res
 	}
 	if res, ok := dbProfile.Status(); ok {
 		status = (*PastoralStatus)(&res)
@@ -61,6 +66,7 @@ func MapToProfile(dbProfile *postgresql.ProfileModel) (*Profile, error) {
 		CreatedAt:     dbProfile.CreatedAt,
 		UpdatedAt:     dbProfile.UpdatedAt,
 		AddressID:     addressID,
+		InvitedBy:     invitedBy,
 	}
 	return profile, nil
 }

@@ -7,6 +7,7 @@ require (
 	github.com/aws/aws-lambda-go v1.27.0
 	github.com/awslabs/aws-lambda-go-api-proxy v0.11.0
 	github.com/brianvoe/gofakeit/v6 v6.9.0
+	github.com/go-playground/validator/v10 v10.9.0
 	github.com/iancoleman/strcase v0.0.0-20190422225806-e506e3ef7365
 	github.com/joho/godotenv v1.4.0
 	github.com/labstack/echo/v4 v4.6.1
@@ -20,7 +21,6 @@ require (
 	github.com/agnivade/levenshtein v1.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
-	github.com/go-playground/validator/v10 v10.9.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.0 // indirect

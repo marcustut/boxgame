@@ -58,6 +58,7 @@ export interface NewProfile {
   tngReceiptUrl?: string | null;
   avatarUrl?: string | null;
   address?: NewAddress | null;
+  invitedBy?: string | null;
 }
 
 export interface NewUser {

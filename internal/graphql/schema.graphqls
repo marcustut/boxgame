@@ -87,6 +87,7 @@ type Profile {
   createdAt: Time!
   updatedAt: Time!
   address: Address
+  invitedBy: String
 }
 
 type Address {
@@ -188,6 +189,7 @@ input NewProfile {
   tngReceiptUrl: String
   avatarUrl: String
   address: NewAddress
+  invitedBy: String
 }
 
 input NewAddress {

@@ -79,6 +79,7 @@ model Profile {
   avatarUrl     String?
   createdAt     DateTime        @default(now())
   updatedAt     DateTime
+  invitedBy     String?
   addressId     String?         @db.Uuid
   satellite     Satellite?
   nameChi       String?
