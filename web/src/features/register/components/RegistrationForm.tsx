@@ -47,7 +47,9 @@ const validationSchema = Yup.object({
   profile: Yup.object({
     status: Yup.mixed<PastoralStatus>().oneOf(Object.values(PastoralStatus)).optional(),
     gender: Yup.mixed<Gender>().oneOf(Object.values(Gender)).required('Required'),
-    satellite: Yup.mixed<Satellite>().oneOf(Object.values(Satellite)).optional(),
+    satellite: Yup.mixed<Satellite>()
+      .oneOf([...Object.values(Satellite), null])
+      .optional(),
     nameEng: Yup.string().max(50, 'Name must not exceed 50 characters').required('Required'),
     nameChi: Yup.string().max(50, 'Name must not exceed 50 characters').optional(),
     contact: Yup.string()
@@ -160,7 +162,7 @@ export const RegistrationForm: React.FC = () => {
           }
         }}
       >
-        {({ isSubmitting, values, setValues }) => {
+        {({ isSubmitting, values, setValues, errors }) => {
           const satellitePicker = (
             <Select
               value={values.profile.satellite}
