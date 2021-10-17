@@ -16,14 +16,8 @@ import (
 // hence 2 transaction is used to create user but this is unsafe as atomicity is not
 // guaranteed, as one transaction might be aborted and the other still remains intact.
 func CreateUserWithTxUnsafe(ctx context.Context, db *postgresql.PrismaClient, param *model.NewUser) (*model.User, error) {
-	var status *postgresql.PastoralStatus
-	if param.Profile.Status != nil {
-		status = (*postgresql.PastoralStatus)(param.Profile.Status)
-	}
-	var satellite *postgresql.Satellite
-	if param.Profile.Satellite != nil {
-		satellite = (*postgresql.Satellite)(param.Profile.Satellite)
-	}
+	status := (*postgresql.PastoralStatus)(param.Profile.Status)
+	satellite := (*postgresql.Satellite)(param.Profile.Satellite)
 
 	var t1 []transaction.Param
 

@@ -31,7 +31,8 @@ const config = () => ({
       typescript: true,
       overlay: true,
       eslint: {
-        files: ['src', 'server'],
+        // files: ['src', 'server'],
+        files: [],
         extensions: ['.ts', '.tsx']
       }
     })
