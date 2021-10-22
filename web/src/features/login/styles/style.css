@@ -1,4 +1,76 @@
-* {
-  box-sizing: border-box;
-  background-color: white;
+.form-in {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1rem;
+}
+
+.box {
+  width: 350px;
+  height: 390px;
+  font-size: 1.2rem;
+  padding: 1rem 2.5rem;
+  background-color: #434856;
+  border-radius: 50px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.user {
+  margin: 2rem 0.5rem 0.5rem;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 4rem;
+}
+
+input {
+  color: black;
+  outline: none;
+  border: none;
+  overflow: hidden;
+  width: 100%;
+  background: none;
+}
+
+.reset-password {
+  color: #848484;
+  text-align: right;
+  margin: 0 1rem;
+  font-size: 0.5rem;
+  cursor: pointer;
+}
+
+.reset-password:hover {
+  text-decoration: underline;
+  color: #ff7f50;
+}
+
+.login-btn {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  display: block;
+  width: 70%;
+  padding: 0.5rem;
+  background-color: #31a3ff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: 600;
+  opacity: 0.8;
+  transition: 0.2s all;
+  cursor: pointer;
+}
+
+.btn:hover {
+  opacity: 1;
 }
