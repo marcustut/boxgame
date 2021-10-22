@@ -14,11 +14,20 @@ export const Login = () => {
         <h1>Log In</h1>
         <div className='box'>
           <div className='user'>
-            <FaUser />
-            <input type='text' name='username' id='username' autoComplete='off' placeholder='Username/Email' />
-            <br />
-            <FaUnlock />
-            <input type='password' name='password' id='password' autoComplete='off' placeholder='Password' />
+            <div className='field'>
+              <FaUser />
+              <input type='text' autoComplete='off' placeholder=' ' />
+              <label htmlFor='email' className='label'>
+                Username/Email
+              </label>
+            </div>
+            <div className='field'>
+              <FaUnlock />
+              <input type='password' autoComplete='off' placeholder=' ' />
+              <label htmlFor='password' className='label'>
+                Password
+              </label>
+            </div>
           </div>
           {/* Error */}
           <p className='reset-password'>Forgot Password?</p>
