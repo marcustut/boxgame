@@ -1,7 +1,6 @@
 import React from 'react'
+import { Profile } from '@/features/profile'
 
-const ProfilePage = () => {
-  return <div>Profile</div>
-}
+const ProfilePage = () => <Profile />
 
 export default ProfilePage

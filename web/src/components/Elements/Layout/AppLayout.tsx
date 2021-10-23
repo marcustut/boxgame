@@ -10,7 +10,7 @@ const routes = [
   { id: 1, name: 'Team', icon: 'clarity:blocks-group-solid', path: '/app/team' },
   { id: 2, name: 'Mission', icon: 'mdi:clipboard', path: '/app/mission' },
   { id: 3, name: 'Social', icon: 'ion:share-social-sharp', path: '/app/social' },
-  { id: 4, name: 'Leaderboard', icon: 'ion:share-social-sharp', path: '/app/leaderboard' }
+  { id: 4, name: 'Leaderboard', icon: 'icon-park-outline:ranking', path: '/app/leaderboard' }
 ]
 
 type AppLayoutProps = {
