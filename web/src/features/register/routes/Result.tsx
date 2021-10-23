@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react'
 
 import { Layout } from '@/features/register'
 import { Button, Spinner } from '@/components/Elements'
-import { useUser, UserState } from '@/hooks/stores'
+import { useUser, UserCurrentState } from '@/hooks/stores'
 import { Rating } from '@mui/material'
 import { useEffectOnce } from 'react-use'
 
@@ -16,7 +16,7 @@ export const Result: React.FC = () => {
   useEffectOnce(() => setMounted(true))
 
   useEffect(() => {
-    if (state !== UserState.REGISTERED) window.location.href = '/'
+    if (state !== UserCurrentState.REGISTERED) window.location.href = '/'
   }, [state, user])
 
   if (!mounted)

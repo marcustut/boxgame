@@ -1,5 +1,6 @@
-import { CircularProgress, styled } from '@mui/material'
+import { styled } from '@mui/material'
 import React from 'react'
+import { Spinner } from '@/components/Elements'
 
 const Root = styled('div')`
   display: flex;
@@ -12,7 +13,7 @@ const Root = styled('div')`
 export const LoadingPage: React.FC = () => {
   return (
     <Root>
-      <CircularProgress color='primary' />
+      <Spinner className='text-secondary' />
     </Root>
   )
 }

@@ -80,10 +80,6 @@ func (r *profileResolver) Address(ctx context.Context, obj *model.Profile) (*mod
 	return query.GetUniqueAddress(ctx, r.db, postgresql.Address.ID.Equals(*obj.AddressID))
 }
 
-func (r *profileResolver) InvitedBy(ctx context.Context, obj *model.Profile) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
 func (r *queryResolver) User(ctx context.Context, userID string) (*model.User, error) {
 	return query.GetUniqueUser(ctx, r.db, postgresql.User.ID.Equals(userID))
 }
@@ -118,7 +114,8 @@ func (r *queryResolver) Posts(ctx context.Context, page model.PaginationInput) (
 
 func (r *teamResolver) Cluster(ctx context.Context, obj *model.Team) (*model.Cluster, error) {
 	if obj.ClusterID == nil {
-		return nil, fmt.Errorf("team %s does not have a cluster", obj.ID)
+		// return nil, gqlerror.Errorf("team %s does not have a cluster", obj.ID)
+		return nil, nil
 	}
 	return query.GetUniqueCluster(ctx, r.db, postgresql.Cluster.ID.Equals(*obj.ClusterID))
 }
@@ -137,7 +134,8 @@ func (r *userResolver) Profile(ctx context.Context, obj *model.User) (*model.Pro
 
 func (r *userResolver) Team(ctx context.Context, obj *model.User) (*model.Team, error) {
 	if obj.TeamID == nil {
-		return nil, fmt.Errorf("user %s does not have a team", obj.ID)
+		// return nil, gqlerror.Errorf("user %s does not have a team", obj.ID)
+		return nil, nil
 	}
 	return query.GetUniqueTeam(ctx, r.db, postgresql.Team.ID.Equals(*obj.TeamID))
 }

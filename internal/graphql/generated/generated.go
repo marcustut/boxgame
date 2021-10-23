@@ -186,7 +186,6 @@ type PostResolver interface {
 }
 type ProfileResolver interface {
 	Address(ctx context.Context, obj *model.Profile) (*model.Address, error)
-	InvitedBy(ctx context.Context, obj *model.Profile) (*string, error)
 }
 type QueryResolver interface {
 	User(ctx context.Context, userID string) (*model.User, error)
@@ -3287,14 +3286,14 @@ func (ec *executionContext) _Profile_invitedBy(ctx context.Context, field graphq
 		Object:     "Profile",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Profile().InvitedBy(rctx, obj)
+		return obj.InvitedBy, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6192,16 +6191,7 @@ func (ec *executionContext) _Profile(ctx context.Context, sel ast.SelectionSet, 
 				return res
 			})
 		case "invitedBy":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Profile_invitedBy(ctx, field, obj)
-				return res
-			})
+			out.Values[i] = ec._Profile_invitedBy(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

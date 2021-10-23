@@ -21,7 +21,7 @@ import {
   CreateNewUser,
   CreateNewUserVariables
 } from '@/graphql'
-import { useUser, UserState } from '@/hooks/stores'
+import { useUser, UserCurrentState } from '@/hooks/stores'
 
 type FormValues = NewUser & {
   extra: {
@@ -154,7 +154,7 @@ export const RegistrationForm: React.FC = () => {
               return
             }
             enqueueSnackbar('You have successfully created an account!', { variant: 'success' })
-            setState(UserState.REGISTERED)
+            setState(UserCurrentState.REGISTERED)
             setUser(data.createUser)
             window.location.href = '/register/result'
           } catch (err) {

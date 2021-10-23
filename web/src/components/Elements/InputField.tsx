@@ -27,7 +27,7 @@ export const InputField: React.FC<InputFieldProps> = ({
 
   return (
     <div className={`${className}`}>
-      {label && <div className={`flex mb-2 font-semibold text-sm`}>{label}</div>}
+      {label && <div className={`flex mb-1 font-semibold text-sm`}>{label}</div>}
       <Input error={meta.error} textarea={textarea} className={inputClassName} {...field} {...props} />
       {meta.error && meta.touched && (
         <div className={`flex mt-1 text-sm`}>

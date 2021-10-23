@@ -1,0 +1,128 @@
+.form-in {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 1rem;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 1.2rem;
+  padding: 2rem 2.5rem;
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.user {
+  margin: 2rem 0.5rem 0.5rem;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 4rem;
+}
+
+input {
+  color: black;
+  outline: none;
+  border: none;
+  overflow: hidden;
+  width: 100%;
+  background: none;
+}
+
+.reset-password {
+  color: #848484;
+  text-align: right;
+  margin: 0 1rem;
+  font-size: 0.5rem;
+  cursor: pointer;
+}
+
+.reset-password:hover {
+  text-decoration: underline;
+  color: #ff7f50;
+}
+
+.login-btn {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  display: block;
+  width: 70%;
+  padding: 0.5rem;
+  background-color: #31a3ff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: 600;
+  opacity: 0.8;
+  transition: 0.2s all;
+  cursor: pointer;
+}
+
+.btn:hover {
+  opacity: 1;
+}
+
+#background {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  background: #202020;
+}
+
+#background > .smoke {
+  bottom: -200px;
+  background: url(http://www.blog.jonnycornwell.com/wp-content/uploads/2012/07/Smoke10.png) transparent no-repeat 0 0;
+  height: 200px;
+  width: 200px;
+  position: absolute;
+  margin: -100px 0 0 -100px;
+  background-size: contain;
+  opacity: 0;
+  animation-name: smoking;
+  animation-duration: 3s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes smoking {
+  0% {
+    opacity: 0.1;
+    bottom: -200px;
+    transform: scale(1) rotateZ(0);
+  }
+  20% {
+    opacity: 1;
+  }
+  90% {
+    bottom: 65%;
+    opacity: 0.8;
+    transform: scale(2.7) rotateZ(18deg);
+  }
+  100% {
+    bottom: 70%;
+    opacity: 0;
+    transform: scale(3) rotateZ(20deg);
+  }
+}
