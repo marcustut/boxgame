@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/client'
 import { GET_USER } from '@/graphql'
 import { GetUser, GetUserVariables, GetUser_user } from '@/graphql/types/GetUser'
 import { UserCredentials } from '@supabase/supabase-js'
+import { clearItem, getItem, setItem } from '@/utils/storage'
 
 type UserWithAuth = {
   user: GetUser_user
@@ -62,17 +63,25 @@ export const AuthProvider: React.FC = ({ children }) => {
   useEffect(() => {
     // Check active sessions and sets the user
     const session = supabase.auth.session()
+    const { data: cachedUser } = getItem<UserWithAuth>('token')
     ;(async () => {
       if (session && session.user) {
         setLoading(true)
-        const { data, error, errors } = await fetchUser({ user_id: session.user.id })
-        if (error || errors || !data || !data.user) {
-          console.error(errors)
-          console.error(error)
-          return
+
+        if (cachedUser) {
+          setUser(cachedUser)
+          setItem<UserWithAuth>('token', cachedUser)
+        } else {
+          const { data, error, errors } = await fetchUser({ user_id: session.user.id })
+          if (error || errors || !data || !data.user) {
+            console.error(errors)
+            console.error(error)
+            return
+          }
+          setUser({ user: data.user, auth: session })
+          setItem<UserWithAuth>('token', { user: data.user, auth: session })
         }
 
-        setUser({ user: data.user, auth: session })
         setLoading(false)
       }
     })()
@@ -81,14 +90,21 @@ export const AuthProvider: React.FC = ({ children }) => {
     const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session && session.user) {
         setLoading(true)
-        const { data, error, errors } = await fetchUser({ user_id: session.user.id })
-        if (error || errors || !data || !data.user) {
-          console.error(errors)
-          console.error(error)
-          return
+
+        if (cachedUser) {
+          setUser(cachedUser)
+          setItem<UserWithAuth>('token', cachedUser)
+        } else {
+          const { data, error, errors } = await fetchUser({ user_id: session.user.id })
+          if (error || errors || !data || !data.user) {
+            console.error(errors)
+            console.error(error)
+            return
+          }
+          setUser({ user: data.user, auth: session })
+          setItem<UserWithAuth>('token', { user: data.user, auth: session })
         }
 
-        setUser({ user: data.user, auth: session })
         setLoading(false)
       }
     })
@@ -104,6 +120,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     signIn: (params, options) => supabase.auth.signIn(params, options),
     signOut: () => {
       setTimeout(() => (window.location.href = '/login'), 500)
+      clearItem('token')
       return supabase.auth.signOut()
     },
     user,
