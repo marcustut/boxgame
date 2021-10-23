@@ -11,9 +11,8 @@ const sizeClassnames = {
 
 const colorClassnames = {
   primary:
-    'text-white bg-primary transition duration-200 ease-in-out hover:bg-primary-hover disabled:text-primary-disabled disabled:bg-primary-hover',
-  secondary:
-    'bg-secondary hover:bg-secondary-hover disabled:bg-secondary-disabled dark:disabled:text-secondary-disabled dark:disabled:bg-secondary-hover',
+    'text-white bg-primary transition duration-200 ease-in-out hover:bg-primary-hover disabled:text-true-gray-100/80 disabled:bg-dark-50',
+  secondary: 'bg-secondary hover:bg-secondary-hover disabled:text-true-gray-100/80 disabled:bg-dark-50',
   gradient:
     'text-white bg-gradient-to-tr from-primary-900 to-primary-400 transition duration-200 ease-in-out hover:bg-primary-hover disabled:text-primary-disabled disabled:bg-primary-hover',
   transparent: 'text-white bg-transparent'
@@ -25,6 +24,7 @@ export type ButtonProps = DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonEleme
   loading?: boolean
   icon?: ReactNode
   transition?: boolean
+  innerClassName?: string
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -35,6 +35,7 @@ export const Button: React.FC<ButtonProps> = ({
   loading,
   icon,
   className = '',
+  innerClassName = '',
   transition = true,
   ...props
 }) => {
@@ -51,7 +52,7 @@ export const Button: React.FC<ButtonProps> = ({
       data-testid='button'
       {...props}
     >
-      <span className={loading ? 'opacity-0' : `flex items-center`}>
+      <span className={`${loading ? 'opacity-0' : `flex items-center`} ${innerClassName}`}>
         {icon ? <span className={`mr-2 items-center`}>{icon}</span> : null}
         {children}
       </span>

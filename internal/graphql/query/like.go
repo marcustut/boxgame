@@ -11,6 +11,23 @@ type countResult struct {
 	Count int `json:"count"`
 }
 
+func GetUniqueCommentLiked(ctx context.Context, db *postgresql.PrismaClient, commentID string, userID string) (bool, error) {
+	var res []countResult
+	err := db.Prisma.QueryRaw(`
+		SELECT 
+			COUNT(*) 
+		FROM 
+			"CommentLike" 
+		WHERE 
+			"commentId" = $1 AND 
+			"userId" = $2;	
+	`, commentID, userID).Exec(ctx, &res)
+	if err != nil {
+		return false, err
+	}
+	return res[0].Count != 0, nil
+}
+
 func GetUniqueCommentLikeCount(ctx context.Context, db *postgresql.PrismaClient, param string) (int, error) {
 	var res []countResult
 	err := db.Prisma.QueryRaw(`
@@ -57,6 +74,23 @@ func DeleteCommentLike(ctx context.Context, db *postgresql.PrismaClient, param *
 		success = true
 	}
 	return &success, nil
+}
+
+func GetUniquePostLiked(ctx context.Context, db *postgresql.PrismaClient, postID string, userID string) (bool, error) {
+	var res []countResult
+	err := db.Prisma.QueryRaw(`
+		SELECT 
+			COUNT(*) 
+		FROM 
+			"PostLike" 
+		WHERE 
+			"postId" = $1 AND 
+			"userId" = $2;	
+	`, postID, userID).Exec(ctx, &res)
+	if err != nil {
+		return false, err
+	}
+	return res[0].Count != 0, nil
 }
 
 func GetUniquePostLikeCount(ctx context.Context, db *postgresql.PrismaClient, param string) (int, error) {

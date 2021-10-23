@@ -69,6 +69,10 @@ func (r *postResolver) Likes(ctx context.Context, obj *model.Post) (int, error) 
 	return query.GetUniquePostLikeCount(ctx, r.db, obj.ID)
 }
 
+func (r *postResolver) Liked(ctx context.Context, obj *model.Post, userID string) (bool, error) {
+	return query.GetUniquePostLiked(ctx, r.db, obj.ID, userID)
+}
+
 func (r *postResolver) Comments(ctx context.Context, obj *model.Post, page model.PaginationInput) ([]*model.Comment, error) {
 	return query.GetManyComment(ctx, r.db, page, postgresql.Comment.PostID.Equals(obj.ID))
 }

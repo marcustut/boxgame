@@ -1,7 +1,7 @@
 import React from 'react'
 import { Icon } from '@iconify/react'
 
-import { AppLayout } from '@/components/Elements'
+import { AppLayout, Avatar } from '@/components/Elements'
 import { LoadingPage } from '@/components/Misc'
 import { useAuth } from '@/lib/auth'
 import { Gender } from '@/graphql'
@@ -28,25 +28,14 @@ export const Profile: React.FC = () => {
             />
           </div>
 
-          <div className='relative'>
-            <img
-              src={
-                user.user.profile.avatarUrl
-                  ? user.user.profile.avatarUrl
-                  : `https://avatars.dicebear.com/api/${user.user.profile.gender.toLowerCase()}/${
-                      user.user.profile.nameEng
-                    }.svg?mood[]=happy`
-              }
-              alt={`${user.user.profile.nameEng}'s avatar`}
-              className='w-24 h-24 mt-4 p-2 rounded-full border-2 border-true-gray-500 bg-dark-200'
-            />
-            <button
-              className='bg-dark-200 rounded-full p-1.5 absolute right-0 bottom-0 shadow-sm focus:outline-none transition duration-200 ease-in-out focus:ring-2 focus:ring-primary-ring'
-              onClick={() => alert('Upload image')}
-            >
-              <Icon icon='mdi:camera' className='text-true-gray-400' />
-            </button>
-          </div>
+          <Avatar
+            src={user.user.profile.avatarUrl}
+            name={user.user.profile.nameEng}
+            gender={user.user.profile.gender}
+            upload
+            uploadOnClick={() => alert('To be continued...')}
+            utilities={{ m: 'mt-4' }}
+          />
 
           <div className='mt-4 flex'>
             {user.user.roles.map((role, index) => (

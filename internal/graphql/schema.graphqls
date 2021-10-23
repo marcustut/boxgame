@@ -108,6 +108,7 @@ type Post {
   updatedAt: Time!
   user: User!
   likes: Int!
+  liked(user_id: ID!): Boolean!
   comments(page: PaginationInput!): [Comment!]!
 }
 

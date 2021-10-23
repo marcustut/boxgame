@@ -7,7 +7,7 @@ import { GetUser, GetUserVariables, GetUser_user } from '@/graphql/types/GetUser
 import { UserCredentials } from '@supabase/supabase-js'
 import { clearItem, getItem, setItem } from '@/utils/storage'
 
-type UserWithAuth = {
+export type UserWithAuth = {
   user: GetUser_user
   auth: Session
 }

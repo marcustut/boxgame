@@ -47,6 +47,18 @@ export interface NewAddress {
   postalCode: string;
 }
 
+export interface NewComment {
+  content: string;
+  postId: string;
+  userId: string;
+}
+
+export interface NewPost {
+  content: string;
+  images: string[];
+  userId: string;
+}
+
 export interface NewProfile {
   status?: PastoralStatus | null;
   gender: Gender;
@@ -68,6 +80,16 @@ export interface NewUser {
   profile: NewProfile;
   roles: Role[];
   teamId?: string | null;
+}
+
+export interface PaginationInput {
+  first: number;
+  offset?: number | null;
+}
+
+export interface PostLikeInput {
+  postId: string;
+  userId: string;
 }
 
 //==============================================================
