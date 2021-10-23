@@ -58,6 +58,7 @@ export const CREATE_POST = gql`
         id
         content
         createdAt
+        updatedAt
         likes
         user {
           id

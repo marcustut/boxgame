@@ -42,6 +42,7 @@ export interface CreatePost_createPost_comments {
   id: string;
   content: string;
   createdAt: TheBox.Time;
+  updatedAt: TheBox.Time;
   likes: number;
   user: CreatePost_createPost_comments_user;
 }
