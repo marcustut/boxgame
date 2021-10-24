@@ -32,6 +32,7 @@ export const GET_USER = gql`
 `
 
 export const GET_POST = gql`
+  ${CORE_POST_FIELDS}
   query GetPost($post_id: ID!, $user_id: ID!) {
     post(post_id: $post_id) {
       ...CorePostFields
@@ -55,6 +56,7 @@ export const GET_POST_WITH_COMMENTS = gql`
 `
 
 export const GET_POSTS = gql`
+  ${CORE_POST_FIELDS}
   query GetPosts($postsPage: PaginationInput!, $user_id: ID!) {
     posts(page: $postsPage) {
       ...CorePostFields
@@ -64,6 +66,7 @@ export const GET_POSTS = gql`
 `
 
 export const GET_POSTS_WITH_COMMENTS = gql`
+  ${CORE_POST_FIELDS}
   ${CORE_COMMENT_FIELDS}
   query GetPostsWithComments($postsPage: PaginationInput!, $commentsPage: PaginationInput!, $user_id: ID!) {
     posts(page: $postsPage) {
