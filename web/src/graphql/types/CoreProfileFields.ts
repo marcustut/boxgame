@@ -3,13 +3,13 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { NewUser, Role, PastoralStatus, Gender, Satellite } from "./globalTypes";
+import { PastoralStatus, Gender, Satellite } from "./globalTypes";
 
 // ====================================================
-// GraphQL mutation operation: CreateNewUser
+// GraphQL fragment: CoreProfileFields
 // ====================================================
 
-export interface CreateNewUser_createUser_profile_address {
+export interface CoreProfileFields_address {
   __typename: "Address";
   id: string;
   city: string;
@@ -20,7 +20,7 @@ export interface CreateNewUser_createUser_profile_address {
   postalCode: string;
 }
 
-export interface CreateNewUser_createUser_profile {
+export interface CoreProfileFields {
   __typename: "Profile";
   id: string;
   status: PastoralStatus | null;
@@ -34,25 +34,6 @@ export interface CreateNewUser_createUser_profile {
   avatarUrl: string | null;
   createdAt: TheBox.Time;
   updatedAt: TheBox.Time;
-  address: CreateNewUser_createUser_profile_address | null;
+  address: CoreProfileFields_address | null;
   invitedBy: string | null;
-}
-
-export interface CreateNewUser_createUser {
-  __typename: "User";
-  id: string;
-  username: string;
-  email: string;
-  createdAt: TheBox.Time;
-  updatedAt: TheBox.Time;
-  roles: Role[];
-  profile: CreateNewUser_createUser_profile | null;
-}
-
-export interface CreateNewUser {
-  createUser: CreateNewUser_createUser | null;
-}
-
-export interface CreateNewUserVariables {
-  param: NewUser;
 }

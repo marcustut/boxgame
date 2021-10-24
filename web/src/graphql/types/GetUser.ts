@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { PastoralStatus, Gender, Satellite, Role } from "./globalTypes";
+import { Role, PastoralStatus, Gender, Satellite } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetUser
@@ -61,9 +61,9 @@ export interface GetUser_user {
   email: string;
   createdAt: TheBox.Time;
   updatedAt: TheBox.Time;
+  roles: Role[];
   profile: GetUser_user_profile | null;
   team: GetUser_user_team | null;
-  roles: Role[];
 }
 
 export interface GetUser {

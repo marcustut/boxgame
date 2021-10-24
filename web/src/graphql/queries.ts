@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+import { CORE_COMMENT_FIELDS, CORE_POST_FIELDS, CORE_PROFILE_FIELDS, CORE_USER_FIELDS } from './fragments'
 
 export const GET_REGISTERED_USER_COUNT = gql`
   query GetUserCount {
@@ -7,36 +8,13 @@ export const GET_REGISTERED_USER_COUNT = gql`
 `
 
 export const GET_USER = gql`
+  ${CORE_USER_FIELDS}
+  ${CORE_PROFILE_FIELDS}
   query GetUser($user_id: ID!) {
     user(user_id: $user_id) {
-      id
-      username
-      email
-      createdAt
-      updatedAt
+      ...CoreUserFields
       profile {
-        id
-        status
-        gender
-        satellite
-        nameEng
-        nameChi
-        contact
-        dob
-        tngReceiptUrl
-        avatarUrl
-        createdAt
-        updatedAt
-        address {
-          id
-          city
-          line1
-          line2
-          state
-          country
-          postalCode
-        }
-        invitedBy
+        ...CoreProfileFields
       }
       team {
         id
@@ -49,7 +27,6 @@ export const GET_USER = gql`
           color
         }
       }
-      roles
     }
   }
 `
@@ -57,60 +34,21 @@ export const GET_USER = gql`
 export const GET_POST = gql`
   query GetPost($post_id: ID!, $user_id: ID!) {
     post(post_id: $post_id) {
-      id
-      content
-      images
-      createdAt
-      updatedAt
-      user {
-        id
-        username
-        profile {
-          avatarUrl
-          nameEng
-          gender
-        }
-      }
-      likes
+      ...CorePostFields
       liked(user_id: $user_id)
     }
   }
 `
 
 export const GET_POST_WITH_COMMENTS = gql`
+  ${CORE_POST_FIELDS}
+  ${CORE_COMMENT_FIELDS}
   query GetPostWithComments($post_id: ID!, $user_id: ID!, $commentsPage: PaginationInput!) {
     post(post_id: $post_id) {
-      id
-      content
-      images
-      createdAt
-      updatedAt
-      user {
-        id
-        username
-        profile {
-          avatarUrl
-          nameEng
-          gender
-        }
-      }
-      likes
+      ...CorePostFields
       liked(user_id: $user_id)
       comments(page: $commentsPage) {
-        id
-        content
-        createdAt
-        updatedAt
-        likes
-        user {
-          id
-          username
-          profile {
-            avatarUrl
-            nameEng
-            gender
-          }
-        }
+        ...CoreCommentFields
       }
     }
   }
@@ -119,60 +57,20 @@ export const GET_POST_WITH_COMMENTS = gql`
 export const GET_POSTS = gql`
   query GetPosts($postsPage: PaginationInput!, $user_id: ID!) {
     posts(page: $postsPage) {
-      id
-      content
-      images
-      createdAt
-      updatedAt
-      user {
-        id
-        username
-        profile {
-          avatarUrl
-          nameEng
-          gender
-        }
-      }
-      likes
+      ...CorePostFields
       liked(user_id: $user_id)
     }
   }
 `
 
 export const GET_POSTS_WITH_COMMENTS = gql`
+  ${CORE_COMMENT_FIELDS}
   query GetPostsWithComments($postsPage: PaginationInput!, $commentsPage: PaginationInput!, $user_id: ID!) {
     posts(page: $postsPage) {
-      id
-      content
-      images
-      createdAt
-      updatedAt
-      user {
-        id
-        username
-        profile {
-          avatarUrl
-          nameEng
-          gender
-        }
-      }
-      likes
+      ...CorePostFields
       liked(user_id: $user_id)
       comments(page: $commentsPage) {
-        id
-        content
-        createdAt
-        updatedAt
-        likes
-        user {
-          id
-          username
-          profile {
-            avatarUrl
-            nameEng
-            gender
-          }
-        }
+        ...CoreCommentFields
       }
     }
   }
