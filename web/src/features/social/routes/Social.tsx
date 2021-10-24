@@ -10,7 +10,13 @@ export const Social: React.FC = () => {
   const { posts, fetchPosts } = useFetchPosts(user)
 
   useEffect(() => {
-    fetchPosts()
+    ;(async () => {
+      const res = await fetchPosts()
+      if (res && res.error) {
+        console.error(res.error)
+        alert('error fetching posts from server')
+      }
+    })()
   }, [fetchPosts])
 
   if (!user) return <LoadingPage />
