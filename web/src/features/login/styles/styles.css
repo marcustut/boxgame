@@ -91,7 +91,7 @@ input {
 
 #background > .smoke {
   bottom: -200px;
-  background: url(http://www.blog.jonnycornwell.com/wp-content/uploads/2012/07/Smoke10.png) transparent no-repeat 0 0;
+  background: url(/Smoke10.png) transparent no-repeat 0 0;
   height: 200px;
   width: 200px;
   position: absolute;

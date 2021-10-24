@@ -3,7 +3,7 @@ import { useEffectOnce } from 'react-use'
 import '@/features/login/styles/styles.css'
 
 export const SmokeBackground: React.FC = ({ children }) => {
-  const [imageUrl] = useState<string>('http://www.blog.jonnycornwell.com/wp-content/uploads/2012/07/Smoke10.png')
+  const [imageUrl] = useState<string>('/Smoke10.png')
   const [smokeDensity] = useState<number>(100)
   const [smokeLife] = useState<number>(10000)
   const [smokes, setSmokes] = useState<HTMLDivElement[]>([])
