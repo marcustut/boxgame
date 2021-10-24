@@ -1,5 +1,5 @@
-import { useCallback } from 'react'
 import { ApolloError, useMutation } from '@apollo/client'
+import { useCallback } from 'react'
 
 import { CREATE_POST, GET_POSTS_WITH_COMMENTS, PaginationInput } from '@/graphql'
 import { CreatePost, CreatePostVariables } from '@/graphql/types/CreatePost'

@@ -1,10 +1,10 @@
-import React from 'react'
 import { Icon } from '@iconify/react'
+import React from 'react'
 
 import { AppLayout, Avatar } from '@/components/Elements'
 import { LoadingPage } from '@/components/Misc'
-import { useAuth } from '@/lib/auth'
 import { Gender } from '@/graphql'
+import { useAuth } from '@/lib/auth'
 
 export const Profile: React.FC = () => {
   const { user } = useAuth()

@@ -1,6 +1,7 @@
-import React, { Suspense } from 'react'
-import { Canvas } from '@react-three/fiber'
 import { Effects, OrbitControls } from '@react-three/drei'
+import { Canvas } from '@react-three/fiber'
+import React, { Suspense } from 'react'
+
 import { Floor, Lightbulb, TV, WaveVideo } from '@/features/opening'
 
 export const Scene: React.FC = () => {

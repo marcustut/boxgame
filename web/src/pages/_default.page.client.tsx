@@ -1,12 +1,14 @@
+import { ApolloClient, InMemoryCache } from '@apollo/client'
+import type { NormalizedCacheObject } from '@apollo/client'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { getPage } from 'vite-plugin-ssr/client'
-import { ApolloClient, InMemoryCache } from '@apollo/client'
-import { createThemeHelper, createEmotionCache } from '@/utils'
+import type { PageContextBuiltInClient } from 'vite-plugin-ssr/types'
+
 import { AppProvider } from '@/context'
 import type { PageContext } from '@/types/ssr'
-import type { PageContextBuiltInClient } from 'vite-plugin-ssr/types'
-import type { NormalizedCacheObject } from '@apollo/client'
+import { createThemeHelper, createEmotionCache } from '@/utils'
+
 import 'virtual:windi.css'
 import '@/styles/globals.css'
 

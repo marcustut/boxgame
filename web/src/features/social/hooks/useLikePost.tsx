@@ -1,9 +1,9 @@
-import { useCallback } from 'react'
 import { ApolloError, useMutation } from '@apollo/client'
+import { useCallback } from 'react'
 
 import { GET_POSTS_WITH_COMMENTS, LIKE_POST, PaginationInput } from '@/graphql'
-import { LikePost, LikePostVariables } from '@/graphql/types/LikePost'
 import { GetPostsWithComments, GetPostsWithCommentsVariables } from '@/graphql/types/GetPostsWithComments'
+import { LikePost, LikePostVariables } from '@/graphql/types/LikePost'
 
 export const useLikePost = (
   fetchPosts: () => Promise<

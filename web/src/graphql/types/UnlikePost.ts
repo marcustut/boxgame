@@ -3,16 +3,16 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { PostLikeInput } from "./globalTypes";
+import { PostLikeInput } from './globalTypes'
 
 // ====================================================
 // GraphQL mutation operation: UnlikePost
 // ====================================================
 
 export interface UnlikePost {
-  unlikePost: boolean | null;
+  unlikePost: boolean | null
 }
 
 export interface UnlikePostVariables {
-  param: PostLikeInput;
+  param: PostLikeInput
 }

@@ -1,10 +1,10 @@
 import { ApolloError, useMutation } from '@apollo/client'
+import produce from 'immer'
+import { useCallback } from 'react'
 
 import { CREATE_COMMENT, GET_POSTS_WITH_COMMENTS, PaginationInput } from '@/graphql'
 import { CreateComment, CreateCommentVariables } from '@/graphql/types/CreateComment'
 import { GetPostsWithComments, GetPostsWithCommentsVariables } from '@/graphql/types/GetPostsWithComments'
-import { useCallback } from 'react'
-import produce from 'immer'
 
 export const useCreateComment = (
   fetchPosts: () => Promise<

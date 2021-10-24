@@ -1,13 +1,14 @@
+import { NormalizedCacheObject, ApolloClient, InMemoryCache } from '@apollo/client'
+import { getDataFromTree } from '@apollo/client/react/ssr'
+import createEmotionServer from '@emotion/server/create-instance'
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import { escapeInject, dangerouslySkipEscape } from 'vite-plugin-ssr'
-import { getDataFromTree } from '@apollo/client/react/ssr'
-import { AppProvider } from '@/context'
-import { createThemeHelper, createEmotionCache } from '@/utils'
-import createEmotionServer from '@emotion/server/create-instance'
-import type { PageContext } from '@/types/ssr'
 import type { PageContextBuiltIn } from 'vite-plugin-ssr/types'
-import { NormalizedCacheObject, ApolloClient, InMemoryCache } from '@apollo/client'
+
+import { AppProvider } from '@/context'
+import type { PageContext } from '@/types/ssr'
+import { createThemeHelper, createEmotionCache } from '@/utils'
 
 const makeApolloClient = (apolloInitialState?: NormalizedCacheObject) => {
   return new ApolloClient({

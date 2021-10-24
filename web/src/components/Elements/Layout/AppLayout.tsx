@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from 'react'
 import { Transition, Dialog } from '@headlessui/react'
 import { Icon } from '@iconify/react'
+import React, { Fragment, useState } from 'react'
 
 import { Button, Navbar } from '@/components/Elements'
 import { useAuth } from '@/lib/auth'

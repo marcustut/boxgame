@@ -1,10 +1,11 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
-import { Provider, Session, User } from '@supabase/gotrue-js'
 import { useQuery } from '@apollo/client'
+import { Provider, Session, User } from '@supabase/gotrue-js'
+import { UserCredentials } from '@supabase/supabase-js'
+import React, { useContext, useState, useEffect } from 'react'
+
 import { GET_USER } from '@/graphql'
 import { GetUser, GetUserVariables, GetUser_user } from '@/graphql/types/GetUser'
-import { UserCredentials } from '@supabase/supabase-js'
+import { supabase } from '@/lib/supabase'
 import { clearItem, getItem, setItem } from '@/utils/storage'
 
 export type UserWithAuth = {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useEffectOnce } from 'react-use'
+
 import { Scene } from '@/features/opening'
 
 export const Opening: React.FC = () => {

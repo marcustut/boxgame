@@ -1,9 +1,9 @@
 import React from 'react'
 import { useEffectOnce } from 'react-use'
 
+import { AppLayout } from '@/components/Elements'
 import { LoadingPage } from '@/components/Misc'
 import { useAuth } from '@/lib/auth'
-import { AppLayout } from '@/components/Elements'
 import { supabase } from '@/lib/supabase'
 
 export const Dashboard: React.FC = () => {

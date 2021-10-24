@@ -1,6 +1,6 @@
-import React from 'react'
 import { ApolloError } from '@apollo/client'
 import { Icon } from '@iconify/react'
+import React from 'react'
 
 import { Spinner } from '@/components/Elements'
 import { Post, useLikePost, useUnlikePost } from '@/features/social'

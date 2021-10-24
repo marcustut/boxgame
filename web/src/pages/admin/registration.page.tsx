@@ -1,9 +1,9 @@
+import { Dialog } from '@headlessui/react'
 import React, { useEffect, useState } from 'react'
 import { useEffectOnce } from 'react-use'
-import { Dialog } from '@headlessui/react'
 
-import { supabase } from '@/lib/supabase'
 import { Button, Input } from '@/components/Elements'
+import { supabase } from '@/lib/supabase'
 
 const RegistrationPage: React.FC = () => {
   const [mounted, setMounted] = useState<boolean>(false)

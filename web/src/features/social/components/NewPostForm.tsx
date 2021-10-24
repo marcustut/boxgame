@@ -1,14 +1,14 @@
-import React, { Fragment, useState } from 'react'
+import { ApolloError } from '@apollo/client'
 import { Transition, Dialog } from '@headlessui/react'
-import { Formik, Form } from 'formik'
 import { Icon } from '@iconify/react'
+import { Formik, Form } from 'formik'
 import { useSnackbar } from 'notistack'
+import React, { Fragment, useState } from 'react'
 
 import { Avatar, InputField, Button } from '@/components/Elements'
-import { UserWithAuth } from '@/lib/auth'
 import { useCreatePost } from '@/features/social'
-import { ApolloError } from '@apollo/client'
 import { GetPostsWithComments } from '@/graphql/types/GetPostsWithComments'
+import { UserWithAuth } from '@/lib/auth'
 
 type NewPostFormProps = {
   user: UserWithAuth

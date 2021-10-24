@@ -1,6 +1,6 @@
-import React from 'react'
 import { Listbox } from '@headlessui/react'
 import { Icon } from '@iconify/react'
+import React from 'react'
 
 export type SelectData<TType = string> = {
   id: string | number

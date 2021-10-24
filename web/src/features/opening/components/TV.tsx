@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
 import { useGLTF } from '@react-three/drei'
+import React, { useState } from 'react'
+
 import url from '/video/TheBoxLogo_Opening.mp4'
-import * as THREE from 'three'
+
 import { useEvent } from 'react-use'
+import * as THREE from 'three'
 
 export const TV: React.FC = () => {
   const [videoPlayed, setVideoPlayed] = useState<boolean>(false)

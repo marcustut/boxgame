@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 
 import { AppLayout, Spinner } from '@/components/Elements'
-import { useAuth } from '@/lib/auth'
 import { LoadingPage } from '@/components/Misc'
 import { NewPostForm, SocialPosts, useFetchPosts } from '@/features/social'
+import { useAuth } from '@/lib/auth'
 
 export const Social: React.FC = () => {
   const { user } = useAuth()

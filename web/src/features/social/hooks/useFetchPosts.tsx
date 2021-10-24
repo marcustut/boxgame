@@ -1,5 +1,5 @@
-import { useAsyncFn } from 'react-use'
 import { useQuery } from '@apollo/client'
+import { useAsyncFn } from 'react-use'
 
 import { GET_POSTS_WITH_COMMENTS } from '@/graphql'
 import { GetPostsWithComments, GetPostsWithCommentsVariables } from '@/graphql/types/GetPostsWithComments'

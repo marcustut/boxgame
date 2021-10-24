@@ -8,5 +8,5 @@
 // ====================================================
 
 export interface GetUserCount {
-  userCount: number;
+  userCount: number
 }

@@ -1,14 +1,14 @@
-import React, { useState } from 'react'
-import { Icon } from '@iconify/react'
 import { ApolloError } from '@apollo/client'
+import { Icon } from '@iconify/react'
 import { useSnackbar } from 'notistack'
+import React, { useState } from 'react'
 
+import { Avatar, Input } from '@/components/Elements'
+import { useCreateComment } from '@/features/social'
+import { GetPostsWithComments, GetPostsWithComments_posts } from '@/graphql/types/GetPostsWithComments'
 import { UserWithAuth } from '@/lib/auth'
 import { WindiUtilities } from '@/types/windi'
-import { Avatar, Input } from '@/components/Elements'
 import { constructClassName } from '@/utils'
-import { GetPostsWithComments, GetPostsWithComments_posts } from '@/graphql/types/GetPostsWithComments'
-import { useCreateComment } from '@/features/social'
 
 type CommentFormProps = {
   user: UserWithAuth

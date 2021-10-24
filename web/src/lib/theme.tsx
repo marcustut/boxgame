@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useMemo } from 'react'
 import { useMediaQuery } from '@mui/material'
-import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles'
-import { useLocalStorage } from 'react-use'
 import CssBaseline from '@mui/material/CssBaseline'
+import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles'
+import React, { createContext, useContext, useMemo } from 'react'
+import { useLocalStorage } from 'react-use'
 
 type ThemeName = 'dark' | 'light'
 interface IChosenTheme {

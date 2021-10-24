@@ -1,12 +1,13 @@
+import { Form, Formik } from 'formik'
+import { useSnackbar } from 'notistack'
 import React from 'react'
 import * as Yup from 'yup'
-import { Form, Formik } from 'formik'
 
-import { SmokeBackground } from '@/features/login'
 import { Button, InputField } from '@/components/Elements'
+import { SmokeBackground } from '@/features/login'
 import { useAuth } from '@/lib/auth'
+
 import '@/features/login/styles/styles.css'
-import { useSnackbar } from 'notistack'
 
 const loginSchema = Yup.object({
   email: Yup.string().email().required(),

@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+
 import { CORE_COMMENT_FIELDS, CORE_POST_FIELDS, CORE_PROFILE_FIELDS, CORE_USER_FIELDS } from './fragments'
 
 export const GET_REGISTERED_USER_COUNT = gql`

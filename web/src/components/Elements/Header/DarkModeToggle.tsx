@@ -1,8 +1,8 @@
-import React, { FC, useContext } from 'react'
+import isPropValid from '@emotion/is-prop-valid'
 import DarkModeIcon from '@mui/icons-material/Brightness3'
 import LightModeIcon from '@mui/icons-material/WbSunny'
 import { styled } from '@mui/material'
-import isPropValid from '@emotion/is-prop-valid'
+import React, { FC, useContext } from 'react'
 
 import { ChosenTheme } from '@/lib/theme'
 

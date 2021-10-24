@@ -1,8 +1,9 @@
 import { extend, ReactThreeFiber } from 'react-three-fiber'
-import { WaveShaderMaterial } from '@/pages/opening/index.page'
+import { GLTF as GLTFThree } from 'three/examples/jsm/loaders/GLTFLoader'
 import { BloomPass } from 'three/examples/jsm/postprocessing/BloomPass'
 import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass'
-import { GLTF as GLTFThree } from 'three/examples/jsm/loaders/GLTFLoader'
+
+import { WaveShaderMaterial } from '@/pages/opening/index.page'
 
 extend({ WaveShaderMaterial, BloomPass, GlitchPass })
 

@@ -1,5 +1,5 @@
-import React, { ButtonHTMLAttributes, DetailedHTMLProps } from 'react'
 import { Icon } from '@iconify/react'
+import React, { ButtonHTMLAttributes, DetailedHTMLProps } from 'react'
 
 import { WindiUtilities } from '@/types/windi'
 import { constructClassName } from '@/utils'

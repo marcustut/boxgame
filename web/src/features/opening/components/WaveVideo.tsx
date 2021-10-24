@@ -1,13 +1,13 @@
-import React, { useRef, useState } from 'react'
-import { extend } from '@react-three/fiber'
-import * as THREE from 'three'
 import url from '/video/TheBoxLogo_Opening.mp4'
 
 // @ts-ignore
 import glsl from 'glslify'
 import { shaderMaterial } from '@react-three/drei'
+import { extend } from '@react-three/fiber'
 import { useFrame } from '@react-three/fiber'
+import React, { useRef, useState } from 'react'
 import { useEvent } from 'react-use'
+import * as THREE from 'three'
 
 export const WaveShaderMaterial = shaderMaterial(
   // Uniform

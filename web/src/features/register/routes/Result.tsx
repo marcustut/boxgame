@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { Icon } from '@iconify/react'
-
-import { Layout } from '@/features/register'
-import { Button, Spinner } from '@/components/Elements'
-import { useUser, UserCurrentState } from '@/hooks/stores'
 import { Rating } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import { useEffectOnce } from 'react-use'
+
+import { Button, Spinner } from '@/components/Elements'
+import { Layout } from '@/features/register'
+import { useUser, UserCurrentState } from '@/hooks/stores'
 
 export const Result: React.FC = () => {
   const [mounted, setMounted] = useState<boolean>(false)

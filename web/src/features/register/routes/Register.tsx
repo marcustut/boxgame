@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useEffectOnce } from 'react-use'
 
-import { Layout, RegistrationForm } from '@/features/register'
 import { Spinner } from '@/components/Elements'
+import { Layout, RegistrationForm } from '@/features/register'
 import { useRiddle } from '@/hooks/stores'
 
 // TODO: Solve SSR error (extra attributes style at Spinner comopnent)

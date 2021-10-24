@@ -1,5 +1,6 @@
-import React from 'react'
 import { useField } from 'formik'
+import React from 'react'
+
 import { Input, InputErrorMsg } from '@/components/Elements'
 
 export type InputFieldProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {

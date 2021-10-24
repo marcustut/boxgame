@@ -1,9 +1,9 @@
+import { Icon } from '@iconify/react'
 import React from 'react'
 
 import { Gender } from '@/graphql'
 import { WindiUtilities } from '@/types/windi'
 import { constructClassName } from '@/utils'
-import { Icon } from '@iconify/react'
 
 type AvatarProps = {
   src: string | null

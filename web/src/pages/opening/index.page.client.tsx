@@ -1,11 +1,12 @@
+import { extend } from '@react-three/fiber'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { getPage } from 'vite-plugin-ssr/client'
-import type { PageContext } from '@/types/ssr'
-import type { PageContextBuiltInClient } from 'vite-plugin-ssr/types'
 import { BloomPass } from 'three/examples/jsm/postprocessing/BloomPass'
 import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass'
-import { extend } from '@react-three/fiber'
+import { getPage } from 'vite-plugin-ssr/client'
+import type { PageContextBuiltInClient } from 'vite-plugin-ssr/types'
+
+import type { PageContext } from '@/types/ssr'
 
 extend({ BloomPass, GlitchPass })
 

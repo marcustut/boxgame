@@ -1,16 +1,14 @@
+import { useMutation } from '@apollo/client'
+import { Switch } from '@headlessui/react'
+import { DatePicker } from '@mui/lab'
+import { Divider } from '@mui/material'
+import { Formik, Form } from 'formik'
+import { useSnackbar } from 'notistack'
 import React from 'react'
 import * as Yup from 'yup'
-import { useSnackbar } from 'notistack'
-import { Formik, Form } from 'formik'
-import { Divider } from '@mui/material'
-import { useMutation } from '@apollo/client'
-import { DatePicker } from '@mui/lab'
 // import { Icon } from '@iconify/react'
-import { Switch } from '@headlessui/react'
 
 import { Select, InputField, Button } from '@/components/Elements'
-import { satellites, states, genders, roles } from '@/lib/constant'
-import { supabase } from '@/lib/supabase'
 import {
   CREATE_NEW_USER,
   Gender,
@@ -22,6 +20,8 @@ import {
   CreateNewUserVariables
 } from '@/graphql'
 import { useUser, UserCurrentState } from '@/hooks/stores'
+import { satellites, states, genders, roles } from '@/lib/constant'
+import { supabase } from '@/lib/supabase'
 
 type FormValues = NewUser & {
   extra: {

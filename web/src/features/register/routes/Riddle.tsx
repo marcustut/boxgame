@@ -1,18 +1,18 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { useEffectOnce, useInterval, usePrevious } from 'react-use'
 import { useQuery } from '@apollo/client'
 import { Dialog } from '@headlessui/react'
-import { Badge } from '@mui/material'
 import { Icon } from '@iconify/react'
+import { Badge } from '@mui/material'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useEffectOnce, useInterval, usePrevious } from 'react-use'
 
-import { useRiddle } from '@/hooks/stores/useRiddle'
+import { Button } from '@/components/Elements'
 import { Layout, Lightbulb } from '@/features/register'
 import { GET_REGISTERED_USER_COUNT, GetUserCount } from '@/graphql'
-import { Button } from '@/components/Elements'
+import { useRiddle } from '@/hooks/stores/useRiddle'
+import { bulbColors } from '@/lib/constant'
 import { supabase } from '@/lib/supabase'
 import { definitions } from '@/types/supabase'
 import { getRandomInts } from '@/utils'
-import { bulbColors } from '@/lib/constant'
 
 type LightState = Record<number, boolean>
 
