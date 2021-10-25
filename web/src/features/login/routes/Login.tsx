@@ -22,6 +22,7 @@ export const Login = () => {
   if (user) window.location.href = '/app'
 
   return (
+<<<<<<< Updated upstream
     <SmokeBackground>
       <Formik
         initialValues={{ email: '', password: '' }}
@@ -30,7 +31,7 @@ export const Login = () => {
         onSubmit={async ({ email, password }) => {
           const { data, error } = await signIn({ email, password }, { redirectTo: '/app' })
           if (error || !data) {
-            enqueueSnackbar('Incorrect email or password', { variant: 'error', autoHideDuration: 1000 })
+            enqueueSnackbar('Incorrect email or password 邮件或密码错误', { variant: 'error', autoHideDuration: 1000 })
             return
           }
 
@@ -46,21 +47,17 @@ export const Login = () => {
                 <InputField
                   name='email'
                   placeholder='Enter email here...'
-                  label='邮件 Email'
+                  label='Email 邮件'
                   inputClassName='bg-dark-400 text-true-gray-50 text-sm py-3 focus:ring-primary-ring focus:border-transparent border-transparent'
                 />
                 <InputField
                   name='password'
                   type='password'
                   placeholder='Enter password here...'
-                  label='密码 Password'
+                  label='Password 密码'
                   className='mt-4'
                   inputClassName='bg-dark-400 text-true-gray-50 text-sm py-3 focus:ring-primary-ring focus:border-transparent border-transparent'
                 />
-                {/* Error */}
-                {/* <div className='login-btn'>
-                <button className='btn'>Login</button>
-              </div> */}
                 <Button
                   type='submit'
                   loading={isSubmitting}
@@ -68,9 +65,29 @@ export const Login = () => {
                   color='secondary'
                   className='w-full text-sm mt-8'
                 >
-                  Login
+                  Login 登入
                 </Button>
               </div>
+=======
+    <form onSubmit={submitHandler}>
+      <div className='form-in'>
+        <h1>Log In</h1>
+        <div className='box'>
+          <div className='user'>
+            <div className='field'>
+              <FaUser />
+              <input className='border-0' type='text' autoComplete='off' placeholder=' ' />
+              <label htmlFor='email' className='label'>
+                Username/Email
+              </label>
+            </div>
+            <div className='field'>
+              <FaUnlock />
+              <input type='password' autoComplete='off' placeholder=' ' />
+              <label htmlFor='password' className='label'>
+                Password
+              </label>
+>>>>>>> Stashed changes
             </div>
           </Form>
         )}

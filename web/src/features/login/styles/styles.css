@@ -19,37 +19,6 @@
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-.user {
-  margin: 2rem 0.5rem 0.5rem;
-}
-
-h1 {
-  font-weight: 700;
-  font-size: 4rem;
-}
-
-input {
-  color: black;
-  outline: none;
-  border: none;
-  overflow: hidden;
-  width: 100%;
-  background: none;
-}
-
-.reset-password {
-  color: #848484;
-  text-align: right;
-  margin: 0 1rem;
-  font-size: 0.5rem;
-  cursor: pointer;
-}
-
-.reset-password:hover {
-  text-decoration: underline;
-  color: #ff7f50;
-}
-
 .login-btn {
   margin-top: 2rem;
   display: flex;
