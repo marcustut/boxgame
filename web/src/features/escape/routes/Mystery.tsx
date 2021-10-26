@@ -10,6 +10,7 @@ import { Button, InputField } from '@/components/Elements'
 import { LoadingPage } from '@/components/Misc'
 import { EscapeLayout } from '@/features/escape'
 import { useMysteryGame } from '@/hooks/stores'
+import { supabase } from '@/lib/supabase'
 
 const NUMBER_OF_HIGHLIGHTS = 4
 
@@ -37,6 +38,11 @@ export const Mystery: React.FC = () => {
   const [points, setPoints] = useState<number>(0)
   const { enqueueSnackbar } = useSnackbar()
   const { keywords, setKeywords, answer, setAnswer, searchWords, setSearchWords } = useMysteryGame()
+
+  // redirect to login if not authenticated
+  useEffectOnce(() => {
+    if (!supabase.auth.session()) window.location.href = '/login'
+  })
 
   const handleHighlight = useCallback(() => {
     const selection = window.getSelection()
