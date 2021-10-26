@@ -11,7 +11,6 @@ import { LoadingPage } from '@/components/Misc'
 import { EscapeLayout } from '@/features/escape'
 import { useMysteryGame } from '@/hooks/stores'
 import { supabase } from '@/lib/supabase'
-import { persist } from 'zustand/middleware'
 
 const NUMBER_OF_HIGHLIGHTS = 5
 
