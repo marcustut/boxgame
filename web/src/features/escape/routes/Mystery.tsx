@@ -11,8 +11,9 @@ import { LoadingPage } from '@/components/Misc'
 import { EscapeLayout } from '@/features/escape'
 import { useMysteryGame } from '@/hooks/stores'
 import { supabase } from '@/lib/supabase'
+import { persist } from 'zustand/middleware'
 
-const NUMBER_OF_HIGHLIGHTS = 4
+const NUMBER_OF_HIGHLIGHTS = 5
 
 const raw_paragraphs = [
   `在这繁华世界里，每个人都在追求自己喜爱的人事物。在这个世界里充满着许多的虚拟和不真实在这个不堪一击的社会里，人人都在为着某样事物在卖命哪有什么事物是值得留恋的呢？在这人海茫茫中有个女生在这虚拟的世界里稍有名气，时常在线上花里花俏得到人的认可和关注。`,
@@ -24,11 +25,11 @@ const raw_paragraphs = [
 ]
 
 const important_phrase_map = {
-  明星: '知名的直播主',
-  粉丝: '铁粉迷恋她',
-  送: '常常会收到粉丝的礼物',
-  新闻: '都要看当日的《新闻报报看》',
-  沙发: '坐在沙发'
+  明星: '直播主',
+  粉丝: '铁粉',
+  送: '收到粉丝的礼物',
+  新闻: '看当日的《新闻报报看》',
+  沙发: '沙发'
 }
 
 export const Mystery: React.FC = () => {
@@ -36,6 +37,7 @@ export const Mystery: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
   const [congratulationOpen, setCongratulationOpen] = useState<boolean>(false)
   const [points, setPoints] = useState<number>(0)
+  const [foundKeyword, setFoundKeyword] = useState<string>()
   const { enqueueSnackbar } = useSnackbar()
   const { keywords, setKeywords, answer, setAnswer, searchWords, setSearchWords } = useMysteryGame()
 
@@ -50,13 +52,19 @@ export const Mystery: React.FC = () => {
 
     // can only highlight up to 20 words at once
     if (selection.toString().length > 20) {
-      enqueueSnackbar('You can only highlight up to 20 words at one moment', { variant: 'error' })
+      enqueueSnackbar('You can only highlight up to 20 words at one moment', {
+        variant: 'error',
+        anchorOrigin: { vertical: 'top', horizontal: 'center' }
+      })
       return
     }
 
     // highlighting across paragraph is not allowed
     if (selection.toString().includes('\n')) {
-      enqueueSnackbar('Highlighting across paragraphs is not allowed', { variant: 'error' })
+      enqueueSnackbar('Highlighting across paragraphs is not allowed', {
+        variant: 'error',
+        anchorOrigin: { vertical: 'top', horizontal: 'center' }
+      })
       return
     }
 
@@ -73,7 +81,10 @@ export const Mystery: React.FC = () => {
 
     // if user has no more highlights
     if (NUMBER_OF_HIGHLIGHTS - searchWords.length <= 0) {
-      enqueueSnackbar('You have no more highlights left', { variant: 'error' })
+      enqueueSnackbar('You have no more highlights left', {
+        variant: 'error',
+        anchorOrigin: { vertical: 'top', horizontal: 'center' }
+      })
       return
     }
 
@@ -81,18 +92,34 @@ export const Mystery: React.FC = () => {
     Object.entries(important_phrase_map).forEach(([keyword, phrase]) => {
       if (selection.toString().includes(phrase)) {
         setKeywords({ ...keywords, [keyword]: true })
+        setFoundKeyword(keyword)
+        setCongratulationOpen(true)
       }
     })
 
     setSearchWords([...searchWords, selection.toString()])
-  }, [searchWords])
-
-  useEffect(() => {
-    if (!Object.values(keywords).includes(true)) return
-    setCongratulationOpen(true)
-  }, [keywords])
+  }, [enqueueSnackbar, keywords, searchWords, setKeywords, setSearchWords])
 
   useEffectOnce(() => setMounted(true))
+
+  useEffect(() => {
+    if (Object.values(keywords).filter(v => v).length === 5) {
+      enqueueSnackbar('You have found the secret keyword!', {
+        variant: 'success',
+        anchorOrigin: { horizontal: 'center', vertical: 'top' },
+        resumeHideDuration: 5000,
+        action: (
+          <button
+            className='bg-secondary px-2 py-1 rounded-lg hover:bg-secondary-hover font-medium text-sm focus:outline-none mr-4'
+            onClick={() => setDialogOpen(true)}
+          >
+            SEE NOW
+          </button>
+        )
+      })
+      setKeywords({ ...keywords, 人皮: true })
+    }
+  }, [enqueueSnackbar, keywords, setKeywords])
 
   if (!mounted) return <LoadingPage />
 
@@ -137,7 +164,10 @@ export const Mystery: React.FC = () => {
             Object.keys(important_phrase_map).forEach(phrase => {
               if (answer.includes(phrase)) {
                 setPoints(points => points + 10)
-                enqueueSnackbar('You got 10 points!', { variant: 'success' })
+                enqueueSnackbar('You got 10 points!', {
+                  variant: 'success',
+                  anchorOrigin: { vertical: 'top', horizontal: 'center' }
+                })
               }
             })
           }}
@@ -227,7 +257,12 @@ export const Mystery: React.FC = () => {
       </Transition>
 
       <Transition show={congratulationOpen} as={Fragment}>
-        <Dialog onClose={() => setCongratulationOpen(false)}>
+        <Dialog
+          onClose={() => {
+            setCongratulationOpen(false)
+            setFoundKeyword(undefined)
+          }}
+        >
           <Transition.Child
             as={Fragment}
             enter='ease-out duration-300'
@@ -255,19 +290,16 @@ export const Mystery: React.FC = () => {
                 <button
                   type='button'
                   className='p-1 bg-dark-200 rounded-full absolute right-4 focus:outline-none'
-                  onClick={() => setCongratulationOpen(false)}
+                  onClick={() => {
+                    setCongratulationOpen(false)
+                    setFoundKeyword(undefined)
+                  }}
                 >
                   <Icon icon='mdi:close' />
                 </button>
               </div>
               <div className='my-2 text-sm'>
-                You have found the keyword:{' '}
-                <span className='font-bold text-lg'>
-                  {Object.entries(keywords)
-                    .filter(k => k[1])
-                    .map(k => k[0])
-                    .shift()}
-                </span>
+                You have found the keyword: <span className='font-bold text-lg'>{foundKeyword && foundKeyword}</span>
               </div>
               <p className='text-sm text-true-gray-400'>
                 {Object.entries(keywords).filter(v => v[1]).length}/{Object.entries(keywords).length} collected
