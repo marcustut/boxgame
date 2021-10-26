@@ -10,6 +10,9 @@ ifneq (,$(wildcard ./.env))
     export
 endif
 
+# take away '?pgbouncer=true' from DATABASE_URL
+DATABASE_URL := $(patsubst %?pgbouncer=true,%,$(DATABASE_URL))
+
 clean:
 	rm -rf ./target
 

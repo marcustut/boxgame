@@ -78,3 +78,14 @@ export const CORE_COMMENT_FIELDS = gql`
     }
   }
 `
+
+export const CORE_MISSION_FIELDS = gql`
+  fragment CoreMissionFields on Mission {
+    id
+    title
+    description
+    points
+    createdAt
+    updatedAt
+  }
+`

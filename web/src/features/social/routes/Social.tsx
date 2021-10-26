@@ -16,6 +16,7 @@ export const Social: React.FC = () => {
         console.error(res.error)
         alert('error fetching posts from server')
       }
+      console.log('fetched posts')
     })()
   }, [fetchPosts])
 

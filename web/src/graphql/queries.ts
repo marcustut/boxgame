@@ -1,6 +1,12 @@
 import { gql } from '@apollo/client'
 
-import { CORE_COMMENT_FIELDS, CORE_POST_FIELDS, CORE_PROFILE_FIELDS, CORE_USER_FIELDS } from './fragments'
+import {
+  CORE_COMMENT_FIELDS,
+  CORE_MISSION_FIELDS,
+  CORE_POST_FIELDS,
+  CORE_PROFILE_FIELDS,
+  CORE_USER_FIELDS
+} from './fragments'
 
 export const GET_REGISTERED_USER_COUNT = gql`
   query GetUserCount {
@@ -75,6 +81,30 @@ export const GET_POSTS_WITH_COMMENTS = gql`
       liked(user_id: $user_id)
       comments(page: $commentsPage) {
         ...CoreCommentFields
+      }
+    }
+  }
+`
+
+export const GET_MISSIONS = gql`
+  ${CORE_MISSION_FIELDS}
+  query GetMissions($page: PaginationInput!) {
+    missions(page: $page) {
+      ...CoreMissionFields
+    }
+  }
+`
+
+export const GET_MISSIONS_WITH_COMPLETED_BY = gql`
+  ${CORE_MISSION_FIELDS}
+  query GetMissionsWithCompletedBy($page: PaginationInput!) {
+    missions(page: $page) {
+      ...CoreMissionFields
+      completedBy {
+        id
+        name
+        color
+        points
       }
     }
   }
