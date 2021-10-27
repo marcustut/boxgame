@@ -36,6 +36,10 @@ html {
   background: #df445c;
 }
 
+button:focus {
+  outline: none;
+}
+
 .bg-confetti-animated {
   background-repeat: repeat-x;
   background-position: top -10px center;

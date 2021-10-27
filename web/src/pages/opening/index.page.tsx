@@ -1,12 +1,11 @@
 import React from 'react'
 
-import { AuthRequiredPage } from '@/components/Misc'
+import { LoadingPage } from '@/components/Misc'
 import { Opening } from '@/features/opening'
-import { useAuth } from '@/lib/auth'
+import { supabase } from '@/lib/supabase'
 
 const OpeningPage: React.FC = () => {
-  const { user } = useAuth()
-  return user ? <Opening /> : <AuthRequiredPage />
+  return supabase.auth.session() ? <Opening /> : <LoadingPage />
 }
 
 export default OpeningPage

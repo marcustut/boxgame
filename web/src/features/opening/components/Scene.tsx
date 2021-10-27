@@ -1,8 +1,9 @@
 import { Effects, OrbitControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import React, { Suspense } from 'react'
+import React, { Suspense, useState } from 'react'
 
 import { Floor, Lightbulb, TV, WaveVideo } from '@/features/opening'
+import { getRandomInt } from '@/utils'
 
 export const Scene: React.FC = () => {
   return (

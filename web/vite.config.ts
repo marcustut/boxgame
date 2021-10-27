@@ -1,8 +1,9 @@
+import { resolve } from 'path'
+
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import checker from 'vite-plugin-checker'
 import ssr from 'vite-plugin-ssr/plugin'
 import WindiCSS from 'vite-plugin-windicss'
-import { resolve } from 'path'
 
 function pathResolve(dir: string) {
   return resolve(__dirname, '.', dir)
