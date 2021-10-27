@@ -1,4 +1,5 @@
 import { Icon } from '@iconify/react'
+import useBlobity from 'blobity/lib/useBlobity'
 import React from 'react'
 
 import { AppLayout, Avatar } from '@/components/Elements'
@@ -8,6 +9,7 @@ import { useAuth } from '@/lib/auth'
 
 export const Profile: React.FC = () => {
   const { user } = useAuth()
+  const blobity = useBlobity({ zIndex: -1, fontSize: 12, dotColor: '#e06578' })
 
   if (!user) return <LoadingPage />
 
@@ -15,7 +17,7 @@ export const Profile: React.FC = () => {
     <AppLayout>
       {user.user.profile ? (
         <div className='flex flex-col justify-center items-center'>
-          <div className='w-full h-48 rounded-md flex justify-center items-center bg-dark-300 text-true-gray-500'>
+          <div className='-z-1 w-full h-48 rounded-md flex justify-center items-center bg-dark-300 text-true-gray-500'>
             3D Model here...
           </div>
 
@@ -41,6 +43,7 @@ export const Profile: React.FC = () => {
             {user.user.roles.map((role, index) => (
               <div
                 key={role}
+                data-blobity-radius='16'
                 className={`bg-dark-300 text-true-gray-400 px-3 py-1 rounded-full ${index !== 0 ? 'ml-2' : ''}`}
               >
                 {role.toLowerCase()}
@@ -52,7 +55,9 @@ export const Profile: React.FC = () => {
             {user.user.team ? `a member of ${user.user.team.name}` : "haven't join a team yet"}
           </p>
 
-          <div className='bg-dark-300 text-true-gray-500 w-full p-4 my-4 rounded-md'>Bio here...</div>
+          <div className='-z-1 bg-dark-300 text-true-gray-500 w-full p-4 my-4 rounded-md'>
+            <span className='z-1'>Bio here...</span>
+          </div>
         </div>
       ) : (
         <p>Unable to fetch your profile</p>

@@ -75,7 +75,7 @@ export const Opening: React.FC = () => {
 
         <div className='absolute bottom-8 right-4 flex flex-col' style={{ zIndex: 11 }}>
           {emojis.map((emoji, index) => (
-            <EmojiWrapper key={emoji.name + index} emoji={emoji} size={25} lifetime={1000} />
+            <EmojiWrapper key={emoji.name + index} emoji={emoji} size={25} lifetime={1500} />
           ))}
         </div>
 

@@ -39,12 +39,14 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
             rightRender={() => (
               <div className='ml-auto'>
                 <button
+                  data-blobity-tooltip='Nagivate to other page'
                   className='p-2 mr-2 rounded-md bg-secondary focus:outline-none transition duration-200 ease-in-out focus:ring-secondary-ring focus:ring-2'
                   onClick={() => setNavOpen(true)}
                 >
                   <Icon className='w-4 h-4' icon='mdi:menu' />
                 </button>
                 <button
+                  data-blobity-tooltip='Log out'
                   className='p-2 border-[1px] border-dark-100 rounded-md focus:outline-none transition duration-200 ease-in-out focus:ring-secondary-ring focus:ring-2'
                   onClick={() => signOut()}
                 >

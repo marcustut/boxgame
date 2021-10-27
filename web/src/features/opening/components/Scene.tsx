@@ -9,8 +9,8 @@ export const Scene: React.FC = () => {
   return (
     <Canvas camera={{ fov: 60 }}>
       <Effects>
-        {/* <bloomPass attachArray='passes' /> */}
-        {/* <glitchPass attachArray='passes' /> */}
+        {/* <bloomPass attachArray='passes' />
+        <glitchPass attachArray='passes' /> */}
       </Effects>
 
       <OrbitControls maxPolarAngle={Math.PI / 2} minPolarAngle={0} />
