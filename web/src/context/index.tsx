@@ -7,7 +7,7 @@ import { SnackbarProvider } from 'notistack'
 import React from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 
-import { ErrorPage } from '@/components/Misc'
+import { ReactBoundaryErrorPage } from '@/components/Misc'
 import { PageContextProvider } from '@/hooks/usePageContext'
 import { AuthProvider } from '@/lib/auth'
 import { PageContext } from '@/types/ssr'
@@ -28,7 +28,7 @@ export const AppProvider: React.FC<AppProviderProps<unknown>> = ({
 }) => {
   return (
     <React.StrictMode>
-      <ErrorBoundary FallbackComponent={ErrorPage}>
+      <ErrorBoundary FallbackComponent={ReactBoundaryErrorPage}>
         <ApolloProvider client={apolloClient}>
           <AuthProvider>
             <CacheProvider value={emotionCache}>

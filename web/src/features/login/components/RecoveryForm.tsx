@@ -7,7 +7,7 @@ import { Button, InputField } from '@/components/Elements'
 import { useAuth } from '@/lib/auth'
 
 const recoverySchema = Yup.object({
-  email: Yup.string().email().required()
+  recoveryEmail: Yup.string().email('Must be a valid email').required('Email must not be empty')
 })
 
 type RecoveryFormProps = {
@@ -20,11 +20,11 @@ export const RecoveryForm: React.FC<RecoveryFormProps> = ({ goBackOnClick }) => 
 
   return (
     <Formik
-      initialValues={{ email: '' }}
+      initialValues={{ recoveryEmail: '' }}
       validationSchema={recoverySchema}
       validateOnBlur={false}
-      onSubmit={async ({ email }) => {
-        const { data, error } = await resetPassword(email)
+      onSubmit={async ({ recoveryEmail }) => {
+        const { data, error } = await resetPassword(recoveryEmail)
         if (error || !data) {
           enqueueSnackbar('Incorrect email 邮件输入错误 ', {
             variant: 'error',
@@ -43,9 +43,10 @@ export const RecoveryForm: React.FC<RecoveryFormProps> = ({ goBackOnClick }) => 
             <h2 className='font-bold text-2xl mb-4'>密码恢复</h2>
             <div className='box <sm:w-full w-96'>
               <InputField
-                name='email'
+                name='recoveryEmail'
                 placeholder='Enter email here...'
                 label='Email 邮件 '
+                type='email'
                 inputClassName='bg-dark-400 text-true-gray-50 text-sm py-3 focus:ring-primary-ring focus:border-transparent border-transparent'
               />
 

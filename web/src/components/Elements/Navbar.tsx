@@ -22,10 +22,10 @@ export const Navbar: React.FC<NavbarProps> = ({
       {leftRender ? (
         leftRender(logoSrc, logoAlt, title)
       ) : (
-        <div className='flex items-center font-bold'>
+        <button className='flex items-center font-bold' onClick={() => (window.location.href = '/app')}>
           <img src={logoSrc} alt={logoAlt} className='w-10 filter grayscale-20 object-fit mr-1' />
           {title}
-        </div>
+        </button>
       )}
 
       {rightRender ? rightRender() : <div className='ml-auto'>Right side</div>}

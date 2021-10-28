@@ -67,7 +67,7 @@ const AuthContext = React.createContext<IAuthContext>({
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [user, setUser] = useState<UserWithAuth>()
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const { refetch: fetchUser } = useQuery<GetUser, GetUserVariables>(GET_USER, { skip: true })
 
   useEffect(() => {
@@ -97,7 +97,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     })()
 
     // Listen for changes on auth state (logged in, signed out, etc.)
-    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session && session.user) {
         setLoading(true)
 
@@ -113,6 +113,18 @@ export const AuthProvider: React.FC = ({ children }) => {
           }
           setUser({ user: data.user, auth: session })
           setItem<UserWithAuth>('token', { user: data.user, auth: session })
+        }
+
+        switch (event) {
+          case 'PASSWORD_RECOVERY':
+            window.location.href = '/app/profile/recovery'
+            break
+          case 'SIGNED_IN':
+            window.location.href = '/app'
+            break
+          case 'SIGNED_OUT':
+            window.location.href = '/login'
+            break
         }
 
         setLoading(false)

@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
 import { LoginForm, RecoveryForm, SmokeBackground } from '@/features/login'
-import { usePageContext } from '@/hooks/usePageContext'
 import { useAuth } from '@/lib/auth'
 
 import '@/features/login/styles/styles.css'
@@ -14,7 +13,6 @@ enum AuthState {
 export const Login = () => {
   const { user } = useAuth()
   const [authState, setAuthState] = useState<AuthState>(AuthState.LOGIN)
-  const pageContext = usePageContext()
 
   // redirect user if is logged in
   if (user) window.location.href = '/app'

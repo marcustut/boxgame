@@ -7,8 +7,8 @@ import { InputField, Button } from '@/components/Elements'
 import { useAuth } from '@/lib/auth'
 
 const loginSchema = Yup.object({
-  email: Yup.string().email().required(),
-  password: Yup.string().required()
+  email: Yup.string().email('Must be a valid email').required('Email must not be empty'),
+  password: Yup.string().required('Password must not be empty')
 })
 
 type LoginFormProps = {
@@ -46,14 +46,14 @@ export const LoginForm: React.FC<LoginFormProps> = ({ forgotPasswordOnClick }) =
               <InputField
                 name='email'
                 placeholder='Enter email here...'
-                label='Email 邮件 '
+                label='Email 邮件'
                 inputClassName='bg-dark-400 text-true-gray-50 text-sm py-3 focus:ring-primary-ring focus:border-transparent border-transparent'
               />
               <InputField
                 name='password'
                 type='password'
                 placeholder='Enter password here...'
-                label='Password 密码 '
+                label='Password 密码'
                 className='mt-4'
                 inputClassName='bg-dark-400 text-true-gray-50 text-sm py-3 focus:ring-primary-ring focus:border-transparent border-transparent'
               />
