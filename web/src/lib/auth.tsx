@@ -45,6 +45,14 @@ interface IAuthContext {
     data: Session | null // Deprecated
   }>
   signOut: () => Promise<{ error: Error | null }>
+  resetPassword: (
+    email: string,
+    options?:
+      | {
+          redirectTo?: string | undefined
+        }
+      | undefined
+  ) => Promise<{ data: {} | null; error: Error | null }>
   user?: UserWithAuth
   loading: boolean
 }
@@ -53,6 +61,7 @@ const AuthContext = React.createContext<IAuthContext>({
   signIn: null as unknown as IAuthContext['signIn'],
   signUp: null as unknown as IAuthContext['signUp'],
   signOut: null as unknown as IAuthContext['signOut'],
+  resetPassword: null as unknown as IAuthContext['resetPassword'],
   loading: false
 })
 
@@ -124,6 +133,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       clearItem('token')
       return supabase.auth.signOut()
     },
+    resetPassword: (email, options) => supabase.auth.api.resetPasswordForEmail(email, options),
     user,
     loading
   }

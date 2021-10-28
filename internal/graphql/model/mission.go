@@ -13,6 +13,8 @@ type Mission struct {
 	Points         float64   `json:"points" fake:"{float64:10,100}"`
 	CreatedAt      time.Time `json:"createdAt" fake:"{date}"`
 	UpdatedAt      time.Time `json:"updatedAt" fake:"{date}"`
+	StartAt        time.Time `json:"startAt" fake:"{date}"`
+	EndAt          time.Time `json:"endAt" fake:"{date}"`
 	CompletedByIDs *[]string `json:"completedBy" fake:"skip"`
 }
 
@@ -29,6 +31,8 @@ func MapToMission(dbMission *postgresql.MissionModel) (*Mission, error) {
 		Points:      dbMission.Points,
 		CreatedAt:   dbMission.CreatedAt,
 		UpdatedAt:   dbMission.UpdatedAt,
+		StartAt:     dbMission.StartAt,
+		EndAt:       dbMission.EndAt,
 	}
 
 	return mission, nil

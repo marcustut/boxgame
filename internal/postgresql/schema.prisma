@@ -79,10 +79,10 @@ model Profile {
   avatarUrl     String?
   createdAt     DateTime        @default(now())
   updatedAt     DateTime
-  invitedBy     String?
   addressId     String?         @db.Uuid
   satellite     Satellite?
   nameChi       String?
+  invitedBy     String?
   address       Address?        @relation(fields: [addressId], references: [id])
   user          User?
 }
@@ -132,6 +132,8 @@ model Mission {
   points      Float
   createdAt   DateTime      @default(now())
   updatedAt   DateTime
+  startAt     DateTime      @db.Timestamp(6)
+  endAt       DateTime      @db.Timestamp(6)
   teamMission TeamMission[]
 }
 

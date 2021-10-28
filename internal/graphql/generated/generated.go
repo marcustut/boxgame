@@ -82,8 +82,10 @@ type ComplexityRoot struct {
 		CompletedBy func(childComplexity int) int
 		CreatedAt   func(childComplexity int) int
 		Description func(childComplexity int) int
+		EndAt       func(childComplexity int) int
 		ID          func(childComplexity int) int
 		Points      func(childComplexity int) int
+		StartAt     func(childComplexity int) int
 		Title       func(childComplexity int) int
 		UpdatedAt   func(childComplexity int) int
 	}
@@ -372,6 +374,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mission.Description(childComplexity), true
 
+	case "Mission.endAt":
+		if e.complexity.Mission.EndAt == nil {
+			break
+		}
+
+		return e.complexity.Mission.EndAt(childComplexity), true
+
 	case "Mission.id":
 		if e.complexity.Mission.ID == nil {
 			break
@@ -385,6 +394,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mission.Points(childComplexity), true
+
+	case "Mission.startAt":
+		if e.complexity.Mission.StartAt == nil {
+			break
+		}
+
+		return e.complexity.Mission.StartAt(childComplexity), true
 
 	case "Mission.title":
 		if e.complexity.Mission.Title == nil {
@@ -981,6 +997,8 @@ type Mission {
   points: Float!
   createdAt: Time!
   updatedAt: Time!
+  startAt: Time!
+  endAt: Time!
   completedBy: [Team!]!
 }
 
@@ -2257,6 +2275,76 @@ func (ec *executionContext) _Mission_updatedAt(ctx context.Context, field graphq
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mission_startAt(ctx context.Context, field graphql.CollectedField, obj *model.Mission) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mission",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StartAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mission_endAt(ctx context.Context, field graphql.CollectedField, obj *model.Mission) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mission",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EndAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6038,6 +6126,16 @@ func (ec *executionContext) _Mission(ctx context.Context, sel ast.SelectionSet, 
 			}
 		case "updatedAt":
 			out.Values[i] = ec._Mission_updatedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "startAt":
+			out.Values[i] = ec._Mission_startAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "endAt":
+			out.Values[i] = ec._Mission_endAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}

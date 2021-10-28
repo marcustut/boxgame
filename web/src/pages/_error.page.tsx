@@ -1,21 +1,12 @@
 import React from 'react'
 
-export { Page }
+import { ErrorPage } from '@/components/Misc'
 
-function Page({ is404 }: { is404: boolean }) {
-  if (is404) {
-    return (
-      <>
-        <h1>404 Page Not Found</h1>
-        <p>This page could not be found.</p>
-      </>
-    )
-  } else {
-    return (
-      <>
-        <h1>500 Internal Server Error</h1>
-        <p>Something went wrong.</p>
-      </>
-    )
-  }
+type VitePluginSSRErrorPageProps = {
+  is404: boolean
 }
+
+const VitePluginSSRErrorPage: React.FC<VitePluginSSRErrorPageProps> = ({ is404 }: { is404: boolean }) =>
+  is404 ? <ErrorPage is404 /> : <ErrorPage is404={false} />
+
+export default VitePluginSSRErrorPage

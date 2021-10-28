@@ -1,9 +1,11 @@
 import { Transition, Dialog } from '@headlessui/react'
 import { Icon } from '@iconify/react'
 import React, { Fragment, useState } from 'react'
+import { useEffectOnce } from 'react-use'
 
 import { Button, Navbar } from '@/components/Elements'
 import { useAuth } from '@/lib/auth'
+import { supabase } from '@/lib/supabase'
 
 const routes = [
   { id: 0, name: 'Profile', icon: 'mdi:face-man-profile', path: '/app/profile' },
@@ -29,33 +31,55 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
 }) => {
   const { signOut } = useAuth()
   const [navOpen, setNavOpen] = useState<boolean>(false)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+
+  useEffectOnce(() => {
+    supabase.auth.session() && setIsLoggedIn(true)
+  })
+
+  const rightRender = (
+    <div className='ml-auto'>
+      {isLoggedIn ? (
+        <>
+          <button
+            data-blobity-tooltip='Nagivate to other page'
+            className='p-2 mr-2 rounded-md bg-secondary focus:outline-none transition duration-200 ease-in-out focus:ring-secondary-ring focus:ring-2'
+            onClick={() => setNavOpen(true)}
+          >
+            <Icon className='w-4 h-4' icon='mdi:menu' />
+          </button>
+          <button
+            data-blobity-tooltip='Log out'
+            className='p-2 border-[1px] border-dark-100 rounded-md focus:outline-none transition duration-200 ease-in-out focus:ring-secondary-ring focus:ring-2'
+            onClick={() => signOut()}
+          >
+            <Icon className='w-4 h-4' icon='mdi:logout' />
+          </button>
+        </>
+      ) : (
+        <>
+          <button
+            className='px-3 py-1.5 mr-2 rounded-md bg-secondary text-sm font-medium focus:outline-none transition duration-200 ease-in-out focus:ring-secondary-ring focus:ring-2'
+            onClick={() => (window.location.href = '/register')}
+          >
+            Register
+          </button>
+          <button
+            data-blobity-tooltip='Log out'
+            className='px-3 py-1.5 border-[1px] border-dark-100 text-sm font-medium rounded-md focus:outline-none transition duration-200 ease-in-out focus:ring-secondary-ring focus:ring-2'
+            onClick={() => (window.location.href = '/login')}
+          >
+            Login
+          </button>
+        </>
+      )}
+    </div>
+  )
 
   return (
     <>
       <div className={`container mx-auto ${className}`}>
-        {navbar && (
-          <Navbar
-            className={`${navbarHeight} ${paddingX}`}
-            rightRender={() => (
-              <div className='ml-auto'>
-                <button
-                  data-blobity-tooltip='Nagivate to other page'
-                  className='p-2 mr-2 rounded-md bg-secondary focus:outline-none transition duration-200 ease-in-out focus:ring-secondary-ring focus:ring-2'
-                  onClick={() => setNavOpen(true)}
-                >
-                  <Icon className='w-4 h-4' icon='mdi:menu' />
-                </button>
-                <button
-                  data-blobity-tooltip='Log out'
-                  className='p-2 border-[1px] border-dark-100 rounded-md focus:outline-none transition duration-200 ease-in-out focus:ring-secondary-ring focus:ring-2'
-                  onClick={() => signOut()}
-                >
-                  <Icon className='w-4 h-4' icon='mdi:logout' />
-                </button>
-              </div>
-            )}
-          />
-        )}
+        {navbar && <Navbar className={`${navbarHeight} ${paddingX}`} rightRender={() => rightRender} />}
         <div className={`${paddingX} py-14`}>{children}</div>
       </div>
 

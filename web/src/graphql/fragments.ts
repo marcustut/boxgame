@@ -87,5 +87,7 @@ export const CORE_MISSION_FIELDS = gql`
     points
     createdAt
     updatedAt
+    startAt
+    endAt
   }
 `

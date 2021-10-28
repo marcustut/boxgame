@@ -59,6 +59,8 @@ type Mission {
   points: Float!
   createdAt: Time!
   updatedAt: Time!
+  startAt: Time!
+  endAt: Time!
   completedBy: [Team!]!
 }
 

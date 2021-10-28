@@ -25,6 +25,8 @@ export interface GetMissionsWithCompletedBy_missions {
   points: number;
   createdAt: TheBox.Time;
   updatedAt: TheBox.Time;
+  startAt: TheBox.Time;
+  endAt: TheBox.Time;
   completedBy: GetMissionsWithCompletedBy_missions_completedBy[];
 }
 
