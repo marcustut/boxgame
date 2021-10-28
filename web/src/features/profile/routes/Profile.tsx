@@ -1,5 +1,4 @@
 import { Icon } from '@iconify/react'
-import useBlobity from 'blobity/lib/useBlobity'
 import React from 'react'
 
 import { AppLayout, Avatar } from '@/components/Elements'
@@ -9,7 +8,6 @@ import { useAuth } from '@/lib/auth'
 
 export const Profile: React.FC = () => {
   const { user } = useAuth()
-  const blobity = useBlobity({ zIndex: -1, fontSize: 12, dotColor: '#e06578' })
 
   if (!user) return <LoadingPage />
 
@@ -17,9 +15,9 @@ export const Profile: React.FC = () => {
     <AppLayout>
       {user.user.profile ? (
         <div className='flex flex-col justify-center items-center'>
-          <div className='-z-1 w-full h-48 rounded-md flex justify-center items-center bg-dark-300 text-true-gray-500'>
+          {/* <div className='-z-1 w-full h-48 rounded-md flex justify-center items-center bg-dark-300 text-true-gray-500'>
             3D Model here...
-          </div>
+          </div> */}
 
           <h2 className='mt-4 text-2xl font-bold'>{user.user.profile.nameEng}</h2>
           <div className='text-true-gray-500 font-medium text-sm flex items-center'>
@@ -55,14 +53,22 @@ export const Profile: React.FC = () => {
             {user.user.team ? `a member of ${user.user.team.name}` : "haven't join a team yet"}
           </p>
 
-          <div className='-z-1 bg-dark-300 text-true-gray-500 w-full p-4 my-4 rounded-md'>
-            <span className='z-1'>Bio here...</span>
+          <div className='bg-dark-300 text-true-gray-500 w-full p-4 my-4 rounded-md'>
+            <span className=''>Bio here...</span>
           </div>
+
+          <button
+            data-blobity-magnetic='false'
+            data-blobity-offset-x='10'
+            className='mt-4 text-true-gray-500 text-sm'
+            onClick={() => (window.location.href = '/app/profile/recovery')}
+          >
+            Looking to reset password?
+          </button>
         </div>
       ) : (
         <p>Unable to fetch your profile</p>
       )}
-      {/* <pre>{JSON.stringify(user?.user, null, 2)}</pre> */}
     </AppLayout>
   )
 }

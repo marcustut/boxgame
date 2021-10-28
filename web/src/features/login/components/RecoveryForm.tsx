@@ -52,7 +52,8 @@ export const RecoveryForm: React.FC<RecoveryFormProps> = ({ goBackOnClick }) => 
 
               <button
                 type='button'
-                className='text-sm self-end mt-4 text-true-gray-400 hover:underline'
+                data-blobity-magnetic='false'
+                className='text-sm self-end mt-4 text-true-gray-400'
                 onClick={goBackOnClick}
               >
                 Go back

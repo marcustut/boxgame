@@ -1,3 +1,4 @@
+import useBlobity from 'blobity/lib/useBlobity'
 import React, { useState } from 'react'
 
 import { LoginForm, RecoveryForm, SmokeBackground } from '@/features/login'
@@ -13,6 +14,15 @@ enum AuthState {
 export const Login = () => {
   const { user } = useAuth()
   const [authState, setAuthState] = useState<AuthState>(AuthState.LOGIN)
+
+  useBlobity({
+    zIndex: 1,
+    focusableElementsOffsetX: 5,
+    focusableElementsOffsetY: 5,
+    fontSize: 12,
+    font: "'Inter',-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif",
+    dotColor: '#e06578'
+  })
 
   // redirect user if is logged in
   if (user) window.location.href = '/app'

@@ -50,6 +50,7 @@ export const Button: React.FC<ButtonProps> = ({
         colorClassnames[color]
       } font-bold flex items-center justify-center ${className}`}
       data-testid='button'
+      data-blobity-magnetic='false'
       {...props}
     >
       <span className={`${loading ? 'opacity-0' : `flex items-center`} ${innerClassName}`}>

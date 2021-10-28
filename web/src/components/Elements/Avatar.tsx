@@ -47,7 +47,8 @@ export const Avatar: React.FC<AvatarProps> = ({
           {avatar}
           <button
             data-blobity-tooltip='Upload your avatar'
-            className='bg-dark-200 rounded-full p-1.5 absolute right-0 bottom-0 shadow-sm focus:outline-none transition duration-200 ease-in-out focus:ring-2 focus:ring-primary-ring'
+            data-blobity-magnetic='false'
+            className='bg-dark-200 rounded-full p-1.5 absolute right-0 bottom-0 shadow-sm hover:bg-dark-100 focus:outline-none transition duration-200 ease-in-out focus:ring-2 focus:ring-primary-ring'
             onClick={uploadOnClick}
           >
             <Icon icon='mdi:camera' className='text-true-gray-400' />

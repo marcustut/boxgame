@@ -42,6 +42,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       {isLoggedIn ? (
         <>
           <button
+            data-blobity-magnetic='false'
             data-blobity-tooltip='Nagivate to other page'
             className='p-2 mr-2 rounded-md bg-secondary focus:outline-none transition duration-200 ease-in-out focus:ring-secondary-ring focus:ring-2'
             onClick={() => setNavOpen(true)}
@@ -49,6 +50,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
             <Icon className='w-4 h-4' icon='mdi:menu' />
           </button>
           <button
+            data-blobity-magnetic='false'
             data-blobity-tooltip='Log out'
             className='p-2 border-[1px] border-dark-100 rounded-md focus:outline-none transition duration-200 ease-in-out focus:ring-secondary-ring focus:ring-2'
             onClick={() => signOut()}
@@ -59,12 +61,14 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       ) : (
         <>
           <button
+            data-blobity-magnetic='false'
             className='px-3 py-1.5 mr-2 rounded-md bg-secondary text-sm font-medium focus:outline-none transition duration-200 ease-in-out focus:ring-secondary-ring focus:ring-2'
             onClick={() => (window.location.href = '/register')}
           >
             Register
           </button>
           <button
+            data-blobity-magnetic='false'
             data-blobity-tooltip='Log out'
             className='px-3 py-1.5 border-[1px] border-dark-100 text-sm font-medium rounded-md focus:outline-none transition duration-200 ease-in-out focus:ring-secondary-ring focus:ring-2'
             onClick={() => (window.location.href = '/login')}
@@ -112,7 +116,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
               {routes.map(route => (
                 <button
                   key={route.id}
-                  className='flex justify-center items-center bg-secondary font-medium text-sm w-full py-1 mt-2 rounded-[4px] focus:outline-none transition duration-200 ease-in-out focus:ring-secondary-ring focus:ring-2'
+                  data-blobity-magnetic='false'
+                  className='flex justify-center items-center hover:bg-secondary font-medium text-sm w-full py-1 mt-2 rounded-[4px] focus:outline-none transition duration-200 ease-in-out focus:ring-secondary-ring focus:ring-2'
                   onClick={() => (window.location.href = route.path)}
                 >
                   <Icon icon={route.icon} className='mr-1' />

@@ -1,18 +1,11 @@
 import React from 'react'
-import { useEffectOnce } from 'react-use'
 
 import { AppLayout } from '@/components/Elements'
 import { LoadingPage } from '@/components/Misc'
 import { useAuth } from '@/lib/auth'
-import { supabase } from '@/lib/supabase'
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuth()
-
-  // redirect to login if not authenticated
-  useEffectOnce(() => {
-    if (!supabase.auth.session()) window.location.href = '/login'
-  })
 
   // show loading when fetching user
   if (!user) return <LoadingPage />

@@ -27,6 +27,7 @@ export const Mission: React.FC = () => {
           {missions.data.missions.map(mission => (
             <button
               key={mission.id}
+              data-blobity-magnetic='false'
               className='relative w-full flex items-center px-4 py-3 rounded-lg border border-dark-100 bg-dark-300 focus:ring-2 focus:ring-secondary-ring transition ease-in-out duration-200'
               style={{
                 background: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(https://www.ginx.tv/uploads2/Various/The_Outlast_Trials/The_Outlast_Trials.jpg)`,
