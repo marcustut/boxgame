@@ -11,7 +11,7 @@ export const useFetchMissions = (page: PaginationInput) => {
   const fetchMissions = useCallback(async () => {
     const res = await _fetchMissions({ page })
     setMissions(res)
-  }, [page])
+  }, [_fetchMissions, page])
 
   return { missions, fetchMissions }
 }

@@ -45,7 +45,7 @@ type Cluster {
 type Team {
   id: ID!
   name: String
-  color: String!
+  avatarUrl: String
   points: Float!
   cluster: Cluster
   completed(page: PaginationInput!): [Mission!]!
@@ -73,6 +73,15 @@ type User {
   profile: Profile
   team: Team
   roles: [Role!]!
+}
+
+type Invitation {
+  id: ID!
+  from: User
+  user: User!
+  team: Team!
+  createdAt: Time!
+  updatedAt: Time!
 }
 
 type Profile {
@@ -126,6 +135,7 @@ type Comment {
 
 type Query {
   user(user_id: ID!): User
+  users(page: PaginationInput!): [User!]!
   userCount: Int!
   team(team_id: ID!): Team
   cluster(cluster_id: ID!): Cluster
@@ -133,12 +143,16 @@ type Query {
   missions(page: PaginationInput!): [Mission!]!
   post(post_id: ID!): Post
   posts(page: PaginationInput!): [Post!]!
+  invitations(user_id: ID!, page: PaginationInput!): [Invitation!]!
 }
 
 type Mutation {
   createUser(param: NewUser!): User
   createPost(param: NewPost!): Post
   createComment(param: NewComment!): Comment
+  createInvitation(param: NewInvitation!): Invitation
+  createTeam(param: NewTeam!): Team
+  updateUser(user_id: ID!, param: UpdateUserInput!): User
   likePost(param: PostLikeInput!): Boolean
   unlikePost(param: PostLikeInput!): Boolean
   likeComment(param: CommentLikeInput!): Boolean
@@ -181,6 +195,18 @@ input NewUser {
   teamId: ID
 }
 
+input NewInvitation {
+  from: ID!
+  to: ID!
+  teamId: ID!
+}
+
+input NewTeam {
+  name: String!
+  avatarUrl: String
+  clusterId: String
+}
+
 input NewProfile {
   status: PastoralStatus
   gender: Gender!
@@ -202,4 +228,8 @@ input NewAddress {
   state: String!
   country: String!
   postalCode: String!
+}
+
+input UpdateUserInput {
+  teamId: ID
 }

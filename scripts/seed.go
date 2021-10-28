@@ -219,6 +219,8 @@ func seed(ctx context.Context, client *postgresql.PrismaClient) error {
 			postgresql.Mission.Title.Set(m.Title),
 			postgresql.Mission.Points.Set(m.Points),
 			postgresql.Mission.UpdatedAt.Set(m.UpdatedAt),
+			postgresql.Mission.StartAt.Set(m.StartAt),
+			postgresql.Mission.EndAt.Set(m.EndAt),
 			postgresql.Mission.Description.Set(*m.Description),
 		).Exec(ctx)
 		if err != nil {

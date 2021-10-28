@@ -49,3 +49,60 @@ export const CREATE_COMMENT = gql`
     }
   }
 `
+
+export const CREATE_INVITATION = gql`
+  ${CORE_USER_FIELDS}
+  mutation CreateInvitation($param: NewInvitation!) {
+    createInvitation(param: $param) {
+      id
+      from {
+        ...CoreUserFields
+      }
+      user {
+        ...CoreUserFields
+      }
+      team {
+        id
+        name
+        avatarUrl
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+export const CREATE_TEAM = gql`
+  mutation CreateTeam($param: NewTeam!) {
+    createTeam(param: $param) {
+      id
+      name
+      avatarUrl
+      points
+    }
+  }
+`
+
+export const UPDATE_USER = gql`
+  ${CORE_USER_FIELDS}
+  ${CORE_PROFILE_FIELDS}
+  mutation UpdateUser($user_id: ID!, $param: UpdateUserInput!) {
+    updateUser(user_id: $user_id, param: $param) {
+      ...CoreUserFields
+      profile {
+        ...CoreProfileFields
+      }
+      team {
+        id
+        name
+        avatarUrl
+        points
+        cluster {
+          id
+          name
+          color
+        }
+      }
+    }
+  }
+`

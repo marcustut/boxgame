@@ -10,20 +10,22 @@ datasource db {
 }
 
 model User {
-  id          String        @id @db.Uuid
-  username    String        @unique
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime
-  teamId      String?       @db.Uuid
-  email       String        @unique
-  profileId   String        @unique @db.Uuid
-  profile     Profile       @relation(fields: [profileId], references: [id])
-  team        Team?         @relation(fields: [teamId], references: [id])
-  comment     Comment[]
-  commentLike CommentLike[]
-  post        Post[]
-  like        PostLike[]
-  userRole    UserRole[]
+  id                                 String        @id @db.Uuid
+  username                           String        @unique
+  createdAt                          DateTime      @default(now())
+  updatedAt                          DateTime
+  teamId                             String?       @db.Uuid
+  email                              String        @unique
+  profileId                          String        @unique @db.Uuid
+  profile                            Profile       @relation(fields: [profileId], references: [id])
+  team                               Team?         @relation(fields: [teamId], references: [id])
+  comment                            Comment[]
+  commentLike                        CommentLike[]
+  Invitation_Invitation_fromToUser   Invitation[]  @relation("Invitation_fromToUser")
+  Invitation_Invitation_userIdToUser Invitation[]  @relation("Invitation_userIdToUser")
+  post                               Post[]
+  like                               PostLike[]
+  userRole                           UserRole[]
 }
 
 model Post {
@@ -101,10 +103,11 @@ model Address {
 model Team {
   id          String        @id @db.Uuid
   name        String?
-  color       String        @unique
+  avatarUrl   String?
   points      Float         @default(0)
   clusterId   String?       @db.Uuid
   cluster     Cluster?      @relation(fields: [clusterId], references: [id])
+  Invitation  Invitation[]
   teamMission TeamMission[]
   members     User[]
 }
@@ -144,6 +147,18 @@ model UserRole {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([userId, role])
+}
+
+model Invitation {
+  id                           String   @id @db.Uuid
+  from                         String?  @db.Uuid
+  userId                       String   @db.Uuid
+  teamId                       String   @db.Uuid
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime
+  User_Invitation_fromToUser   User?    @relation("Invitation_fromToUser", fields: [from], references: [id], onDelete: Cascade)
+  Team                         Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  User_Invitation_userIdToUser User     @relation("Invitation_userIdToUser", fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum Role {

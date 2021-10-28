@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client'
 import { Provider, Session, User } from '@supabase/gotrue-js'
 import { UserCredentials } from '@supabase/supabase-js'
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect, useCallback } from 'react'
 
 import { GET_USER } from '@/graphql'
 import { GetUser, GetUserVariables, GetUser_user } from '@/graphql/types/GetUser'
@@ -53,6 +53,15 @@ interface IAuthContext {
         }
       | undefined
   ) => Promise<{ data: {} | null; error: Error | null }>
+  updateUserCache: (newUser: UserWithAuth['user']) =>
+    | {
+        user: null
+        error: Error
+      }
+    | {
+        user: UserWithAuth
+        error: null
+      }
   user?: UserWithAuth
   loading: boolean
 }
@@ -62,6 +71,7 @@ const AuthContext = React.createContext<IAuthContext>({
   signUp: null as unknown as IAuthContext['signUp'],
   signOut: null as unknown as IAuthContext['signOut'],
   resetPassword: null as unknown as IAuthContext['resetPassword'],
+  updateUserCache: null as unknown as IAuthContext['updateUserCache'],
   loading: false
 })
 
@@ -136,6 +146,16 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
   }, [fetchUser])
 
+  const updateUserCache = useCallback(
+    (newUser: UserWithAuth['user']) => {
+      if (!user) return { user: null, error: new Error('No cached user present currently') }
+      setUser({ user: newUser, auth: user.auth })
+      setItem<UserWithAuth>('token', { user: newUser, auth: user.auth })
+      return { user, error: null }
+    },
+    [user]
+  )
+
   // Will be passed down to Signup, Login and Dashboard components
   const value: IAuthContext = {
     signUp: (params, options) => supabase.auth.signUp(params, options),
@@ -146,6 +166,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       return supabase.auth.signOut()
     },
     resetPassword: (email, options) => supabase.auth.api.resetPasswordForEmail(email, options),
+    updateUserCache,
     user,
     loading
   }

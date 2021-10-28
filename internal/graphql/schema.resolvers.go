@@ -6,7 +6,6 @@ package graphql
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/marcustut/thebox/internal/graphql/generated"
 	"github.com/marcustut/thebox/internal/graphql/model"
@@ -30,6 +29,18 @@ func (r *commentResolver) Likes(ctx context.Context, obj *model.Comment) (int, e
 	return query.GetUniqueCommentLikeCount(ctx, r.db, obj.ID)
 }
 
+func (r *invitationResolver) From(ctx context.Context, obj *model.Invitation) (*model.User, error) {
+	return query.GetUniqueUser(ctx, r.db, postgresql.User.ID.EqualsIfPresent(obj.FromID))
+}
+
+func (r *invitationResolver) User(ctx context.Context, obj *model.Invitation) (*model.User, error) {
+	return query.GetUniqueUser(ctx, r.db, postgresql.User.ID.Equals(obj.UserID))
+}
+
+func (r *invitationResolver) Team(ctx context.Context, obj *model.Invitation) (*model.Team, error) {
+	return query.GetUniqueTeam(ctx, r.db, postgresql.Team.ID.Equals(obj.TeamID))
+}
+
 func (r *missionResolver) CompletedBy(ctx context.Context, obj *model.Mission) ([]*model.Team, error) {
 	return query.GetManyTeam(ctx, r.db, postgresql.Team.TeamMission.Some(postgresql.TeamMission.MissionID.Equals(obj.ID)))
 }
@@ -44,6 +55,18 @@ func (r *mutationResolver) CreatePost(ctx context.Context, param model.NewPost) 
 
 func (r *mutationResolver) CreateComment(ctx context.Context, param model.NewComment) (*model.Comment, error) {
 	return query.CreateComment(ctx, r.db, &param)
+}
+
+func (r *mutationResolver) CreateInvitation(ctx context.Context, param model.NewInvitation) (*model.Invitation, error) {
+	return query.CreateInvitation(ctx, r.db, &param)
+}
+
+func (r *mutationResolver) CreateTeam(ctx context.Context, param model.NewTeam) (*model.Team, error) {
+	return query.CreateTeam(ctx, r.db, &param)
+}
+
+func (r *mutationResolver) UpdateUser(ctx context.Context, userID string, param model.UpdateUserInput) (*model.User, error) {
+	return query.UpdateUniqueUser(ctx, r.db, postgresql.User.ID.Equals(userID), &param)
 }
 
 func (r *mutationResolver) LikePost(ctx context.Context, param model.PostLikeInput) (*bool, error) {
@@ -89,6 +112,10 @@ func (r *queryResolver) User(ctx context.Context, userID string) (*model.User, e
 	return query.GetUniqueUser(ctx, r.db, postgresql.User.ID.Equals(userID))
 }
 
+func (r *queryResolver) Users(ctx context.Context, page model.PaginationInput) ([]*model.User, error) {
+	return query.GetManyUser(ctx, r.db, page)
+}
+
 func (r *queryResolver) UserCount(ctx context.Context) (int, error) {
 	return query.GetTotalUserCount(ctx, r.db)
 }
@@ -117,6 +144,10 @@ func (r *queryResolver) Posts(ctx context.Context, page model.PaginationInput) (
 	return query.GetManyPost(ctx, r.db, page)
 }
 
+func (r *queryResolver) Invitations(ctx context.Context, userID string, page model.PaginationInput) ([]*model.Invitation, error) {
+	return query.GetManyInvitation(ctx, r.db, page, postgresql.Invitation.UserID.Equals(userID))
+}
+
 func (r *teamResolver) Cluster(ctx context.Context, obj *model.Team) (*model.Cluster, error) {
 	if obj.ClusterID == nil {
 		// return nil, gqlerror.Errorf("team %s does not have a cluster", obj.ID)
@@ -130,7 +161,7 @@ func (r *teamResolver) Completed(ctx context.Context, obj *model.Team, page mode
 }
 
 func (r *teamResolver) Members(ctx context.Context, obj *model.Team) ([]*model.User, error) {
-	return query.GetManyUser(ctx, r.db, postgresql.User.TeamID.Equals(obj.ID))
+	return query.GetManyUser(ctx, r.db, model.PaginationInput{First: 100}, postgresql.User.TeamID.Equals(obj.ID))
 }
 
 func (r *userResolver) Profile(ctx context.Context, obj *model.User) (*model.Profile, error) {
@@ -155,6 +186,9 @@ func (r *Resolver) Cluster() generated.ClusterResolver { return &clusterResolver
 // Comment returns generated.CommentResolver implementation.
 func (r *Resolver) Comment() generated.CommentResolver { return &commentResolver{r} }
 
+// Invitation returns generated.InvitationResolver implementation.
+func (r *Resolver) Invitation() generated.InvitationResolver { return &invitationResolver{r} }
+
 // Mission returns generated.MissionResolver implementation.
 func (r *Resolver) Mission() generated.MissionResolver { return &missionResolver{r} }
 
@@ -178,6 +212,7 @@ func (r *Resolver) User() generated.UserResolver { return &userResolver{r} }
 
 type clusterResolver struct{ *Resolver }
 type commentResolver struct{ *Resolver }
+type invitationResolver struct{ *Resolver }
 type missionResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type postResolver struct{ *Resolver }
@@ -185,16 +220,3 @@ type profileResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type teamResolver struct{ *Resolver }
 type userResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *missionResolver) StartAt(ctx context.Context, obj *model.Mission) (*time.Time, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-func (r *missionResolver) EndAt(ctx context.Context, obj *model.Mission) (*time.Time, error) {
-	panic(fmt.Errorf("not implemented"))
-}

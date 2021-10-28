@@ -53,6 +53,12 @@ export interface NewComment {
   userId: string;
 }
 
+export interface NewInvitation {
+  from: string;
+  to: string;
+  teamId: string;
+}
+
 export interface NewPost {
   content: string;
   images: string[];
@@ -73,6 +79,12 @@ export interface NewProfile {
   invitedBy?: string | null;
 }
 
+export interface NewTeam {
+  name: string;
+  avatarUrl?: string | null;
+  clusterId?: string | null;
+}
+
 export interface NewUser {
   id?: string | null;
   username: string;
@@ -90,6 +102,10 @@ export interface PaginationInput {
 export interface PostLikeInput {
   postId: string;
   userId: string;
+}
+
+export interface UpdateUserInput {
+  teamId?: string | null;
 }
 
 //==============================================================

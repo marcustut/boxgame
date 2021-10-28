@@ -38,6 +38,7 @@ type Config struct {
 type ResolverRoot interface {
 	Cluster() ClusterResolver
 	Comment() CommentResolver
+	Invitation() InvitationResolver
 	Mission() MissionResolver
 	Mutation() MutationResolver
 	Post() PostResolver
@@ -78,6 +79,15 @@ type ComplexityRoot struct {
 		User      func(childComplexity int) int
 	}
 
+	Invitation struct {
+		CreatedAt func(childComplexity int) int
+		From      func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Team      func(childComplexity int) int
+		UpdatedAt func(childComplexity int) int
+		User      func(childComplexity int) int
+	}
+
 	Mission struct {
 		CompletedBy func(childComplexity int) int
 		CreatedAt   func(childComplexity int) int
@@ -91,13 +101,16 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateComment func(childComplexity int, param model.NewComment) int
-		CreatePost    func(childComplexity int, param model.NewPost) int
-		CreateUser    func(childComplexity int, param model.NewUser) int
-		LikeComment   func(childComplexity int, param model.CommentLikeInput) int
-		LikePost      func(childComplexity int, param model.PostLikeInput) int
-		UnlikeComment func(childComplexity int, param model.CommentLikeInput) int
-		UnlikePost    func(childComplexity int, param model.PostLikeInput) int
+		CreateComment    func(childComplexity int, param model.NewComment) int
+		CreateInvitation func(childComplexity int, param model.NewInvitation) int
+		CreatePost       func(childComplexity int, param model.NewPost) int
+		CreateTeam       func(childComplexity int, param model.NewTeam) int
+		CreateUser       func(childComplexity int, param model.NewUser) int
+		LikeComment      func(childComplexity int, param model.CommentLikeInput) int
+		LikePost         func(childComplexity int, param model.PostLikeInput) int
+		UnlikeComment    func(childComplexity int, param model.CommentLikeInput) int
+		UnlikePost       func(childComplexity int, param model.PostLikeInput) int
+		UpdateUser       func(childComplexity int, userID string, param model.UpdateUserInput) int
 	}
 
 	Post struct {
@@ -130,19 +143,21 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Cluster   func(childComplexity int, clusterID string) int
-		Mission   func(childComplexity int, missionID string) int
-		Missions  func(childComplexity int, page model.PaginationInput) int
-		Post      func(childComplexity int, postID string) int
-		Posts     func(childComplexity int, page model.PaginationInput) int
-		Team      func(childComplexity int, teamID string) int
-		User      func(childComplexity int, userID string) int
-		UserCount func(childComplexity int) int
+		Cluster     func(childComplexity int, clusterID string) int
+		Invitations func(childComplexity int, userID string, page model.PaginationInput) int
+		Mission     func(childComplexity int, missionID string) int
+		Missions    func(childComplexity int, page model.PaginationInput) int
+		Post        func(childComplexity int, postID string) int
+		Posts       func(childComplexity int, page model.PaginationInput) int
+		Team        func(childComplexity int, teamID string) int
+		User        func(childComplexity int, userID string) int
+		UserCount   func(childComplexity int) int
+		Users       func(childComplexity int, page model.PaginationInput) int
 	}
 
 	Team struct {
+		AvatarUrl func(childComplexity int) int
 		Cluster   func(childComplexity int) int
-		Color     func(childComplexity int) int
 		Completed func(childComplexity int, page model.PaginationInput) int
 		ID        func(childComplexity int) int
 		Members   func(childComplexity int) int
@@ -170,6 +185,11 @@ type CommentResolver interface {
 	Post(ctx context.Context, obj *model.Comment) (*model.Post, error)
 	Likes(ctx context.Context, obj *model.Comment) (int, error)
 }
+type InvitationResolver interface {
+	From(ctx context.Context, obj *model.Invitation) (*model.User, error)
+	User(ctx context.Context, obj *model.Invitation) (*model.User, error)
+	Team(ctx context.Context, obj *model.Invitation) (*model.Team, error)
+}
 type MissionResolver interface {
 	CompletedBy(ctx context.Context, obj *model.Mission) ([]*model.Team, error)
 }
@@ -177,6 +197,9 @@ type MutationResolver interface {
 	CreateUser(ctx context.Context, param model.NewUser) (*model.User, error)
 	CreatePost(ctx context.Context, param model.NewPost) (*model.Post, error)
 	CreateComment(ctx context.Context, param model.NewComment) (*model.Comment, error)
+	CreateInvitation(ctx context.Context, param model.NewInvitation) (*model.Invitation, error)
+	CreateTeam(ctx context.Context, param model.NewTeam) (*model.Team, error)
+	UpdateUser(ctx context.Context, userID string, param model.UpdateUserInput) (*model.User, error)
 	LikePost(ctx context.Context, param model.PostLikeInput) (*bool, error)
 	UnlikePost(ctx context.Context, param model.PostLikeInput) (*bool, error)
 	LikeComment(ctx context.Context, param model.CommentLikeInput) (*bool, error)
@@ -193,6 +216,7 @@ type ProfileResolver interface {
 }
 type QueryResolver interface {
 	User(ctx context.Context, userID string) (*model.User, error)
+	Users(ctx context.Context, page model.PaginationInput) ([]*model.User, error)
 	UserCount(ctx context.Context) (int, error)
 	Team(ctx context.Context, teamID string) (*model.Team, error)
 	Cluster(ctx context.Context, clusterID string) (*model.Cluster, error)
@@ -200,6 +224,7 @@ type QueryResolver interface {
 	Missions(ctx context.Context, page model.PaginationInput) ([]*model.Mission, error)
 	Post(ctx context.Context, postID string) (*model.Post, error)
 	Posts(ctx context.Context, page model.PaginationInput) ([]*model.Post, error)
+	Invitations(ctx context.Context, userID string, page model.PaginationInput) ([]*model.Invitation, error)
 }
 type TeamResolver interface {
 	Cluster(ctx context.Context, obj *model.Team) (*model.Cluster, error)
@@ -353,6 +378,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Comment.User(childComplexity), true
 
+	case "Invitation.createdAt":
+		if e.complexity.Invitation.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.Invitation.CreatedAt(childComplexity), true
+
+	case "Invitation.from":
+		if e.complexity.Invitation.From == nil {
+			break
+		}
+
+		return e.complexity.Invitation.From(childComplexity), true
+
+	case "Invitation.id":
+		if e.complexity.Invitation.ID == nil {
+			break
+		}
+
+		return e.complexity.Invitation.ID(childComplexity), true
+
+	case "Invitation.team":
+		if e.complexity.Invitation.Team == nil {
+			break
+		}
+
+		return e.complexity.Invitation.Team(childComplexity), true
+
+	case "Invitation.updatedAt":
+		if e.complexity.Invitation.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.Invitation.UpdatedAt(childComplexity), true
+
+	case "Invitation.user":
+		if e.complexity.Invitation.User == nil {
+			break
+		}
+
+		return e.complexity.Invitation.User(childComplexity), true
+
 	case "Mission.completedBy":
 		if e.complexity.Mission.CompletedBy == nil {
 			break
@@ -428,6 +495,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateComment(childComplexity, args["param"].(model.NewComment)), true
 
+	case "Mutation.createInvitation":
+		if e.complexity.Mutation.CreateInvitation == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createInvitation_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateInvitation(childComplexity, args["param"].(model.NewInvitation)), true
+
 	case "Mutation.createPost":
 		if e.complexity.Mutation.CreatePost == nil {
 			break
@@ -439,6 +518,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreatePost(childComplexity, args["param"].(model.NewPost)), true
+
+	case "Mutation.createTeam":
+		if e.complexity.Mutation.CreateTeam == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createTeam_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateTeam(childComplexity, args["param"].(model.NewTeam)), true
 
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
@@ -499,6 +590,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UnlikePost(childComplexity, args["param"].(model.PostLikeInput)), true
+
+	case "Mutation.updateUser":
+		if e.complexity.Mutation.UpdateUser == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateUser_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateUser(childComplexity, args["user_id"].(string), args["param"].(model.UpdateUserInput)), true
 
 	case "Post.comments":
 		if e.complexity.Post.Comments == nil {
@@ -683,6 +786,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Cluster(childComplexity, args["cluster_id"].(string)), true
 
+	case "Query.invitations":
+		if e.complexity.Query.Invitations == nil {
+			break
+		}
+
+		args, err := ec.field_Query_invitations_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Invitations(childComplexity, args["user_id"].(string), args["page"].(model.PaginationInput)), true
+
 	case "Query.mission":
 		if e.complexity.Query.Mission == nil {
 			break
@@ -762,19 +877,31 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.UserCount(childComplexity), true
 
+	case "Query.users":
+		if e.complexity.Query.Users == nil {
+			break
+		}
+
+		args, err := ec.field_Query_users_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Users(childComplexity, args["page"].(model.PaginationInput)), true
+
+	case "Team.avatarUrl":
+		if e.complexity.Team.AvatarUrl == nil {
+			break
+		}
+
+		return e.complexity.Team.AvatarUrl(childComplexity), true
+
 	case "Team.cluster":
 		if e.complexity.Team.Cluster == nil {
 			break
 		}
 
 		return e.complexity.Team.Cluster(childComplexity), true
-
-	case "Team.color":
-		if e.complexity.Team.Color == nil {
-			break
-		}
-
-		return e.complexity.Team.Color(childComplexity), true
 
 	case "Team.completed":
 		if e.complexity.Team.Completed == nil {
@@ -983,7 +1110,7 @@ type Cluster {
 type Team {
   id: ID!
   name: String
-  color: String!
+  avatarUrl: String
   points: Float!
   cluster: Cluster
   completed(page: PaginationInput!): [Mission!]!
@@ -1011,6 +1138,15 @@ type User {
   profile: Profile
   team: Team
   roles: [Role!]!
+}
+
+type Invitation {
+  id: ID!
+  from: User
+  user: User!
+  team: Team!
+  createdAt: Time!
+  updatedAt: Time!
 }
 
 type Profile {
@@ -1064,6 +1200,7 @@ type Comment {
 
 type Query {
   user(user_id: ID!): User
+  users(page: PaginationInput!): [User!]!
   userCount: Int!
   team(team_id: ID!): Team
   cluster(cluster_id: ID!): Cluster
@@ -1071,12 +1208,16 @@ type Query {
   missions(page: PaginationInput!): [Mission!]!
   post(post_id: ID!): Post
   posts(page: PaginationInput!): [Post!]!
+  invitations(user_id: ID!, page: PaginationInput!): [Invitation!]!
 }
 
 type Mutation {
   createUser(param: NewUser!): User
   createPost(param: NewPost!): Post
   createComment(param: NewComment!): Comment
+  createInvitation(param: NewInvitation!): Invitation
+  createTeam(param: NewTeam!): Team
+  updateUser(user_id: ID!, param: UpdateUserInput!): User
   likePost(param: PostLikeInput!): Boolean
   unlikePost(param: PostLikeInput!): Boolean
   likeComment(param: CommentLikeInput!): Boolean
@@ -1119,6 +1260,18 @@ input NewUser {
   teamId: ID
 }
 
+input NewInvitation {
+  from: ID!
+  to: ID!
+  teamId: ID!
+}
+
+input NewTeam {
+  name: String!
+  avatarUrl: String
+  clusterId: String
+}
+
 input NewProfile {
   status: PastoralStatus
   gender: Gender!
@@ -1140,6 +1293,10 @@ input NewAddress {
   state: String!
   country: String!
   postalCode: String!
+}
+
+input UpdateUserInput {
+  teamId: ID
 }
 `, BuiltIn: false},
 }
@@ -1164,6 +1321,21 @@ func (ec *executionContext) field_Mutation_createComment_args(ctx context.Contex
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createInvitation_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.NewInvitation
+	if tmp, ok := rawArgs["param"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
+		arg0, err = ec.unmarshalNNewInvitation2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewInvitation(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["param"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createPost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1171,6 +1343,21 @@ func (ec *executionContext) field_Mutation_createPost_args(ctx context.Context, 
 	if tmp, ok := rawArgs["param"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
 		arg0, err = ec.unmarshalNNewPost2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewPost(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["param"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createTeam_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.NewTeam
+	if tmp, ok := rawArgs["param"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
+		arg0, err = ec.unmarshalNNewTeam2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewTeam(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1254,6 +1441,30 @@ func (ec *executionContext) field_Mutation_unlikePost_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_updateUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["user_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("user_id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["user_id"] = arg0
+	var arg1 model.UpdateUserInput
+	if tmp, ok := rawArgs["param"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
+		arg1, err = ec.unmarshalNUpdateUserInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpdateUserInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["param"] = arg1
+	return args, nil
+}
+
 func (ec *executionContext) field_Post_comments_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1311,6 +1522,30 @@ func (ec *executionContext) field_Query_cluster_args(ctx context.Context, rawArg
 		}
 	}
 	args["cluster_id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_invitations_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["user_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("user_id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["user_id"] = arg0
+	var arg1 model.PaginationInput
+	if tmp, ok := rawArgs["page"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("page"))
+		arg1, err = ec.unmarshalNPaginationInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPaginationInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["page"] = arg1
 	return args, nil
 }
 
@@ -1401,6 +1636,21 @@ func (ec *executionContext) field_Query_user_args(ctx context.Context, rawArgs m
 		}
 	}
 	args["user_id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_users_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.PaginationInput
+	if tmp, ok := rawArgs["page"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("page"))
+		arg0, err = ec.unmarshalNPaginationInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPaginationInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["page"] = arg0
 	return args, nil
 }
 
@@ -2084,6 +2334,213 @@ func (ec *executionContext) _Comment_likes(ctx context.Context, field graphql.Co
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Invitation_id(ctx context.Context, field graphql.CollectedField, obj *model.Invitation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Invitation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Invitation_from(ctx context.Context, field graphql.CollectedField, obj *model.Invitation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Invitation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Invitation().From(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalOUser2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Invitation_user(ctx context.Context, field graphql.CollectedField, obj *model.Invitation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Invitation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Invitation().User(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Invitation_team(ctx context.Context, field graphql.CollectedField, obj *model.Invitation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Invitation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Invitation().Team(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Team)
+	fc.Result = res
+	return ec.marshalNTeam2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeam(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Invitation_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.Invitation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Invitation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Invitation_updatedAt(ctx context.Context, field graphql.CollectedField, obj *model.Invitation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Invitation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mission_id(ctx context.Context, field graphql.CollectedField, obj *model.Mission) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2511,6 +2968,123 @@ func (ec *executionContext) _Mutation_createComment(ctx context.Context, field g
 	res := resTmp.(*model.Comment)
 	fc.Result = res
 	return ec.marshalOComment2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐComment(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createInvitation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createInvitation_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateInvitation(rctx, args["param"].(model.NewInvitation))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Invitation)
+	fc.Result = res
+	return ec.marshalOInvitation2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐInvitation(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createTeam(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createTeam_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateTeam(rctx, args["param"].(model.NewTeam))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Team)
+	fc.Result = res
+	return ec.marshalOTeam2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeam(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateUser_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateUser(rctx, args["user_id"].(string), args["param"].(model.UpdateUserInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalOUser2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_likePost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3506,6 +4080,48 @@ func (ec *executionContext) _Query_user(ctx context.Context, field graphql.Colle
 	return ec.marshalOUser2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_users(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_users_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Users(rctx, args["page"].(model.PaginationInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUserᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_userCount(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3781,6 +4397,48 @@ func (ec *executionContext) _Query_posts(ctx context.Context, field graphql.Coll
 	return ec.marshalNPost2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPostᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_invitations(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_invitations_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Invitations(rctx, args["user_id"].(string), args["page"].(model.PaginationInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Invitation)
+	fc.Result = res
+	return ec.marshalNInvitation2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐInvitationᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3919,7 +4577,7 @@ func (ec *executionContext) _Team_name(ctx context.Context, field graphql.Collec
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Team_color(ctx context.Context, field graphql.CollectedField, obj *model.Team) (ret graphql.Marshaler) {
+func (ec *executionContext) _Team_avatarUrl(ctx context.Context, field graphql.CollectedField, obj *model.Team) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3937,21 +4595,18 @@ func (ec *executionContext) _Team_color(ctx context.Context, field graphql.Colle
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Color, nil
+		return obj.AvatarUrl, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Team_points(ctx context.Context, field graphql.CollectedField, obj *model.Team) (ret graphql.Marshaler) {
@@ -5627,6 +6282,45 @@ func (ec *executionContext) unmarshalInputNewComment(ctx context.Context, obj in
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputNewInvitation(ctx context.Context, obj interface{}) (model.NewInvitation, error) {
+	var it model.NewInvitation
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "from":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("from"))
+			it.From, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "to":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("to"))
+			it.To, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "teamId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teamId"))
+			it.TeamID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputNewPost(ctx context.Context, obj interface{}) (model.NewPost, error) {
 	var it model.NewPost
 	asMap := map[string]interface{}{}
@@ -5769,6 +6463,45 @@ func (ec *executionContext) unmarshalInputNewProfile(ctx context.Context, obj in
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputNewTeam(ctx context.Context, obj interface{}) (model.NewTeam, error) {
+	var it model.NewTeam
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "avatarUrl":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("avatarUrl"))
+			it.AvatarURL, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "clusterId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clusterId"))
+			it.ClusterID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputNewUser(ctx context.Context, obj interface{}) (model.NewUser, error) {
 	var it model.NewUser
 	asMap := map[string]interface{}{}
@@ -5885,6 +6618,29 @@ func (ec *executionContext) unmarshalInputPostLikeInput(ctx context.Context, obj
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userId"))
 			it.UserID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, obj interface{}) (model.UpdateUserInput, error) {
+	var it model.UpdateUserInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "teamId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teamId"))
+			it.TeamID, err = ec.unmarshalOID2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6091,6 +6847,82 @@ func (ec *executionContext) _Comment(ctx context.Context, sel ast.SelectionSet, 
 	return out
 }
 
+var invitationImplementors = []string{"Invitation"}
+
+func (ec *executionContext) _Invitation(ctx context.Context, sel ast.SelectionSet, obj *model.Invitation) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, invitationImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Invitation")
+		case "id":
+			out.Values[i] = ec._Invitation_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "from":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Invitation_from(ctx, field, obj)
+				return res
+			})
+		case "user":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Invitation_user(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "team":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Invitation_team(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "createdAt":
+			out.Values[i] = ec._Invitation_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "updatedAt":
+			out.Values[i] = ec._Invitation_updatedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var missionImplementors = []string{"Mission"}
 
 func (ec *executionContext) _Mission(ctx context.Context, sel ast.SelectionSet, obj *model.Mission) graphql.Marshaler {
@@ -6185,6 +7017,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_createPost(ctx, field)
 		case "createComment":
 			out.Values[i] = ec._Mutation_createComment(ctx, field)
+		case "createInvitation":
+			out.Values[i] = ec._Mutation_createInvitation(ctx, field)
+		case "createTeam":
+			out.Values[i] = ec._Mutation_createTeam(ctx, field)
+		case "updateUser":
+			out.Values[i] = ec._Mutation_updateUser(ctx, field)
 		case "likePost":
 			out.Values[i] = ec._Mutation_likePost(ctx, field)
 		case "unlikePost":
@@ -6413,6 +7251,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_user(ctx, field)
 				return res
 			})
+		case "users":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_users(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "userCount":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -6499,6 +7351,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "invitations":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_invitations(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "__type":
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
@@ -6532,11 +7398,8 @@ func (ec *executionContext) _Team(ctx context.Context, sel ast.SelectionSet, obj
 			}
 		case "name":
 			out.Values[i] = ec._Team_name(ctx, field, obj)
-		case "color":
-			out.Values[i] = ec._Team_color(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
+		case "avatarUrl":
+			out.Values[i] = ec._Team_avatarUrl(ctx, field, obj)
 		case "points":
 			out.Values[i] = ec._Team_points(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -7054,6 +7917,60 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
+func (ec *executionContext) marshalNInvitation2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐInvitationᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Invitation) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNInvitation2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐInvitation(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNInvitation2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐInvitation(ctx context.Context, sel ast.SelectionSet, v *model.Invitation) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Invitation(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNMission2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐMissionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Mission) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -7113,6 +8030,11 @@ func (ec *executionContext) unmarshalNNewComment2githubᚗcomᚋmarcustutᚋtheb
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNNewInvitation2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewInvitation(ctx context.Context, v interface{}) (model.NewInvitation, error) {
+	res, err := ec.unmarshalInputNewInvitation(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNNewPost2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewPost(ctx context.Context, v interface{}) (model.NewPost, error) {
 	res, err := ec.unmarshalInputNewPost(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -7121,6 +8043,11 @@ func (ec *executionContext) unmarshalNNewPost2githubᚗcomᚋmarcustutᚋthebox�
 func (ec *executionContext) unmarshalNNewProfile2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewProfile(ctx context.Context, v interface{}) (*model.NewProfile, error) {
 	res, err := ec.unmarshalInputNewProfile(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNNewTeam2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewTeam(ctx context.Context, v interface{}) (model.NewTeam, error) {
+	res, err := ec.unmarshalInputNewTeam(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNNewUser2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewUser(ctx context.Context, v interface{}) (model.NewUser, error) {
@@ -7322,6 +8249,10 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	return ret
 }
 
+func (ec *executionContext) marshalNTeam2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeam(ctx context.Context, sel ast.SelectionSet, v model.Team) graphql.Marshaler {
+	return ec._Team(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNTeam2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeamᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Team) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -7389,6 +8320,11 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNUpdateUserInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpdateUserInput(ctx context.Context, v interface{}) (model.UpdateUserInput, error) {
+	res, err := ec.unmarshalInputUpdateUserInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNUser2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
@@ -7779,6 +8715,13 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 		return graphql.Null
 	}
 	return graphql.MarshalInt(*v)
+}
+
+func (ec *executionContext) marshalOInvitation2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐInvitation(ctx context.Context, sel ast.SelectionSet, v *model.Invitation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Invitation(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOMission2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐMission(ctx context.Context, sel ast.SelectionSet, v *model.Mission) graphql.Marshaler {

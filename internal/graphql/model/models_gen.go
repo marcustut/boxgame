@@ -29,6 +29,12 @@ type NewComment struct {
 	UserID  string `json:"userId"`
 }
 
+type NewInvitation struct {
+	From   string `json:"from"`
+	To     string `json:"to"`
+	TeamID string `json:"teamId"`
+}
+
 type NewPost struct {
 	Content string   `json:"content"`
 	Images  []string `json:"images"`
@@ -49,6 +55,12 @@ type NewProfile struct {
 	InvitedBy     *string         `json:"invitedBy"`
 }
 
+type NewTeam struct {
+	Name      string  `json:"name"`
+	AvatarURL *string `json:"avatarUrl"`
+	ClusterID *string `json:"clusterId"`
+}
+
 type NewUser struct {
 	ID       *string     `json:"id"`
 	Username string      `json:"username"`
@@ -66,6 +78,10 @@ type PaginationInput struct {
 type PostLikeInput struct {
 	PostID string `json:"postId"`
 	UserID string `json:"userId"`
+}
+
+type UpdateUserInput struct {
+	TeamID *string `json:"teamId"`
 }
 
 type Gender string

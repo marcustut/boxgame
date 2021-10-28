@@ -13,7 +13,7 @@ export interface GetMissionsWithCompletedBy_missions_completedBy {
   __typename: "Team";
   id: string;
   name: string | null;
-  color: string;
+  avatarUrl: string | null;
   points: number;
 }
 

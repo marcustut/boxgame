@@ -26,7 +26,31 @@ export const GET_USER = gql`
       team {
         id
         name
-        color
+        avatarUrl
+        points
+        cluster {
+          id
+          name
+          color
+        }
+      }
+    }
+  }
+`
+
+export const GET_USERS = gql`
+  ${CORE_USER_FIELDS}
+  ${CORE_PROFILE_FIELDS}
+  query GetUsers($page: PaginationInput!) {
+    users(page: $page) {
+      ...CoreUserFields
+      profile {
+        ...CoreProfileFields
+      }
+      team {
+        id
+        name
+        avatarUrl
         points
         cluster {
           id
@@ -103,9 +127,31 @@ export const GET_MISSIONS_WITH_COMPLETED_BY = gql`
       completedBy {
         id
         name
-        color
+        avatarUrl
         points
       }
+    }
+  }
+`
+
+export const GET_INVITATIONS_WITH_USER_ID = gql`
+  ${CORE_USER_FIELDS}
+  query GetInvitationsWithUserId($user_id: ID!, $page: PaginationInput!) {
+    invitations(user_id: $user_id, page: $page) {
+      id
+      from {
+        ...CoreUserFields
+      }
+      user {
+        ...CoreUserFields
+      }
+      team {
+        id
+        name
+        avatarUrl
+      }
+      createdAt
+      updatedAt
     }
   }
 `
