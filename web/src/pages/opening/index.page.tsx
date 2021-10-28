@@ -1,12 +1,14 @@
 import React from 'react'
 
-import { CheckAuth } from '@/components/Misc'
+import { CheckAuth, LockPage } from '@/components/Misc'
 import { Opening } from '@/features/opening'
 
 const OpeningPage: React.FC = () => {
   return (
     <CheckAuth>
-      <Opening />
+      <LockPage>
+        <Opening />
+      </LockPage>
     </CheckAuth>
   )
 }

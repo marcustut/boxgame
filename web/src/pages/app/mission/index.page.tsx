@@ -1,11 +1,13 @@
 import React from 'react'
 
-import { CheckAuth } from '@/components/Misc'
+import { CheckAuth, LockPage } from '@/components/Misc'
 import { Mission } from '@/features/mission'
 
 export const MissionPage: React.FC = () => (
   <CheckAuth>
-    <Mission />
+    <LockPage>
+      <Mission />
+    </LockPage>
   </CheckAuth>
 )
 

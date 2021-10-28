@@ -16,7 +16,7 @@ export const Team: React.FC = () => {
       <h2 className='text-2xl font-bold'>Team Invitations</h2>
       <div>
         {invitations.map(invitation => (
-          <div></div>
+          <div key={invitation.id}></div>
         ))}
       </div>
     </AppLayout>

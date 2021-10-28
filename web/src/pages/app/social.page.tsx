@@ -1,11 +1,13 @@
 import React from 'react'
 
-import { CheckAuth } from '@/components/Misc'
+import { CheckAuth, LockPage } from '@/components/Misc'
 import { Social } from '@/features/social'
 
 const SocialPage: React.FC = () => (
   <CheckAuth>
-    <Social />
+    <LockPage>
+      <Social />
+    </LockPage>
   </CheckAuth>
 )
 

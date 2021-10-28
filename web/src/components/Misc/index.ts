@@ -1,5 +1,6 @@
 export * from './ErrorPage'
 export * from './LoadingPage'
 export * from './CheckAuth'
+export * from './LockPage'
 export * from './HelmetHandler'
 export * from './AuthRequiredPage'
