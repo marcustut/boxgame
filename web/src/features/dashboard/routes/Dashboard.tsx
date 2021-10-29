@@ -23,7 +23,7 @@ export const Dashboard: React.FC = () => {
             size='small'
             color='secondary'
             className='mt-2'
-            onClick={() => window.open('https://us02web.zoom.us/j/83053403228?pwd=enNEOENOMXNQK0NteXc2R2ZrUTkvQT09')}
+            onClick={() => window.open('https://zoom.us/my/shawnwong')}
           >
             Click me for Zoom <Icon icon='grommet-icons:zoom' className='ml-2' />
           </Button>
