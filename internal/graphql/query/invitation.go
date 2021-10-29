@@ -69,3 +69,46 @@ func CreateInvitation(ctx context.Context, db *postgresql.PrismaClient, param *m
 
 	return invitation, nil
 }
+
+func AcceptInvitation(ctx context.Context, db *postgresql.PrismaClient, invitationID string) (*bool, error) {
+	var success bool
+
+	// remove the invitation
+	invitation, err := db.Invitation.FindUnique(
+		postgresql.Invitation.ID.Equals(invitationID),
+	).Delete().Exec(ctx)
+	if err != nil {
+		return &success, err
+	}
+
+	// add user to the team
+	user, err := db.User.FindUnique(
+		postgresql.User.ID.Equals(invitation.UserID),
+	).Update(
+		postgresql.User.TeamID.Set(invitation.TeamID),
+	).Exec(ctx)
+	if err != nil {
+		return &success, err
+	}
+	if _, ok := user.TeamID(); ok {
+		success = true
+	}
+	return &success, nil
+}
+
+func RejectInvitation(ctx context.Context, db *postgresql.PrismaClient, invitationID string) (*bool, error) {
+	var success bool
+
+	// remove the invitation
+	invitation, err := db.Invitation.FindUnique(
+		postgresql.Invitation.ID.Equals(invitationID),
+	).Delete().Exec(ctx)
+	if err != nil {
+		return &success, err
+	}
+
+	if invitation != nil {
+		success = true
+	}
+	return &success, nil
+}

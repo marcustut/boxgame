@@ -157,6 +157,8 @@ type Mutation {
   unlikePost(param: PostLikeInput!): Boolean
   likeComment(param: CommentLikeInput!): Boolean
   unlikeComment(param: CommentLikeInput!): Boolean
+  acceptInvitation(invitation_id: ID!): Boolean
+  rejectInvitation(invitation_id: ID!): Boolean
 }
 
 input PaginationInput {

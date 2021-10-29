@@ -9,12 +9,20 @@ import { PaginationInput } from "./globalTypes";
 // GraphQL query operation: GetMissionsWithCompletedBy
 // ====================================================
 
+export interface GetMissionsWithCompletedBy_missions_completedBy_cluster {
+  __typename: "Cluster";
+  id: string;
+  name: string;
+  color: string;
+}
+
 export interface GetMissionsWithCompletedBy_missions_completedBy {
   __typename: "Team";
   id: string;
   name: string | null;
   avatarUrl: string | null;
   points: number;
+  cluster: GetMissionsWithCompletedBy_missions_completedBy_cluster | null;
 }
 
 export interface GetMissionsWithCompletedBy_missions {

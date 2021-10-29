@@ -101,6 +101,7 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		AcceptInvitation func(childComplexity int, invitationID string) int
 		CreateComment    func(childComplexity int, param model.NewComment) int
 		CreateInvitation func(childComplexity int, param model.NewInvitation) int
 		CreatePost       func(childComplexity int, param model.NewPost) int
@@ -108,6 +109,7 @@ type ComplexityRoot struct {
 		CreateUser       func(childComplexity int, param model.NewUser) int
 		LikeComment      func(childComplexity int, param model.CommentLikeInput) int
 		LikePost         func(childComplexity int, param model.PostLikeInput) int
+		RejectInvitation func(childComplexity int, invitationID string) int
 		UnlikeComment    func(childComplexity int, param model.CommentLikeInput) int
 		UnlikePost       func(childComplexity int, param model.PostLikeInput) int
 		UpdateUser       func(childComplexity int, userID string, param model.UpdateUserInput) int
@@ -204,6 +206,8 @@ type MutationResolver interface {
 	UnlikePost(ctx context.Context, param model.PostLikeInput) (*bool, error)
 	LikeComment(ctx context.Context, param model.CommentLikeInput) (*bool, error)
 	UnlikeComment(ctx context.Context, param model.CommentLikeInput) (*bool, error)
+	AcceptInvitation(ctx context.Context, invitationID string) (*bool, error)
+	RejectInvitation(ctx context.Context, invitationID string) (*bool, error)
 }
 type PostResolver interface {
 	User(ctx context.Context, obj *model.Post) (*model.User, error)
@@ -483,6 +487,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mission.UpdatedAt(childComplexity), true
 
+	case "Mutation.acceptInvitation":
+		if e.complexity.Mutation.AcceptInvitation == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_acceptInvitation_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AcceptInvitation(childComplexity, args["invitation_id"].(string)), true
+
 	case "Mutation.createComment":
 		if e.complexity.Mutation.CreateComment == nil {
 			break
@@ -566,6 +582,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.LikePost(childComplexity, args["param"].(model.PostLikeInput)), true
+
+	case "Mutation.rejectInvitation":
+		if e.complexity.Mutation.RejectInvitation == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_rejectInvitation_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RejectInvitation(childComplexity, args["invitation_id"].(string)), true
 
 	case "Mutation.unlikeComment":
 		if e.complexity.Mutation.UnlikeComment == nil {
@@ -1222,6 +1250,8 @@ type Mutation {
   unlikePost(param: PostLikeInput!): Boolean
   likeComment(param: CommentLikeInput!): Boolean
   unlikeComment(param: CommentLikeInput!): Boolean
+  acceptInvitation(invitation_id: ID!): Boolean
+  rejectInvitation(invitation_id: ID!): Boolean
 }
 
 input PaginationInput {
@@ -1305,6 +1335,21 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_acceptInvitation_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["invitation_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("invitation_id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["invitation_id"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_createComment_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -1408,6 +1453,21 @@ func (ec *executionContext) field_Mutation_likePost_args(ctx context.Context, ra
 		}
 	}
 	args["param"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_rejectInvitation_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["invitation_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("invitation_id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["invitation_id"] = arg0
 	return args, nil
 }
 
@@ -3230,6 +3290,84 @@ func (ec *executionContext) _Mutation_unlikeComment(ctx context.Context, field g
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Mutation().UnlikeComment(rctx, args["param"].(model.CommentLikeInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_acceptInvitation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_acceptInvitation_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AcceptInvitation(rctx, args["invitation_id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_rejectInvitation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_rejectInvitation_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RejectInvitation(rctx, args["invitation_id"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7031,6 +7169,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_likeComment(ctx, field)
 		case "unlikeComment":
 			out.Values[i] = ec._Mutation_unlikeComment(ctx, field)
+		case "acceptInvitation":
+			out.Values[i] = ec._Mutation_acceptInvitation(ctx, field)
+		case "rejectInvitation":
+			out.Values[i] = ec._Mutation_rejectInvitation(ctx, field)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

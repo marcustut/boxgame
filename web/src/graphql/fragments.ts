@@ -23,6 +23,20 @@ export const CORE_USER_FIELDS = gql`
   }
 `
 
+export const CORE_TEAM_FIELDS = gql`
+  fragment CoreTeamFields on Team {
+    id
+    name
+    avatarUrl
+    points
+    cluster {
+      id
+      name
+      color
+    }
+  }
+`
+
 export const CORE_PROFILE_FIELDS = gql`
   fragment CoreProfileFields on Profile {
     id

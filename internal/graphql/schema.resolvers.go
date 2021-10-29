@@ -85,6 +85,14 @@ func (r *mutationResolver) UnlikeComment(ctx context.Context, param model.Commen
 	return query.DeleteCommentLike(ctx, r.db, &param)
 }
 
+func (r *mutationResolver) AcceptInvitation(ctx context.Context, invitationID string) (*bool, error) {
+	return query.AcceptInvitation(ctx, r.db, invitationID)
+}
+
+func (r *mutationResolver) RejectInvitation(ctx context.Context, invitationID string) (*bool, error) {
+	return query.RejectInvitation(ctx, r.db, invitationID)
+}
+
 func (r *postResolver) User(ctx context.Context, obj *model.Post) (*model.User, error) {
 	return query.GetUniqueUser(ctx, r.db, postgresql.User.ID.Equals(obj.UserID))
 }

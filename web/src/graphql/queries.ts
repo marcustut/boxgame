@@ -5,6 +5,7 @@ import {
   CORE_MISSION_FIELDS,
   CORE_POST_FIELDS,
   CORE_PROFILE_FIELDS,
+  CORE_TEAM_FIELDS,
   CORE_USER_FIELDS
 } from './fragments'
 
@@ -17,6 +18,7 @@ export const GET_REGISTERED_USER_COUNT = gql`
 export const GET_USER = gql`
   ${CORE_USER_FIELDS}
   ${CORE_PROFILE_FIELDS}
+  ${CORE_TEAM_FIELDS}
   query GetUser($user_id: ID!) {
     user(user_id: $user_id) {
       ...CoreUserFields
@@ -24,15 +26,7 @@ export const GET_USER = gql`
         ...CoreProfileFields
       }
       team {
-        id
-        name
-        avatarUrl
-        points
-        cluster {
-          id
-          name
-          color
-        }
+        ...CoreTeamFields
       }
     }
   }
@@ -41,6 +35,7 @@ export const GET_USER = gql`
 export const GET_USERS = gql`
   ${CORE_USER_FIELDS}
   ${CORE_PROFILE_FIELDS}
+  ${CORE_TEAM_FIELDS}
   query GetUsers($page: PaginationInput!) {
     users(page: $page) {
       ...CoreUserFields
@@ -48,14 +43,24 @@ export const GET_USERS = gql`
         ...CoreProfileFields
       }
       team {
-        id
-        name
-        avatarUrl
-        points
-        cluster {
-          id
-          name
-          color
+        ...CoreTeamFields
+      }
+    }
+  }
+`
+
+export const GET_TEAM = gql`
+  ${CORE_USER_FIELDS}
+  ${CORE_TEAM_FIELDS}
+  query GetTeam($team_id: ID!) {
+    team(team_id: $team_id) {
+      ...CoreTeamFields
+      members {
+        ...CoreUserFields
+        profile {
+          nameEng
+          avatarUrl
+          gender
         }
       }
     }
@@ -121,14 +126,12 @@ export const GET_MISSIONS = gql`
 
 export const GET_MISSIONS_WITH_COMPLETED_BY = gql`
   ${CORE_MISSION_FIELDS}
+  ${CORE_TEAM_FIELDS}
   query GetMissionsWithCompletedBy($page: PaginationInput!) {
     missions(page: $page) {
       ...CoreMissionFields
       completedBy {
-        id
-        name
-        avatarUrl
-        points
+        ...CoreTeamFields
       }
     }
   }
@@ -136,6 +139,7 @@ export const GET_MISSIONS_WITH_COMPLETED_BY = gql`
 
 export const GET_INVITATIONS_WITH_USER_ID = gql`
   ${CORE_USER_FIELDS}
+  ${CORE_TEAM_FIELDS}
   query GetInvitationsWithUserId($user_id: ID!, $page: PaginationInput!) {
     invitations(user_id: $user_id, page: $page) {
       id
@@ -146,9 +150,7 @@ export const GET_INVITATIONS_WITH_USER_ID = gql`
         ...CoreUserFields
       }
       team {
-        id
-        name
-        avatarUrl
+        ...CoreTeamFields
       }
       createdAt
       updatedAt

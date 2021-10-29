@@ -58,7 +58,7 @@ export const ConfirmInviteDialog: React.FC<ConfirmInviteDialogProps> = ({ open, 
                 }
 
                 onClose()
-                enqueueSnackbar(`${user.profile?.nameEng} is invited to the team`, { variant: 'success' })
+                enqueueSnackbar(`${to.profile?.nameEng} is invited to the team`, { variant: 'success' })
               }}
             >
               {({ isSubmitting }) => (

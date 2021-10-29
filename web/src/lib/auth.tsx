@@ -62,6 +62,7 @@ interface IAuthContext {
         user: UserWithAuth
         error: null
       }
+  refetch: () => void
   user?: UserWithAuth
   loading: boolean
 }
@@ -72,6 +73,7 @@ const AuthContext = React.createContext<IAuthContext>({
   signOut: null as unknown as IAuthContext['signOut'],
   resetPassword: null as unknown as IAuthContext['resetPassword'],
   updateUserCache: null as unknown as IAuthContext['updateUserCache'],
+  refetch: null as unknown as IAuthContext['refetch'],
   loading: false
 })
 
@@ -156,6 +158,18 @@ export const AuthProvider: React.FC = ({ children }) => {
     [user]
   )
 
+  const refetch = useCallback(async () => {
+    if (!user) return { user: null, error: new Error('No cached user present currently') }
+    const { data, error, errors } = await fetchUser({ user_id: user.user.id })
+    if (error || errors || !data || !data.user) {
+      console.error(errors)
+      console.error(error)
+      return
+    }
+    setUser({ user: data.user, auth: user.auth })
+    setItem<UserWithAuth>('token', { user: data.user, auth: user.auth })
+  }, [fetchUser, user])
+
   // Will be passed down to Signup, Login and Dashboard components
   const value: IAuthContext = {
     signUp: (params, options) => supabase.auth.signUp(params, options),
@@ -167,6 +181,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     },
     resetPassword: (email, options) => supabase.auth.api.resetPasswordForEmail(email, options),
     updateUserCache,
+    refetch,
     user,
     loading
   }

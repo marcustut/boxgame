@@ -29,11 +29,20 @@ export interface GetInvitationsWithUserId_invitations_user {
   roles: Role[];
 }
 
+export interface GetInvitationsWithUserId_invitations_team_cluster {
+  __typename: "Cluster";
+  id: string;
+  name: string;
+  color: string;
+}
+
 export interface GetInvitationsWithUserId_invitations_team {
   __typename: "Team";
   id: string;
   name: string | null;
   avatarUrl: string | null;
+  points: number;
+  cluster: GetInvitationsWithUserId_invitations_team_cluster | null;
 }
 
 export interface GetInvitationsWithUserId_invitations {

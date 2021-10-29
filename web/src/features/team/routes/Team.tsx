@@ -26,10 +26,10 @@ export const Team: React.FC = () => {
 
   return (
     <AppLayout>
-      <h2 className='text-2xl font-bold mb-2'>{user.user.team ? 'My Team' : 'Team Invitations'}</h2>
-      <div className='bg-dark-300 min-h-24 p-4 rounded-lg flex justify-center items-center'>
+      <h2 className='text-2xl font-bold mb-2'>{user.user.team ? user.user.team.name : 'Team Invitations'}</h2>
+      <div className='bg-dark-300 min-h-24 p-4 rounded-lg flex flex-col justify-center items-center'>
         {user.user.team ? (
-          <TeamDetail team={user.user.team} />
+          <TeamDetail teamId={user.user.team.id} />
         ) : (
           <InvitationList invitations={invitations?.data.invitations} />
         )}
@@ -56,7 +56,7 @@ export const Team: React.FC = () => {
                 className='w-full bg-dark-300 text-true-gray-100 hover:ring-0 border-0 focus:outline-none focus:ring-0'
                 type='text'
                 onChange={e => setSearchText(e.target.value)}
-                placeholder='Invite your teammates...'
+                placeholder='Invite new teammates...'
               />
             </div>
             {searchText &&

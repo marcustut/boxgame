@@ -72,6 +72,18 @@ export const CREATE_INVITATION = gql`
   }
 `
 
+export const ACCEPT_INVITATION = gql`
+  mutation AcceptInvitation($invitation_id: ID!) {
+    acceptInvitation(invitation_id: $invitation_id)
+  }
+`
+
+export const REJECT_INVITATION = gql`
+  mutation RejectInvitation($invitation_id: ID!) {
+    rejectInvitation(invitation_id: $invitation_id)
+  }
+`
+
 export const CREATE_TEAM = gql`
   mutation CreateTeam($param: NewTeam!) {
     createTeam(param: $param) {
