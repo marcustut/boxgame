@@ -1,14 +1,14 @@
 import React from 'react'
 
 import { CheckAuth, LockPage } from '@/components/Misc'
-import { Mystery } from '@/features/escape'
+import { Escape } from '@/features/escape'
 
-export const MysteryPage: React.FC = () => (
+const EscapePage: React.FC = () => (
   <CheckAuth>
     <LockPage>
-      <Mystery />
+      <Escape />
     </LockPage>
   </CheckAuth>
 )
 
-export default MysteryPage
+export default EscapePage

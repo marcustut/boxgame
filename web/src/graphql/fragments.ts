@@ -97,6 +97,7 @@ export const CORE_MISSION_FIELDS = gql`
   fragment CoreMissionFields on Mission {
     id
     title
+    slug
     description
     points
     createdAt

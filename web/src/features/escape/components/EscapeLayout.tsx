@@ -5,11 +5,12 @@ import { WindiUtilities } from '@/types/windi'
 import { constructClassName } from '@/utils'
 
 type EscapeLayoutProps = {
+  isHall?: boolean
   utilities?: WindiUtilities
   className?: string
 }
 
-export const EscapeLayout: React.FC<EscapeLayoutProps> = ({ utilities, className = '', children }) => {
+export const EscapeLayout: React.FC<EscapeLayoutProps> = ({ isHall = false, utilities, className = '', children }) => {
   const defaultUtilities: WindiUtilities = {
     p: 'p-4',
     m: 'mx-auto',
@@ -18,9 +19,13 @@ export const EscapeLayout: React.FC<EscapeLayoutProps> = ({ utilities, className
 
   return (
     <div className={constructClassName(utilities, defaultUtilities, className)}>
-      <button className='flex items-center text-sm mb-4 focus:outline-none' onClick={() => window.history.back()}>
+      <button
+        data-blobity-magnetic='false'
+        className='flex items-center text-sm mb-4 focus:outline-none'
+        onClick={() => window.history.back()}
+      >
         <Icon icon='ic:outline-chevron-left' className='w-6 h-6 mr-0.5' />
-        Back to Escape
+        Back to {isHall ? 'Mission' : 'Escape'}
       </button>
       {children}
     </div>

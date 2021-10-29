@@ -13,6 +13,7 @@ export interface GetMissions_missions {
   __typename: "Mission";
   id: string;
   title: string;
+  slug: string;
   description: string | null;
   points: number;
   createdAt: TheBox.Time;

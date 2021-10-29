@@ -145,7 +145,7 @@ export const Mystery: React.FC = () => {
       </div>
 
       <div className='mt-8'>
-        <h1 className='text-lg font-bold'>Paragraph</h1>
+        {/* <h1 className='text-lg font-bold'>Paragraph</h1> */}
         <div>
           {raw_paragraphs.map((p, i) => (
             <div key={p} className={`font-medium text-justify <sm:text-sm sm:tracking-wide ${i !== 0 ? 'mt-4' : ''}`}>

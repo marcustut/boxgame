@@ -9,6 +9,7 @@ import (
 type Mission struct {
 	ID             string    `json:"id" fake:"{uuid}"`
 	Title          string    `json:"title" fake:"{appname}"`
+	Slug           string    `json:"slug" fake:"{appname}"`
 	Description    *string   `json:"description" fake:"{sentence:12}"`
 	Points         float64   `json:"points" fake:"{float64:10,100}"`
 	CreatedAt      time.Time `json:"createdAt" fake:"{date}"`
@@ -27,6 +28,7 @@ func MapToMission(dbMission *postgresql.MissionModel) (*Mission, error) {
 	mission := &Mission{
 		ID:          dbMission.ID,
 		Title:       dbMission.Title,
+		Slug:        dbMission.Slug,
 		Description: description,
 		Points:      dbMission.Points,
 		CreatedAt:   dbMission.CreatedAt,

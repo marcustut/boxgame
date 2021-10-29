@@ -137,6 +137,7 @@ model Mission {
   updatedAt   DateTime
   startAt     DateTime      @db.Timestamp(6)
   endAt       DateTime      @db.Timestamp(6)
+  slug        String
   teamMission TeamMission[]
 }
 
