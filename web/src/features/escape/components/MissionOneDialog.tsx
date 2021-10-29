@@ -79,6 +79,7 @@ export const MissionOneDialog: React.FC<MissionOneDialogProps> = ({ open, onClos
                 enqueueSnackbar('Successfully submitted', { variant: 'success' })
                 await sleep(500)
                 onClose()
+                window.location.reload()
               }}
             >
               {({ isSubmitting, values }) => (
