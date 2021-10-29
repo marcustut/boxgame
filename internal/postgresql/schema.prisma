@@ -107,6 +107,7 @@ model Team {
   points      Float         @default(0)
   clusterId   String?       @db.Uuid
   cluster     Cluster?      @relation(fields: [clusterId], references: [id])
+  Escape      Escape?
   Invitation  Invitation[]
   teamMission TeamMission[]
   members     User[]
@@ -160,6 +161,15 @@ model Invitation {
   User_Invitation_fromToUser   User?    @relation("Invitation_fromToUser", fields: [from], references: [id], onDelete: Cascade)
   Team                         Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   User_Invitation_userIdToUser User     @relation("Invitation_userIdToUser", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Escape {
+  id           String  @id @db.Uuid
+  missionOne   Boolean @default(false)
+  missionTwo   Boolean @default(false)
+  missionThree Float   @default(0)
+  teamId       String  @unique @db.Uuid
+  Team         Team    @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }
 
 enum Role {

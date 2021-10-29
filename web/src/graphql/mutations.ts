@@ -118,3 +118,19 @@ export const UPDATE_USER = gql`
     }
   }
 `
+
+export const UPSERT_ESCAPE = gql`
+  mutation UpsertEscape($param: UpsertEscapeInput!) {
+    upsertEscape(param: $param) {
+      id
+      missionOne
+      missionTwo
+      missionThree
+      team {
+        id
+        name
+        avatarUrl
+      }
+    }
+  }
+`

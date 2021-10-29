@@ -157,3 +157,19 @@ export const GET_INVITATIONS_WITH_USER_ID = gql`
     }
   }
 `
+
+export const GET_ESCAPE = gql`
+  query GetEscape($team_id: ID!) {
+    escape(team_id: $team_id) {
+      id
+      missionOne
+      missionTwo
+      missionThree
+      team {
+        id
+        name
+        avatarUrl
+      }
+    }
+  }
+`

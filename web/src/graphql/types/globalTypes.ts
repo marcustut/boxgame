@@ -108,6 +108,13 @@ export interface UpdateUserInput {
   teamId?: string | null;
 }
 
+export interface UpsertEscapeInput {
+  teamId: string;
+  missionOne?: boolean | null;
+  missionTwo?: boolean | null;
+  missionThree?: number | null;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

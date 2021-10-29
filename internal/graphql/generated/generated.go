@@ -38,6 +38,7 @@ type Config struct {
 type ResolverRoot interface {
 	Cluster() ClusterResolver
 	Comment() CommentResolver
+	Escape() EscapeResolver
 	Invitation() InvitationResolver
 	Mission() MissionResolver
 	Mutation() MutationResolver
@@ -79,6 +80,14 @@ type ComplexityRoot struct {
 		User      func(childComplexity int) int
 	}
 
+	Escape struct {
+		ID           func(childComplexity int) int
+		MissionOne   func(childComplexity int) int
+		MissionThree func(childComplexity int) int
+		MissionTwo   func(childComplexity int) int
+		Team         func(childComplexity int) int
+	}
+
 	Invitation struct {
 		CreatedAt func(childComplexity int) int
 		From      func(childComplexity int) int
@@ -114,6 +123,7 @@ type ComplexityRoot struct {
 		UnlikeComment    func(childComplexity int, param model.CommentLikeInput) int
 		UnlikePost       func(childComplexity int, param model.PostLikeInput) int
 		UpdateUser       func(childComplexity int, userID string, param model.UpdateUserInput) int
+		UpsertEscape     func(childComplexity int, param model.UpsertEscapeInput) int
 	}
 
 	Post struct {
@@ -147,6 +157,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Cluster     func(childComplexity int, clusterID string) int
+		Escape      func(childComplexity int, teamID string) int
 		Invitations func(childComplexity int, userID string, page model.PaginationInput) int
 		Mission     func(childComplexity int, missionID string) int
 		Missions    func(childComplexity int, page model.PaginationInput) int
@@ -188,6 +199,9 @@ type CommentResolver interface {
 	Post(ctx context.Context, obj *model.Comment) (*model.Post, error)
 	Likes(ctx context.Context, obj *model.Comment) (int, error)
 }
+type EscapeResolver interface {
+	Team(ctx context.Context, obj *model.Escape) (*model.Team, error)
+}
 type InvitationResolver interface {
 	From(ctx context.Context, obj *model.Invitation) (*model.User, error)
 	User(ctx context.Context, obj *model.Invitation) (*model.User, error)
@@ -203,6 +217,7 @@ type MutationResolver interface {
 	CreateInvitation(ctx context.Context, param model.NewInvitation) (*model.Invitation, error)
 	CreateTeam(ctx context.Context, param model.NewTeam) (*model.Team, error)
 	UpdateUser(ctx context.Context, userID string, param model.UpdateUserInput) (*model.User, error)
+	UpsertEscape(ctx context.Context, param model.UpsertEscapeInput) (*model.Escape, error)
 	LikePost(ctx context.Context, param model.PostLikeInput) (*bool, error)
 	UnlikePost(ctx context.Context, param model.PostLikeInput) (*bool, error)
 	LikeComment(ctx context.Context, param model.CommentLikeInput) (*bool, error)
@@ -227,6 +242,7 @@ type QueryResolver interface {
 	Cluster(ctx context.Context, clusterID string) (*model.Cluster, error)
 	Mission(ctx context.Context, missionID string) (*model.Mission, error)
 	Missions(ctx context.Context, page model.PaginationInput) ([]*model.Mission, error)
+	Escape(ctx context.Context, teamID string) (*model.Escape, error)
 	Post(ctx context.Context, postID string) (*model.Post, error)
 	Posts(ctx context.Context, page model.PaginationInput) ([]*model.Post, error)
 	Invitations(ctx context.Context, userID string, page model.PaginationInput) ([]*model.Invitation, error)
@@ -382,6 +398,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Comment.User(childComplexity), true
+
+	case "Escape.id":
+		if e.complexity.Escape.ID == nil {
+			break
+		}
+
+		return e.complexity.Escape.ID(childComplexity), true
+
+	case "Escape.missionOne":
+		if e.complexity.Escape.MissionOne == nil {
+			break
+		}
+
+		return e.complexity.Escape.MissionOne(childComplexity), true
+
+	case "Escape.missionThree":
+		if e.complexity.Escape.MissionThree == nil {
+			break
+		}
+
+		return e.complexity.Escape.MissionThree(childComplexity), true
+
+	case "Escape.missionTwo":
+		if e.complexity.Escape.MissionTwo == nil {
+			break
+		}
+
+		return e.complexity.Escape.MissionTwo(childComplexity), true
+
+	case "Escape.team":
+		if e.complexity.Escape.Team == nil {
+			break
+		}
+
+		return e.complexity.Escape.Team(childComplexity), true
 
 	case "Invitation.createdAt":
 		if e.complexity.Invitation.CreatedAt == nil {
@@ -639,6 +690,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateUser(childComplexity, args["user_id"].(string), args["param"].(model.UpdateUserInput)), true
 
+	case "Mutation.upsertEscape":
+		if e.complexity.Mutation.UpsertEscape == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_upsertEscape_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpsertEscape(childComplexity, args["param"].(model.UpsertEscapeInput)), true
+
 	case "Post.comments":
 		if e.complexity.Post.Comments == nil {
 			break
@@ -821,6 +884,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Cluster(childComplexity, args["cluster_id"].(string)), true
+
+	case "Query.escape":
+		if e.complexity.Query.Escape == nil {
+			break
+		}
+
+		args, err := ec.field_Query_escape_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Escape(childComplexity, args["team_id"].(string)), true
 
 	case "Query.invitations":
 		if e.complexity.Query.Invitations == nil {
@@ -1166,6 +1241,14 @@ type Mission {
   completedBy: [Team!]!
 }
 
+type Escape {
+  id: ID!
+  missionOne: Boolean!
+  missionTwo: Boolean!
+  missionThree: Float!
+  team: Team!
+}
+
 type User {
   id: ID!
   username: String!
@@ -1243,6 +1326,7 @@ type Query {
   cluster(cluster_id: ID!): Cluster
   mission(mission_id: ID!): Mission
   missions(page: PaginationInput!): [Mission!]!
+  escape(team_id: ID!): Escape
   post(post_id: ID!): Post
   posts(page: PaginationInput!): [Post!]!
   invitations(user_id: ID!, page: PaginationInput!): [Invitation!]!
@@ -1255,6 +1339,7 @@ type Mutation {
   createInvitation(param: NewInvitation!): Invitation
   createTeam(param: NewTeam!): Team
   updateUser(user_id: ID!, param: UpdateUserInput!): User
+  upsertEscape(param: UpsertEscapeInput!): Escape
   likePost(param: PostLikeInput!): Boolean
   unlikePost(param: PostLikeInput!): Boolean
   likeComment(param: CommentLikeInput!): Boolean
@@ -1266,6 +1351,13 @@ type Mutation {
 input PaginationInput {
   first: Int!
   offset: Int
+}
+
+input UpsertEscapeInput {
+  teamId: ID!
+  missionOne: Boolean
+  missionTwo: Boolean
+  missionThree: Float
 }
 
 input PostLikeInput {
@@ -1534,6 +1626,21 @@ func (ec *executionContext) field_Mutation_updateUser_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_upsertEscape_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpsertEscapeInput
+	if tmp, ok := rawArgs["param"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
+		arg0, err = ec.unmarshalNUpsertEscapeInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpsertEscapeInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["param"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Post_comments_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1591,6 +1698,21 @@ func (ec *executionContext) field_Query_cluster_args(ctx context.Context, rawArg
 		}
 	}
 	args["cluster_id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_escape_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["team_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("team_id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["team_id"] = arg0
 	return args, nil
 }
 
@@ -2403,6 +2525,181 @@ func (ec *executionContext) _Comment_likes(ctx context.Context, field graphql.Co
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Escape_id(ctx context.Context, field graphql.CollectedField, obj *model.Escape) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Escape",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Escape_missionOne(ctx context.Context, field graphql.CollectedField, obj *model.Escape) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Escape",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MissionOne, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Escape_missionTwo(ctx context.Context, field graphql.CollectedField, obj *model.Escape) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Escape",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MissionTwo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Escape_missionThree(ctx context.Context, field graphql.CollectedField, obj *model.Escape) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Escape",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MissionThree, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	fc.Result = res
+	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Escape_team(ctx context.Context, field graphql.CollectedField, obj *model.Escape) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Escape",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Escape().Team(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Team)
+	fc.Result = res
+	return ec.marshalNTeam2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeam(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Invitation_id(ctx context.Context, field graphql.CollectedField, obj *model.Invitation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3189,6 +3486,45 @@ func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field grap
 	res := resTmp.(*model.User)
 	fc.Result = res
 	return ec.marshalOUser2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_upsertEscape(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_upsertEscape_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpsertEscape(rctx, args["param"].(model.UpsertEscapeInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Escape)
+	fc.Result = res
+	return ec.marshalOEscape2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐEscape(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_likePost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4496,6 +4832,45 @@ func (ec *executionContext) _Query_missions(ctx context.Context, field graphql.C
 	res := resTmp.([]*model.Mission)
 	fc.Result = res
 	return ec.marshalNMission2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐMissionᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_escape(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_escape_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Escape(rctx, args["team_id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Escape)
+	fc.Result = res
+	return ec.marshalOEscape2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐEscape(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_post(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -6832,6 +7207,53 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpsertEscapeInput(ctx context.Context, obj interface{}) (model.UpsertEscapeInput, error) {
+	var it model.UpsertEscapeInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "teamId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teamId"))
+			it.TeamID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "missionOne":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("missionOne"))
+			it.MissionOne, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "missionTwo":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("missionTwo"))
+			it.MissionTwo, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "missionThree":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("missionThree"))
+			it.MissionThree, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -7029,6 +7451,62 @@ func (ec *executionContext) _Comment(ctx context.Context, sel ast.SelectionSet, 
 	return out
 }
 
+var escapeImplementors = []string{"Escape"}
+
+func (ec *executionContext) _Escape(ctx context.Context, sel ast.SelectionSet, obj *model.Escape) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, escapeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Escape")
+		case "id":
+			out.Values[i] = ec._Escape_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "missionOne":
+			out.Values[i] = ec._Escape_missionOne(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "missionTwo":
+			out.Values[i] = ec._Escape_missionTwo(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "missionThree":
+			out.Values[i] = ec._Escape_missionThree(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "team":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Escape_team(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var invitationImplementors = []string{"Invitation"}
 
 func (ec *executionContext) _Invitation(ctx context.Context, sel ast.SelectionSet, obj *model.Invitation) graphql.Marshaler {
@@ -7210,6 +7688,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_createTeam(ctx, field)
 		case "updateUser":
 			out.Values[i] = ec._Mutation_updateUser(ctx, field)
+		case "upsertEscape":
+			out.Values[i] = ec._Mutation_upsertEscape(ctx, field)
 		case "likePost":
 			out.Values[i] = ec._Mutation_likePost(ctx, field)
 		case "unlikePost":
@@ -7515,6 +7995,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			})
+		case "escape":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_escape(ctx, field)
 				return res
 			})
 		case "post":
@@ -8518,6 +9009,11 @@ func (ec *executionContext) unmarshalNUpdateUserInput2githubᚗcomᚋmarcustut�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNUpsertEscapeInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpsertEscapeInput(ctx context.Context, v interface{}) (model.UpsertEscapeInput, error) {
+	res, err := ec.unmarshalInputUpsertEscapeInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNUser2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
 }
@@ -8876,6 +9372,28 @@ func (ec *executionContext) marshalOComment2ᚖgithubᚗcomᚋmarcustutᚋthebox
 		return graphql.Null
 	}
 	return ec._Comment(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOEscape2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐEscape(ctx context.Context, sel ast.SelectionSet, v *model.Escape) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Escape(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOFloat2ᚖfloat64(ctx context.Context, v interface{}) (*float64, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalFloat(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOFloat2ᚖfloat64(ctx context.Context, sel ast.SelectionSet, v *float64) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.MarshalFloat(*v)
 }
 
 func (ec *executionContext) unmarshalOID2ᚖstring(ctx context.Context, v interface{}) (*string, error) {

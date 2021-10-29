@@ -84,6 +84,13 @@ type UpdateUserInput struct {
 	TeamID *string `json:"teamId"`
 }
 
+type UpsertEscapeInput struct {
+	TeamID       string   `json:"teamId"`
+	MissionOne   *bool    `json:"missionOne"`
+	MissionTwo   *bool    `json:"missionTwo"`
+	MissionThree *float64 `json:"missionThree"`
+}
+
 type Gender string
 
 const (

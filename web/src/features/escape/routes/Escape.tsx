@@ -1,10 +1,31 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-import { EscapeLayout, MissionOneDialog, MissionTwoDialog } from '@/features/escape'
+import { LoadingPage } from '@/components/Misc'
+import { EscapeLayout, MissionOneDialog, MissionTwoDialog, useFetchEscape, useUpsertEscape } from '@/features/escape'
+import { useAuth } from '@/lib/auth'
 
 export const Escape: React.FC = () => {
+  const { user } = useAuth()
   const [missionOneDialog, setMissionOneDialog] = useState<boolean>(false)
   const [missionTwoDialog, setMissionTwoDialog] = useState<boolean>(false)
+  const { escape, fetchEscape } = useFetchEscape()
+  const { upsertEscape } = useUpsertEscape()
+
+  useEffect(() => {
+    if (!user || !user.user.team) return
+    fetchEscape(user.user.team.id)
+      .then(() => console.log('fetched escape'))
+      .catch(err => {
+        if (err.message === 'ErrNotFound') {
+          upsertEscape({ teamId: user.user.team!.id }).then(() => {
+            console.log('upserted escape')
+            fetchEscape(user.user.team!.id).then(() => console.log('fetched escape'))
+          })
+        }
+      })
+  }, [fetchEscape, upsertEscape, user])
+
+  if (!user || !escape || !escape.data.escape) return <LoadingPage />
 
   return (
     <>
@@ -27,21 +48,31 @@ export const Escape: React.FC = () => {
           <div className='mt-4 p-4 rounded-lg flex flex-col w-full'>
             <button
               data-blobity-magnetic='false'
+              disabled={escape.data.escape.missionOne}
               className='bg-dark-300 w-full rounded-lg p-4 relative'
               onClick={() => setMissionOneDialog(true)}
             >
-              <span className='bg-secondary absolute -top-2 right-4 rounded-full px-2 py-1 text-xs font-medium'>
-                Uncompleted
+              <span
+                className={`${
+                  escape.data.escape.missionOne ? 'bg-primary' : 'bg-secondary'
+                } absolute -top-2 right-4 rounded-full px-2 py-1 text-xs font-medium`}
+              >
+                {escape.data.escape.missionOne ? 'Completed' : 'Uncompleted'}
               </span>
               <span>Mission 1</span>
             </button>
             <button
               data-blobity-magnetic='false'
+              disabled={escape.data.escape.missionTwo}
               className='mt-6 bg-dark-300 w-full rounded-lg p-4 relative'
               onClick={() => setMissionTwoDialog(true)}
             >
-              <span className='bg-secondary absolute -top-2 right-4 rounded-full px-2 py-1 text-xs font-medium'>
-                Uncompleted
+              <span
+                className={`${
+                  escape.data.escape.missionTwo ? 'bg-primary' : 'bg-secondary'
+                } absolute -top-2 right-4 rounded-full px-2 py-1 text-xs font-medium`}
+              >
+                {escape.data.escape.missionTwo ? 'Completed' : 'Uncompleted'}
               </span>
               <span>Mission 2</span>
             </button>
@@ -50,8 +81,12 @@ export const Escape: React.FC = () => {
               className='mt-6 bg-dark-300 w-full rounded-lg p-4 relative'
               onClick={() => (window.location.href = `${window.location.pathname}/mystery`)}
             >
-              <span className='bg-secondary absolute -top-2 right-4 rounded-full px-2 py-1 text-xs font-medium'>
-                Uncompleted
+              <span
+                className={`${
+                  escape.data.escape.missionThree > 0 ? 'bg-primary' : 'bg-secondary'
+                } absolute -top-2 right-4 rounded-full px-2 py-1 text-xs font-medium`}
+              >
+                {escape.data.escape.missionThree > 0 ? 'Completed' : 'Uncompleted'}
               </span>
               <span>Mission 3</span>
             </button>

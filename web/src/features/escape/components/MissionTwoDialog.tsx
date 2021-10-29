@@ -5,8 +5,12 @@ import { useSnackbar } from 'notistack'
 import React, { Fragment } from 'react'
 import * as Yup from 'yup'
 
-import { Button, InputField } from '@/components/Elements'
+import { Button, InputField, Spinner } from '@/components/Elements'
+import { useUpsertEscape } from '@/features/escape'
+import { useAuth } from '@/lib/auth'
 import { sleep } from '@/utils/sleep'
+
+const CORRECT_ANSWER = 6
 
 const missionTwoSchema = Yup.object({
   answer: Yup.string()
@@ -20,7 +24,11 @@ type MissionTwoDialogProps = {
 }
 
 export const MissionTwoDialog: React.FC<MissionTwoDialogProps> = ({ open, onClose }) => {
+  const { user } = useAuth()
   const { enqueueSnackbar } = useSnackbar()
+  const { upsertEscape } = useUpsertEscape()
+
+  if (!user) return <Spinner className='mx-auto mt-4 text-secondary' />
 
   return (
     <Transition show={open} as={Fragment}>
@@ -51,6 +59,23 @@ export const MissionTwoDialog: React.FC<MissionTwoDialogProps> = ({ open, onClos
               validationSchema={missionTwoSchema}
               validateOnBlur={false}
               onSubmit={async ({ answer }) => {
+                if (parseInt(answer) !== CORRECT_ANSWER) {
+                  enqueueSnackbar('Wrong answer. Try again', { variant: 'error' })
+                  return
+                }
+
+                if (!user.user.team) {
+                  enqueueSnackbar("You don't have a team yet", { variant: 'error' })
+                  return
+                }
+
+                const { data, errors } = await upsertEscape({ teamId: user.user.team.id, missionTwo: true })
+                if (errors || !data) {
+                  console.error(errors)
+                  enqueueSnackbar('Unable to submit mission 1 answer at the moment', { variant: 'error' })
+                  return
+                }
+
                 enqueueSnackbar('Successfully submitted', { variant: 'success' })
                 await sleep(500)
                 onClose()

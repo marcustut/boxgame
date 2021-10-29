@@ -65,6 +65,14 @@ type Mission {
   completedBy: [Team!]!
 }
 
+type Escape {
+  id: ID!
+  missionOne: Boolean!
+  missionTwo: Boolean!
+  missionThree: Float!
+  team: Team!
+}
+
 type User {
   id: ID!
   username: String!
@@ -142,6 +150,7 @@ type Query {
   cluster(cluster_id: ID!): Cluster
   mission(mission_id: ID!): Mission
   missions(page: PaginationInput!): [Mission!]!
+  escape(team_id: ID!): Escape
   post(post_id: ID!): Post
   posts(page: PaginationInput!): [Post!]!
   invitations(user_id: ID!, page: PaginationInput!): [Invitation!]!
@@ -154,6 +163,7 @@ type Mutation {
   createInvitation(param: NewInvitation!): Invitation
   createTeam(param: NewTeam!): Team
   updateUser(user_id: ID!, param: UpdateUserInput!): User
+  upsertEscape(param: UpsertEscapeInput!): Escape
   likePost(param: PostLikeInput!): Boolean
   unlikePost(param: PostLikeInput!): Boolean
   likeComment(param: CommentLikeInput!): Boolean
@@ -165,6 +175,13 @@ type Mutation {
 input PaginationInput {
   first: Int!
   offset: Int
+}
+
+input UpsertEscapeInput {
+  teamId: ID!
+  missionOne: Boolean
+  missionTwo: Boolean
+  missionThree: Float
 }
 
 input PostLikeInput {

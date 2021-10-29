@@ -29,6 +29,10 @@ func (r *commentResolver) Likes(ctx context.Context, obj *model.Comment) (int, e
 	return query.GetUniqueCommentLikeCount(ctx, r.db, obj.ID)
 }
 
+func (r *escapeResolver) Team(ctx context.Context, obj *model.Escape) (*model.Team, error) {
+	return query.GetUniqueTeam(ctx, r.db, postgresql.Team.ID.Equals(obj.TeamID))
+}
+
 func (r *invitationResolver) From(ctx context.Context, obj *model.Invitation) (*model.User, error) {
 	return query.GetUniqueUser(ctx, r.db, postgresql.User.ID.EqualsIfPresent(obj.FromID))
 }
@@ -67,6 +71,10 @@ func (r *mutationResolver) CreateTeam(ctx context.Context, param model.NewTeam) 
 
 func (r *mutationResolver) UpdateUser(ctx context.Context, userID string, param model.UpdateUserInput) (*model.User, error) {
 	return query.UpdateUniqueUser(ctx, r.db, postgresql.User.ID.Equals(userID), &param)
+}
+
+func (r *mutationResolver) UpsertEscape(ctx context.Context, param model.UpsertEscapeInput) (*model.Escape, error) {
+	return query.UpsertUniqueEscape(ctx, r.db, &param)
 }
 
 func (r *mutationResolver) LikePost(ctx context.Context, param model.PostLikeInput) (*bool, error) {
@@ -144,6 +152,10 @@ func (r *queryResolver) Missions(ctx context.Context, page model.PaginationInput
 	return query.GetManyMission(ctx, r.db, page)
 }
 
+func (r *queryResolver) Escape(ctx context.Context, teamID string) (*model.Escape, error) {
+	return query.GetUniqueEscape(ctx, r.db, postgresql.Escape.TeamID.Equals(teamID))
+}
+
 func (r *queryResolver) Post(ctx context.Context, postID string) (*model.Post, error) {
 	return query.GetUniquePost(ctx, r.db, postgresql.Post.ID.Equals(postID))
 }
@@ -194,6 +206,9 @@ func (r *Resolver) Cluster() generated.ClusterResolver { return &clusterResolver
 // Comment returns generated.CommentResolver implementation.
 func (r *Resolver) Comment() generated.CommentResolver { return &commentResolver{r} }
 
+// Escape returns generated.EscapeResolver implementation.
+func (r *Resolver) Escape() generated.EscapeResolver { return &escapeResolver{r} }
+
 // Invitation returns generated.InvitationResolver implementation.
 func (r *Resolver) Invitation() generated.InvitationResolver { return &invitationResolver{r} }
 
@@ -220,6 +235,7 @@ func (r *Resolver) User() generated.UserResolver { return &userResolver{r} }
 
 type clusterResolver struct{ *Resolver }
 type commentResolver struct{ *Resolver }
+type escapeResolver struct{ *Resolver }
 type invitationResolver struct{ *Resolver }
 type missionResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
