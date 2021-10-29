@@ -1,8 +1,8 @@
 import { Transition } from '@headlessui/react'
 import { Icon } from '@iconify/react'
 import { EmojiData, Picker } from 'emoji-mart'
-import React, { Fragment, useEffect, useState } from 'react'
-import { useEffectOnce, useInterval, useTimeoutFn } from 'react-use'
+import React, { Fragment, useState } from 'react'
+import { useEffectOnce, useInterval } from 'react-use'
 
 import { Button } from '@/components/Elements'
 import { OnlinePanel, EmojiWrapper, Scene } from '@/features/opening'

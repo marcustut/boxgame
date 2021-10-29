@@ -1,4 +1,6 @@
+import { Icon } from '@iconify/react'
 import React, { useEffect, useState } from 'react'
+import { useEffectOnce } from 'react-use'
 
 import { LoadingPage } from '@/components/Misc'
 import { EscapeLayout, MissionOneDialog, MissionTwoDialog, useFetchEscape, useUpsertEscape } from '@/features/escape'
@@ -6,6 +8,7 @@ import { useAuth } from '@/lib/auth'
 
 export const Escape: React.FC = () => {
   const { user } = useAuth()
+  const [mounted, setMounted] = useState<boolean>(false)
   const [missionOneDialog, setMissionOneDialog] = useState<boolean>(false)
   const [missionTwoDialog, setMissionTwoDialog] = useState<boolean>(false)
   const { escape, fetchEscape } = useFetchEscape()
@@ -24,6 +27,10 @@ export const Escape: React.FC = () => {
         }
       })
   }, [fetchEscape, upsertEscape, user])
+
+  useEffectOnce(() => setMounted(true))
+
+  if (!mounted) return <LoadingPage />
 
   if (!user || !escape || !escape.data.escape) return <LoadingPage />
 
@@ -45,11 +52,14 @@ export const Escape: React.FC = () => {
             In order to escape, you must complete the three tasks below:{' '}
           </p>
 
-          <div className='mt-4 p-4 rounded-lg flex flex-col w-full'>
+          <div className='mt-0 p-4 rounded-lg flex flex-col w-full'>
             <button
               data-blobity-magnetic='false'
+              data-blobity-tooltip={escape.data.escape.missionOne ? 'This mission is completed' : undefined}
               disabled={escape.data.escape.missionOne}
-              className='bg-dark-300 w-full rounded-lg p-4 relative'
+              className={`${
+                escape.data.escape.missionOne ? 'bg-dark-50' : 'bg-dark-300'
+              } w-full rounded-lg p-4 relative`}
               onClick={() => setMissionOneDialog(true)}
             >
               <span
@@ -63,8 +73,11 @@ export const Escape: React.FC = () => {
             </button>
             <button
               data-blobity-magnetic='false'
+              data-blobity-tooltip={escape.data.escape.missionTwo ? 'This mission is completed' : undefined}
               disabled={escape.data.escape.missionTwo}
-              className='mt-6 bg-dark-300 w-full rounded-lg p-4 relative'
+              className={`${
+                escape.data.escape.missionTwo ? 'bg-dark-50' : 'bg-dark-300'
+              } mt-6 w-full rounded-lg p-4 relative`}
               onClick={() => setMissionTwoDialog(true)}
             >
               <span
@@ -78,7 +91,10 @@ export const Escape: React.FC = () => {
             </button>
             <button
               data-blobity-magnetic='false'
-              className='mt-6 bg-dark-300 w-full rounded-lg p-4 relative'
+              data-blobity-tooltip={escape.data.escape.missionThree ? 'This mission is completed' : undefined}
+              className={`${
+                escape.data.escape.missionThree > 0 ? 'bg-dark-50' : 'bg-dark-300'
+              } mt-6 w-full rounded-lg p-4 relative`}
               onClick={() => (window.location.href = `${window.location.pathname}/mystery`)}
             >
               <span
@@ -88,9 +104,15 @@ export const Escape: React.FC = () => {
               >
                 {escape.data.escape.missionThree > 0 ? 'Completed' : 'Uncompleted'}
               </span>
-              <span>Mission 3</span>
+              <span>
+                Mission 3{escape.data.escape.missionThree > 0 ? ` (${escape.data.escape.missionThree} marks)` : ''}
+              </span>
             </button>
           </div>
+          <span className='text-sm text-true-gray-400 flex items-center'>
+            <Icon icon='ph:lightbulb-filament-fill' className='mr-1' /> For mission 3, you can keep trying until you get
+            the highest marks.
+          </span>
         </div>
       </EscapeLayout>
 

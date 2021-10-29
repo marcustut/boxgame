@@ -8,8 +8,9 @@ import { useEffectOnce } from 'react-use'
 
 import { Button, InputField } from '@/components/Elements'
 import { LoadingPage } from '@/components/Misc'
-import { EscapeLayout } from '@/features/escape'
+import { EscapeLayout, useUpsertEscape } from '@/features/escape'
 import { useMysteryGame } from '@/hooks/stores'
+import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 
 const NUMBER_OF_HIGHLIGHTS = 5
@@ -37,8 +38,11 @@ export const Mystery: React.FC = () => {
   const [congratulationOpen, setCongratulationOpen] = useState<boolean>(false)
   const [points, setPoints] = useState<number>(0)
   const [foundKeyword, setFoundKeyword] = useState<string>()
-  const { enqueueSnackbar } = useSnackbar()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { keywords, setKeywords, answer, setAnswer, searchWords, setSearchWords } = useMysteryGame()
+  const { upsertEscape } = useUpsertEscape()
+
+  const { user } = useAuth()
 
   // redirect to login if not authenticated
   useEffectOnce(() => {
@@ -120,29 +124,30 @@ export const Mystery: React.FC = () => {
     }
   }, [enqueueSnackbar, keywords, setKeywords])
 
+  if (!user || !user.user.team) return <LoadingPage />
+
   if (!mounted) return <LoadingPage />
 
   return (
     <EscapeLayout utilities={{ p: 'px-4 pt-4 pb-20', pos: 'relative' }}>
-      {/*<div>*/}
-      {/*  <h1 className='text-lg font-bold'>Game Rules</h1>*/}
-      {/*  <p className='text-sm'>*/}
-      {/*    <strong>Objective:</strong> 从我们给的资料中去查寻事件的真相*/}
-      {/*  </p>*/}
-      {/*  <p className='text-sm'>*/}
-      {/*    <strong>Objective:</strong> 从我们给的资料中去查寻事件的真相*/}
-      {/*  </p>*/}
-      {/*  <p className='text-sm'>*/}
-      {/*    <strong>Objective:</strong> 从我们给的资料中去查寻事件的真相*/}
-      {/*  </p>*/}
-      {/*  <p className='text-sm'>*/}
-      {/*    <strong>Objective:</strong> 从我们给的资料中去查寻事件的真相*/}
-      {/*  </p>*/}
-      {/*</div>*/}
-
-      <div className='w-full flex justify-center'>
-        <p className='text-2xl font-bold'>Points: {points}</p>
+      <div>
+        <h1 className='text-lg font-bold'>Game Rules</h1>
+        {/*  <p className='text-sm'>*/}
+        {/*    <strong>Objective:</strong> 从我们给的资料中去查寻事件的真相*/}
+        {/*  </p>*/}
+        {/*  <p className='text-sm'>*/}
+        {/*    <strong>Objective:</strong> 从我们给的资料中去查寻事件的真相*/}
+        {/*  </p>*/}
+        {/*  <p className='text-sm'>*/}
+        {/*    <strong>Objective:</strong> 从我们给的资料中去查寻事件的真相*/}
+        {/*  </p>*/}
+        <p className='text-true-gray-200 mt-2'>
+          小组需从所提供的信息去还原事情的真相 并以文字的形式叙述（至少20字）｜ 还原度越高 获得的分数越高
+        </p>
+        <p className='mt-1 text-sm text-true-gray-400'>*提示可用 highlighter 去找出关键词</p>
       </div>
+
+      <div className='h-[1px] w-full bg-dark-100 mt-8' />
 
       <div className='mt-8'>
         {/* <h1 className='text-lg font-bold'>Paragraph</h1> */}
@@ -155,19 +160,58 @@ export const Mystery: React.FC = () => {
         </div>
       </div>
 
+      <div className='mt-8 w-full flex justify-center'>
+        <p className='text-2xl font-bold'>Points: {points}</p>
+      </div>
+
       <div className='mt-8'>
         <Formik
           initialValues={{ answer }}
           onSubmit={async ({ answer }) => {
+            if (answer.length <= 20) {
+              enqueueSnackbar('Answer must not be lesser than 20 words', { variant: 'error' })
+              return
+            }
+
             setPoints(0)
-            Object.keys(important_phrase_map).forEach(phrase => {
+            let pts = 0
+            Object.keys(keywords).forEach(phrase => {
               if (answer.includes(phrase)) {
                 setPoints(points => points + 10)
+                pts += 10
                 enqueueSnackbar('You got 10 points!', {
                   variant: 'success',
                   anchorOrigin: { vertical: 'top', horizontal: 'center' }
                 })
               }
+            })
+            const { data, errors } = await upsertEscape({ teamId: user.user.team!.id, missionThree: pts })
+            if (errors || !data) {
+              enqueueSnackbar('Unable to update your mission 3 marks', { variant: 'error' })
+              console.error(errors)
+              return
+            }
+            enqueueSnackbar('Do you want to go back to the Hub?', {
+              persist: true,
+              anchorOrigin: { vertical: 'top', horizontal: 'center' },
+              action: (
+                <div className='flex items-center'>
+                  <button
+                    data-blobity-magnetic='false'
+                    className='font-medium text-secondary hover:bg-true-gray-200 px-2 py-1'
+                    onClick={() => (window.location.href = '/app/mission/escape')}
+                  >
+                    Yes
+                  </button>
+                  <button
+                    data-blobity-magnetic='false'
+                    className='ml-2 font-medium text-secondary hover:bg-true-gray-200 px-2 py-1'
+                    onClick={() => closeSnackbar()}
+                  >
+                    No
+                  </button>
+                </div>
+              )
             })
           }}
         >

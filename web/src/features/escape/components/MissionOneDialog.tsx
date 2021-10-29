@@ -94,6 +94,7 @@ export const MissionOneDialog: React.FC<MissionOneDialogProps> = ({ open, onClos
                       <Icon icon='mdi:close' />
                     </button>
                   </div>
+
                   <div className='mt-4 rounded-lg'>
                     <InputField
                       name='answer'
@@ -101,6 +102,8 @@ export const MissionOneDialog: React.FC<MissionOneDialogProps> = ({ open, onClos
                       inputClassName='bg-dark-300 text-true-gray-50 text-sm py-3 focus:ring-primary-ring focus:border-transparent border-transparent'
                     />
                   </div>
+
+                  <span className='mt-2 text-sm text-true-gray-400'>*Hint: the answer is in digits</span>
 
                   <Button
                     type='submit'

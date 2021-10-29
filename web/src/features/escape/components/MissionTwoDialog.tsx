@@ -102,6 +102,8 @@ export const MissionTwoDialog: React.FC<MissionTwoDialogProps> = ({ open, onClos
                     />
                   </div>
 
+                  <span className='mt-2 text-sm text-true-gray-400'>*Hint: the answer is in digits</span>
+
                   <Button
                     type='submit'
                     loading={isSubmitting}
