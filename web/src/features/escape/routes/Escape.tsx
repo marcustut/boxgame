@@ -1,10 +1,15 @@
 import { Icon } from '@iconify/react'
+import Dayjs from 'dayjs'
+import RelativeTime from 'dayjs/plugin/relativeTime'
 import React, { useEffect, useState } from 'react'
 import { useEffectOnce } from 'react-use'
 
 import { LoadingPage } from '@/components/Misc'
-import { EscapeLayout, MissionOneDialog, MissionTwoDialog, useFetchEscape, useUpsertEscape } from '@/features/escape'
+import { MissionOneDialog, MissionTwoDialog, useFetchEscape, useUpsertEscape } from '@/features/escape'
+import { MissionLayout } from '@/features/mission'
 import { useAuth } from '@/lib/auth'
+
+Dayjs.extend(RelativeTime)
 
 export const Escape: React.FC = () => {
   const { user } = useAuth()
@@ -36,7 +41,7 @@ export const Escape: React.FC = () => {
 
   return (
     <>
-      <EscapeLayout isHall utilities={{ p: 'px-4 pt-4 pb-20', pos: 'relative' }}>
+      <MissionLayout isHall utilities={{ p: 'px-4 pt-4 pb-20', pos: 'relative' }}>
         <div className='flex flex-col <sm:items-center <sm:text-center'>
           <h2 className='font-bold text-2xl'>Welcome to the Hub!</h2>
           <p className='text-sm text-true-gray-400'>Scan the following QR Code to enter our virtual Escape Room</p>
@@ -114,7 +119,7 @@ export const Escape: React.FC = () => {
             the highest marks.
           </span>
         </div>
-      </EscapeLayout>
+      </MissionLayout>
 
       <MissionOneDialog open={missionOneDialog} onClose={() => setMissionOneDialog(false)} />
       <MissionTwoDialog open={missionTwoDialog} onClose={() => setMissionTwoDialog(false)} />

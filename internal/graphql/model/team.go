@@ -5,7 +5,7 @@ import "github.com/marcustut/thebox/internal/postgresql"
 type Team struct {
 	ID           string    `json:"id" fake:"{uuid}"`
 	Name         *string   `json:"name" fake:"{name}"`
-	AvatarUrl    *string   `json:"color" fake:"{hexcolor}"`
+	AvatarUrl    *string   `json:"color" fake:"{url}"`
 	Points       float64   `json:"points" fake:"{float64:10,100}"`
 	ClusterID    *string   `json:"cluster" fake:"skip"`
 	CompletedIDs *[]string `json:"completed" fake:"skip"`

@@ -199,7 +199,7 @@ func seed(ctx context.Context, client *postgresql.PrismaClient) error {
 		teams = append(teams, t.ID)
 		res, err := client.Team.CreateOne(
 			postgresql.Team.ID.Set(t.ID),
-			postgresql.Team.Color.Set(t.Color),
+			postgresql.Team.AvatarURL.SetIfPresent(t.AvatarUrl),
 			postgresql.Team.Name.Set(*t.Name),
 			postgresql.Team.Points.Set(t.Points),
 			postgresql.Team.ClusterID.Set(clusters[rand.Intn(len(clusters))]),
@@ -221,6 +221,7 @@ func seed(ctx context.Context, client *postgresql.PrismaClient) error {
 			postgresql.Mission.UpdatedAt.Set(m.UpdatedAt),
 			postgresql.Mission.StartAt.Set(m.StartAt),
 			postgresql.Mission.EndAt.Set(m.EndAt),
+			postgresql.Mission.Slug.Set(m.Slug),
 			postgresql.Mission.Description.Set(*m.Description),
 		).Exec(ctx)
 		if err != nil {

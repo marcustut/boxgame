@@ -4,13 +4,18 @@ import React from 'react'
 import { WindiUtilities } from '@/types/windi'
 import { constructClassName } from '@/utils'
 
-type EscapeLayoutProps = {
+type MissionLayoutProps = {
   isHall?: boolean
   utilities?: WindiUtilities
   className?: string
 }
 
-export const EscapeLayout: React.FC<EscapeLayoutProps> = ({ isHall = false, utilities, className = '', children }) => {
+export const MissionLayout: React.FC<MissionLayoutProps> = ({
+  isHall = false,
+  utilities,
+  className = '',
+  children
+}) => {
   const defaultUtilities: WindiUtilities = {
     p: 'p-4',
     m: 'mx-auto',

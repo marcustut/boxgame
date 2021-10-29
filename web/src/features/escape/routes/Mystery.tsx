@@ -8,7 +8,8 @@ import { useEffectOnce } from 'react-use'
 
 import { Button, InputField } from '@/components/Elements'
 import { LoadingPage } from '@/components/Misc'
-import { EscapeLayout, useUpsertEscape } from '@/features/escape'
+import { useUpsertEscape } from '@/features/escape'
+import { MissionLayout } from '@/features/mission'
 import { useMysteryGame } from '@/hooks/stores'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
@@ -129,7 +130,7 @@ export const Mystery: React.FC = () => {
   if (!mounted) return <LoadingPage />
 
   return (
-    <EscapeLayout utilities={{ p: 'px-4 pt-4 pb-20', pos: 'relative' }}>
+    <MissionLayout utilities={{ p: 'px-4 pt-4 pb-20', pos: 'relative' }}>
       <div>
         <h1 className='text-lg font-bold'>Game Rules</h1>
         {/*  <p className='text-sm'>*/}
@@ -352,6 +353,6 @@ export const Mystery: React.FC = () => {
           </Transition.Child>
         </Dialog>
       </Transition>
-    </EscapeLayout>
+    </MissionLayout>
   )
 }

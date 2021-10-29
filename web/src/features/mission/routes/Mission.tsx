@@ -10,6 +10,12 @@ import { LoadingPage } from '@/components/Misc'
 import { useFetchMissions } from '@/features/mission'
 import { useAuth } from '@/lib/auth'
 
+const imageBG: Record<string, string> = {
+  '绝地逃离 Mystery Escape': 'https://www.ginx.tv/uploads2/Various/The_Outlast_Trials/The_Outlast_Trials.jpg',
+  '极速对决 Time Hunter':
+    'https://vfqzgsbgmlvglbygosna.supabase.in/storage/v1/object/public/assets/TimeHunterWallpaper.jpg'
+}
+
 Dayjs.extend(RelativeTime)
 
 export const Mission: React.FC = () => {
@@ -18,7 +24,7 @@ export const Mission: React.FC = () => {
   const { missions, fetchMissions } = useFetchMissions({ first: 5 })
 
   useEffectOnce(() => {
-    fetchMissions().then(() => console.log('fetched missions'))
+    fetchMissions().then(() => console.log('fetched 5 missions'))
   })
 
   if (!user) return <LoadingPage />
@@ -33,18 +39,23 @@ export const Mission: React.FC = () => {
       </div>
       {missions && missions.data ? (
         <>
-          {missions.data.missions.map(mission => {
-            const isOngoing = import.meta.env.DEV
-              ? true
-              : Dayjs(mission.startAt).isBefore(Dayjs()) && Dayjs(Dayjs()).isBefore(mission.endAt)
+          {missions.data.missions.map((mission, index) => {
+            const isOngoing = Dayjs(mission.startAt).isBefore(Dayjs()) && Dayjs(Dayjs()).isBefore(mission.endAt)
+            const message = Dayjs(mission.endAt).isBefore(Dayjs())
+              ? `Closed ${Dayjs(mission.startAt).fromNow()}`
+              : `Opening ${Dayjs(mission.startAt).fromNow()}`
             return (
               <button
                 key={mission.id}
                 data-blobity-magnetic='false'
-                data-blobity-tooltip={!isOngoing ? `Opening ${Dayjs(mission.startAt).fromNow()}` : undefined}
-                className='relative w-full flex items-center px-4 py-3 rounded-lg border border-dark-100 bg-dark-300 focus:ring-2 focus:ring-secondary-ring transition ease-in-out duration-200'
+                data-blobity-tooltip={!isOngoing ? message : undefined}
+                className={`relative w-full flex items-center px-4 py-3 ${
+                  index !== 0 ? 'mt-6' : ''
+                } rounded-lg border border-dark-100 bg-dark-300 focus:ring-2 ${
+                  isOngoing ? 'focus:ring-primary-ring' : 'focus:ring-secondary-ring'
+                } transition ease-in-out duration-200`}
                 style={{
-                  background: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(https://www.ginx.tv/uploads2/Various/The_Outlast_Trials/The_Outlast_Trials.jpg)`,
+                  background: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${imageBG[mission.title]})`,
                   backgroundPosition: 'center',
                   backgroundSize: 'cover',
                   backgroundRepeat: 'no-repeat'
@@ -52,7 +63,7 @@ export const Mission: React.FC = () => {
                 onClick={() =>
                   isOngoing
                     ? (window.location.href = `${window.location.pathname}/${mission.slug}`)
-                    : enqueueSnackbar(`Opening ${Dayjs(mission.startAt).fromNow()}`, { variant: 'error' })
+                    : enqueueSnackbar(message, { variant: 'error' })
                 }
               >
                 <div
