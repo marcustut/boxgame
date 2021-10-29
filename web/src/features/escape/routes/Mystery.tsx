@@ -162,6 +162,7 @@ export const Mystery: React.FC = () => {
 
       <div className='mt-8 w-full flex justify-center'>
         <p className='text-2xl font-bold'>Points: {points}</p>
+        <span className='text-sm font-medium text-true-gray-400'>maximum is 60 points</span>
       </div>
 
       <div className='mt-8'>
