@@ -80,7 +80,7 @@ export const Speed: React.FC = () => {
   if (!speed.data.speed) return <div>Error loading speed</div>
 
   // if mission is closed
-  // if (!isOngoing) return <MissionUnavailable mission={mission.data.mission} />
+  if (!isOngoing) return <MissionUnavailable mission={mission.data.mission} />
 
   return (
     <>

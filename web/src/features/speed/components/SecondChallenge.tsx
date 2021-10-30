@@ -66,7 +66,7 @@ export const SecondChallenge: React.FC<SecondChallengeProps> = ({ unlocked, setU
               <a
                 data-blobity-magnetic='false'
                 className='hover:text-secondary hover:underline flex items-center'
-                href={`${window.location.pathname}/donwload`}
+                href={`https://thebox.fgacycyw.com/app/mission/speed/download/`}
                 target='_blank'
                 rel='noreferrer'
               >
