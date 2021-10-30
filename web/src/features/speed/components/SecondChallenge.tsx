@@ -33,11 +33,15 @@ export const SecondChallenge: React.FC<SecondChallengeProps> = ({ unlocked, setU
       <div className='mt-12 flex items-center text-2xl'>
         <h2 className='font-bold'>Second Challenge</h2> <Icon icon='twemoji:keycap-2' className='ml-2' />
       </div>
-      <p className='text-true-gray-400 mt-1'>
+      <p className='text-true-gray-400 mt-1 whitespace-pre-wrap'>
         Before proceeding to this challenge, make sure you have acquired the password from the previous challenge. In
         this challenge, you'll first have to <strong>unlock the link to 7 images below.</strong> The goal of this
         challenge is to find the clues we left behind in the images, decode them and{' '}
-        <strong>find the final message</strong>. Follow the instructions provided in the unlocked materials below.
+        <strong>find the final message</strong>. Follow the instructions provided in the unlocked materials below.{' '}
+        {'\n'}
+        开始这挑战之前，请确保您已从上一个挑战中获取密码。这挑战中，您首先必须解锁以下 7
+        张图片的链接。这个挑战的目标是找到我们在图像中留下的线索，解码它们并找到最终的信息。
+        按照以下解锁材料中提供的说明进行操作。
       </p>
       <div className='flex justify-center items-center'>
         <div className='p-4 bg-dark-300 rounded-lg mt-4 w-full'>

@@ -7,12 +7,15 @@ export const FirstChallenge: React.FC = () => {
       <div className='mt-12 flex items-center text-2xl'>
         <h2 className='font-bold'>First Challenge</h2> <Icon icon='twemoji:keycap-1' className='ml-2' />
       </div>
-      <p className='text-true-gray-400 mt-1'>
+      <p className='text-true-gray-400 mt-1 whitespace-pre-wrap'>
         In this first challenge, you and your teammate will have to complete 碰糖 using an Instagram filter provided
         below. First, <strong>open the Instagram filter</strong> by scanning the QR or clicking the link provided. Then,
         complete the challenge <strong>using the 40 seconds setting</strong> and post it to your story by tagging{' '}
         <strong className='italic'>#TheBox2021</strong> and <strong className='italic'>#GroupName</strong> below. After
-        posting, wait for our message, <strong>we will DM you the password for the next challenge.</strong>
+        posting, wait for our message, <strong>we will DM you the password for the next challenge.</strong> {'\n'}
+        在第一个挑战中，您和您的队友必须使用下面提供的 Instagram 的filter完成碰糖。首先，通过扫描 QR
+        或单击提供的链接打开 Instagram的filter。然后，使用 40 秒设置完成挑战，并通过在下方Hashtag #TheBox2021 和
+        #GroupName 将其发布到您的Instagram Story。发布后，等待我们的消息，我们将DM您下个挑战的密码。
       </p>
       <div className='flex <sm:flex-col justify-evenly items-center mt-4'>
         <div className='flex flex-col items-center text-center'>

@@ -107,7 +107,7 @@ export const Speed: React.FC = () => {
           </div>
           <div className='flex justify-center items-center text-lg mt-4'>
             <Icon icon='emojione:index-pointing-up-medium-skin-tone' className='mr-2 transform' />
-            <span className='text-true-gray-400'>Refer to the video if needed</span>
+            <span className='text-true-gray-400'>Refer to the video if needed 若有需要请参阅视频</span>
           </div>
 
           <h2 className='font-bold text-2xl mt-12'>Game Description</h2>
@@ -115,6 +115,7 @@ export const Speed: React.FC = () => {
             In this mission, you will have to compete against the time, if you look on the bottom right, there is a
             countdown timer, when the timer reaches 0, the mission will close and no one will be able to submit their
             answer.
+            在这个任务中，你必须与时间竞争，如果你看右下角，有一个倒数计时器，当计时器到0时，任务将关闭，不能再提交你们的答案
           </p>
 
           <FirstChallenge />

@@ -38,9 +38,10 @@ export const SubmissionForm: React.FC<SubmissionFormProps> = ({ team, mission, c
       <div className='mt-12 flex items-center text-2xl'>
         <h2 className='font-bold'>Answer Submission</h2> <Icon icon='twemoji:bookmark-tabs' className='ml-2' />
       </div>
-      <div className='text-true-gray-400 mt-1'>
+      <div className='text-true-gray-400 mt-1 whitespace-pre-wrap'>
         After you successfully found the final message, fill in the blanks below with the message and submit! Note that
-        the timer will stop after your submission, you only have one chance.
+        the timer will stop after your submission, you only have one chance. {'\n'}
+        成功找到最终留言后，请在下方空白处填写留言并提交！ 请注意，计时器将在您提交后停止，您只有一次机会。
         <div className='text-xs flex items-center'>
           <Icon icon='ph:lightbulb-filament-fill' className='mr-1' />
           Don't leave after submitting, there's still one last task
