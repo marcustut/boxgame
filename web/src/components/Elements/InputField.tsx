@@ -12,6 +12,7 @@ export type InputFieldProps = React.DetailedHTMLProps<React.InputHTMLAttributes<
   textarea?: boolean
   rows?: number
   inputClassName?: string
+  noError?: boolean
 }
 
 export const InputField: React.FC<InputFieldProps> = ({
@@ -22,6 +23,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   ref: _,
   className,
   inputClassName = '',
+  noError = false,
   ...props
 }) => {
   const [field, meta] = useField(props)
@@ -30,7 +32,7 @@ export const InputField: React.FC<InputFieldProps> = ({
     <div className={`${className}`}>
       {label && <div className={`flex mb-1 font-semibold text-sm`}>{label}</div>}
       <Input error={meta.error} textarea={textarea} className={inputClassName} {...field} {...props} />
-      {meta.error && meta.touched && (
+      {!noError && meta.error && meta.touched && (
         <div className={`flex mt-1 text-sm`}>
           <InputErrorMsg className={errorMsgColor}>{errorMsg || meta.error}</InputErrorMsg>
         </div>

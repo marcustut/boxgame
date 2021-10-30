@@ -115,6 +115,15 @@ export const GET_POSTS_WITH_COMMENTS = gql`
   }
 `
 
+export const GET_MISSION = gql`
+  ${CORE_MISSION_FIELDS}
+  query GetMission($mission_id: ID!) {
+    mission(mission_id: $mission_id) {
+      ...CoreMissionFields
+    }
+  }
+`
+
 export const GET_MISSIONS = gql`
   ${CORE_MISSION_FIELDS}
   query GetMissions($page: PaginationInput!) {
