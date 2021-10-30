@@ -2,29 +2,45 @@ import { Icon } from '@iconify/react'
 import Dayjs from 'dayjs'
 import RelativeTime from 'dayjs/plugin/relativeTime'
 import { Form, Formik } from 'formik'
-import React, { useMemo, useState } from 'react'
+import { useSnackbar } from 'notistack'
+import React, { useEffect, useMemo, useState } from 'react'
 import Countdown from 'react-countdown'
 import { useEffectOnce } from 'react-use'
 
 import { Button, InputField } from '@/components/Elements'
 import { LoadingPage } from '@/components/Misc'
 import { MissionUnavailable, MissionLayout, useFetchMission, ReadReminder } from '@/features/mission'
+import { useFetchSpeed, useUpsertSpeed } from '@/features/speed'
 import { FirstChallenge, SecondChallenge, SubmissionForm } from '@/features/speed'
+import { useSpeedGame } from '@/hooks/stores'
 import { useAuth } from '@/lib/auth'
-import { sleep } from '@/utils/sleep'
+import { getDuration } from '@/utils/time'
 
 Dayjs.extend(RelativeTime)
 
-const INTRO_VIDEO = 'https://www.youtube.com/embed/caFKHAcLwSI'
-const COMPLETED_VIDEO = 'https://www.youtube.com/watch?v=caFKHAcLwSI'
+const INTRO_VIDEO = 'https://www.youtube.com/embed/Y42egm2GEJ4'
+const BRIEFING_VIDEO = 'https://www.youtube.com/embed/BRfg6XGzAEs'
+const COMPLETED_VIDEO = 'https://www.youtube.com/watch?v=9edf-__ocLU'
+
+const MISSION_ID = '6f0621af-2e3e-4be6-90dd-24f3ee763f5d'
+
+const TimerWrapper: React.FC = ({ children }) => (
+  <div className='fixed bottom-4 right-4 text-2xl text-red-600 text-left' style={{ fontFamily: 'Audiowide' }}>
+    {children}
+  </div>
+)
 
 export const Speed: React.FC = () => {
   const [mounted, setMounted] = useState<boolean>(false)
   const [unlocked, setUnlocked] = useState<boolean>(false)
   const [completed, setCompleted] = useState<boolean>(false)
   const [reminderOpen, setReminderOpen] = useState<boolean>(true)
+  const { enqueueSnackbar } = useSnackbar()
   const { user } = useAuth()
   const { mission, fetchMission } = useFetchMission()
+  const { speed, fetchSpeed } = useFetchSpeed()
+  const { upsertSpeed } = useUpsertSpeed()
+  const { completedAt } = useSpeedGame()
 
   const isOngoing = useMemo(
     () =>
@@ -34,14 +50,34 @@ export const Speed: React.FC = () => {
 
   useEffectOnce(() => {
     setMounted(true)
-    fetchMission('6f0621af-2e3e-4be6-90dd-24f3ee763f5d').then(() => console.log('fetched mission'))
+    fetchMission(MISSION_ID).then(() => console.log('fetched mission'))
   })
 
+  useEffect(() => {
+    if (!user || !user.user.team) return
+    fetchSpeed(user.user.team.id)
+      .then(() => console.log('fetched speed'))
+      .catch(err => {
+        if (err.message === 'ErrNotFound') {
+          upsertSpeed({ teamId: user.user.team!.id, missionId: MISSION_ID }).then(() => {
+            console.log('upserted speed')
+            fetchSpeed(user.user.team!.id).then(() => console.log('fetched speed'))
+          })
+        }
+      })
+  }, [fetchSpeed, upsertSpeed, user])
+
   // if still loading data
-  if (!user || !mounted || !mission) return <LoadingPage />
+  if (!user || !mounted || !mission || !speed) return <LoadingPage />
+
+  // if unable to load team
+  if (!user.user.team) return <div>Error loading team</div>
 
   // if unable to load mission
   if (!mission.data.mission) return <div>Error loading mission</div>
+
+  // if unable to load speed
+  if (!speed.data.speed) return <div>Error loading speed</div>
 
   // if mission is closed
   // if (!isOngoing) return <MissionUnavailable mission={mission.data.mission} />
@@ -51,24 +87,27 @@ export const Speed: React.FC = () => {
       <MissionLayout isHall utilities={{ p: 'px-4 pt-4 pb-96', pos: 'relative' }}>
         <div className='flex flex-col'>
           <h2 className='font-bold text-2xl'>You are now in {mission.data.mission.title}'s Mission Page</h2>
-          <div className='flex <sm:flex-col items-center mx-auto'>
+          <div className='w-full flex <sm:flex-col justify-center items-center mx-auto mt-12'>
             <iframe
-              width='400'
-              height='250'
               src={INTRO_VIDEO}
               title='YouTube video player'
               frameBorder='0'
               allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
               allowFullScreen
-              className='mt-12'
+              className='w-full h-80 <sm:h-64 <sm:mt-4 sm:mr-2'
             />
-            <div className='flex items-center ml-4 text-lg <sm:mt-2'>
-              <Icon
-                icon='emojione:index-pointing-up-medium-skin-tone'
-                className='mr-2 transform rotate-270 <sm:rotate-0'
-              />
-              <span className='text-true-gray-400'>Refer to the video if needed</span>
-            </div>
+            <iframe
+              src={BRIEFING_VIDEO}
+              title='YouTube video player'
+              frameBorder='0'
+              allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+              allowFullScreen
+              className='w-full h-80 <sm:h-64 <sm:mt-4 sm:ml-2'
+            />
+          </div>
+          <div className='flex justify-center items-center text-lg mt-4'>
+            <Icon icon='emojione:index-pointing-up-medium-skin-tone' className='mr-2 transform' />
+            <span className='text-true-gray-400'>Refer to the video if needed</span>
           </div>
 
           <h2 className='font-bold text-2xl mt-12'>Game Description</h2>
@@ -80,7 +119,12 @@ export const Speed: React.FC = () => {
 
           <FirstChallenge />
           <SecondChallenge unlocked={unlocked} setUnlocked={unlocked => setUnlocked(unlocked)} />
-          <SubmissionForm completed={completed} setCompleted={completed => setCompleted(completed)} />
+          <SubmissionForm
+            team={user.user.team}
+            mission={mission.data.mission}
+            completed={completed}
+            setCompleted={completed => setCompleted(completed)}
+          />
 
           {completed ? (
             <div className='flex flex-col justify-center items-center mt-24'>
@@ -96,8 +140,18 @@ export const Speed: React.FC = () => {
               </span>
               <Formik
                 initialValues={{ answer: '' }}
-                onSubmit={async values => {
-                  await sleep(500)
+                onSubmit={async ({ answer }) => {
+                  const { data, errors } = await upsertSpeed({
+                    teamId: user.user.team!.id,
+                    missionId: mission.data.mission!.id,
+                    answer
+                  })
+                  if (errors || !data) {
+                    enqueueSnackbar('Unable to submit your answer now', { variant: 'error' })
+                    console.error(errors)
+                    return
+                  }
+                  enqueueSnackbar('Successfully submitted your answer', { variant: 'success' })
                   window.open(COMPLETED_VIDEO)
                 }}
               >
@@ -131,17 +185,21 @@ export const Speed: React.FC = () => {
           )}
         </div>
 
-        <Countdown
-          intervalDelay={0}
-          precision={3}
-          date={new Date(mission.data.mission.endAt)}
-          renderer={props => (
-            <div className='fixed bottom-4 right-4 text-2xl text-red-600 text-left' style={{ fontFamily: 'Audiowide' }}>
-              {String(props.hours).padStart(2, '0')}:{String(props.minutes).padStart(2, '0')}:
-              {String(props.seconds).padStart(2, '0')}
-            </div>
-          )}
-        />
+        {completedAt ? (
+          <TimerWrapper>{getDuration(Dayjs(mission.data.mission.startAt), Dayjs(completedAt))}</TimerWrapper>
+        ) : (
+          <Countdown
+            intervalDelay={0}
+            precision={3}
+            date={new Date(mission.data.mission.endAt)}
+            renderer={props => (
+              <TimerWrapper>
+                {String(props.hours).padStart(2, '0')}:{String(props.minutes).padStart(2, '0')}:
+                {String(props.seconds).padStart(2, '0')}
+              </TimerWrapper>
+            )}
+          />
+        )}
       </MissionLayout>
 
       <ReadReminder open={reminderOpen} onClose={() => setReminderOpen(false)} />

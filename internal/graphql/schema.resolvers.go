@@ -77,6 +77,10 @@ func (r *mutationResolver) UpsertEscape(ctx context.Context, param model.UpsertE
 	return query.UpsertUniqueEscape(ctx, r.db, &param)
 }
 
+func (r *mutationResolver) UpsertSpeed(ctx context.Context, param model.UpsertSpeedInput) (*model.Speed, error) {
+	return query.UpsertUniqueSpeed(ctx, r.db, &param)
+}
+
 func (r *mutationResolver) LikePost(ctx context.Context, param model.PostLikeInput) (*bool, error) {
 	return query.CreatePostLike(ctx, r.db, &param)
 }
@@ -140,6 +144,10 @@ func (r *queryResolver) Team(ctx context.Context, teamID string) (*model.Team, e
 	return query.GetUniqueTeam(ctx, r.db, postgresql.Team.ID.Equals(teamID))
 }
 
+func (r *queryResolver) Speed(ctx context.Context, teamID string) (*model.Speed, error) {
+	return query.GetUniqueSpeed(ctx, r.db, postgresql.Speed.TeamID.Equals(teamID))
+}
+
 func (r *queryResolver) Cluster(ctx context.Context, clusterID string) (*model.Cluster, error) {
 	return query.GetUniqueCluster(ctx, r.db, postgresql.Cluster.ID.Equals(clusterID))
 }
@@ -166,6 +174,14 @@ func (r *queryResolver) Posts(ctx context.Context, page model.PaginationInput) (
 
 func (r *queryResolver) Invitations(ctx context.Context, userID string, page model.PaginationInput) ([]*model.Invitation, error) {
 	return query.GetManyInvitation(ctx, r.db, page, postgresql.Invitation.UserID.Equals(userID))
+}
+
+func (r *speedResolver) Team(ctx context.Context, obj *model.Speed) (*model.Team, error) {
+	return query.GetUniqueTeam(ctx, r.db, postgresql.Team.ID.Equals(obj.TeamID))
+}
+
+func (r *speedResolver) Mission(ctx context.Context, obj *model.Speed) (*model.Mission, error) {
+	return query.GetUniqueMission(ctx, r.db, postgresql.Mission.ID.Equals(obj.MissionID))
 }
 
 func (r *teamResolver) Cluster(ctx context.Context, obj *model.Team) (*model.Cluster, error) {
@@ -227,6 +243,9 @@ func (r *Resolver) Profile() generated.ProfileResolver { return &profileResolver
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+// Speed returns generated.SpeedResolver implementation.
+func (r *Resolver) Speed() generated.SpeedResolver { return &speedResolver{r} }
+
 // Team returns generated.TeamResolver implementation.
 func (r *Resolver) Team() generated.TeamResolver { return &teamResolver{r} }
 
@@ -242,5 +261,6 @@ type mutationResolver struct{ *Resolver }
 type postResolver struct{ *Resolver }
 type profileResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type speedResolver struct{ *Resolver }
 type teamResolver struct{ *Resolver }
 type userResolver struct{ *Resolver }

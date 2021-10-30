@@ -109,6 +109,7 @@ model Team {
   cluster     Cluster?      @relation(fields: [clusterId], references: [id])
   Escape      Escape?
   Invitation  Invitation[]
+  Speed       Speed?
   teamMission TeamMission[]
   members     User[]
 }
@@ -139,6 +140,7 @@ model Mission {
   startAt     DateTime      @db.Timestamp(6)
   endAt       DateTime      @db.Timestamp(6)
   slug        String
+  Speed       Speed[]
   teamMission TeamMission[]
 }
 
@@ -170,6 +172,18 @@ model Escape {
   missionThree Float   @default(0)
   teamId       String  @unique @db.Uuid
   Team         Team    @relation(fields: [teamId], references: [id], onDelete: Cascade)
+}
+
+model Speed {
+  id          String    @id @db.Uuid
+  completedAt DateTime?
+  answer      String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  teamId      String    @unique @db.Uuid
+  missionId   String    @db.Uuid
+  Mission     Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  Team        Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }
 
 enum Role {

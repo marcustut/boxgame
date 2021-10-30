@@ -182,3 +182,15 @@ export const GET_ESCAPE = gql`
     }
   }
 `
+
+export const GET_SPEED = gql`
+  query GetSpeed($team_id: ID!) {
+    speed(team_id: $team_id) {
+      id
+      completedAt
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`

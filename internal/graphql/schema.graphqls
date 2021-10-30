@@ -52,6 +52,16 @@ type Team {
   members: [User!]!
 }
 
+type Speed {
+  id: ID!
+  completedAt: Time
+  answer: String
+  createdAt: Time!
+  updatedAt: Time!
+  team: Team!
+  mission: Mission!
+}
+
 type Mission {
   id: ID!
   title: String!
@@ -147,6 +157,7 @@ type Query {
   users(page: PaginationInput!): [User!]!
   userCount: Int!
   team(team_id: ID!): Team
+  speed(team_id: ID!): Speed
   cluster(cluster_id: ID!): Cluster
   mission(mission_id: ID!): Mission
   missions(page: PaginationInput!): [Mission!]!
@@ -164,6 +175,7 @@ type Mutation {
   createTeam(param: NewTeam!): Team
   updateUser(user_id: ID!, param: UpdateUserInput!): User
   upsertEscape(param: UpsertEscapeInput!): Escape
+  upsertSpeed(param: UpsertSpeedInput!): Speed
   likePost(param: PostLikeInput!): Boolean
   unlikePost(param: PostLikeInput!): Boolean
   likeComment(param: CommentLikeInput!): Boolean
@@ -182,6 +194,13 @@ input UpsertEscapeInput {
   missionOne: Boolean
   missionTwo: Boolean
   missionThree: Float
+}
+
+input UpsertSpeedInput {
+  teamId: ID!
+  missionId: ID!
+  completedAt: Time
+  answer: String
 }
 
 input PostLikeInput {

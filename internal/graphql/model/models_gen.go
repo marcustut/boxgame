@@ -91,6 +91,13 @@ type UpsertEscapeInput struct {
 	MissionThree *float64 `json:"missionThree"`
 }
 
+type UpsertSpeedInput struct {
+	TeamID      string     `json:"teamId"`
+	MissionID   string     `json:"missionId"`
+	CompletedAt *time.Time `json:"completedAt"`
+	Answer      *string    `json:"answer"`
+}
+
 type Gender string
 
 const (

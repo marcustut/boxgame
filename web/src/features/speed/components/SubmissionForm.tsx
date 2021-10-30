@@ -1,11 +1,15 @@
 import { Icon } from '@iconify/react'
+import Dayjs from 'dayjs'
 import { Form, Formik } from 'formik'
 import { useSnackbar } from 'notistack'
 import React from 'react'
 import * as Yup from 'yup'
 
 import { Button, InputField } from '@/components/Elements'
-import { sleep } from '@/utils/sleep'
+import { useUpsertSpeed } from '@/features/speed'
+import { GetMission_mission } from '@/graphql/types/GetMission'
+import { GetUser_user_team } from '@/graphql/types/GetUser'
+import { useSpeedGame } from '@/hooks/stores'
 
 const answerSchema = Yup.object({
   we: Yup.string().required().length(2).oneOf(['we']),
@@ -18,12 +22,16 @@ const answerSchema = Yup.object({
 })
 
 type SubmissionFormProps = {
+  team: GetUser_user_team
+  mission: GetMission_mission
   completed: boolean
   setCompleted: (completed: boolean) => void
 }
 
-export const SubmissionForm: React.FC<SubmissionFormProps> = ({ completed, setCompleted }) => {
+export const SubmissionForm: React.FC<SubmissionFormProps> = ({ team, mission, completed, setCompleted }) => {
   const { enqueueSnackbar } = useSnackbar()
+  const { upsertSpeed } = useUpsertSpeed()
+  const { setCompletedAt } = useSpeedGame()
 
   return (
     <>
@@ -47,7 +55,18 @@ export const SubmissionForm: React.FC<SubmissionFormProps> = ({ completed, setCo
             enqueueSnackbar('You have already completed', { variant: 'info' })
             return
           }
-          await sleep(500)
+          const { data, errors } = await upsertSpeed({
+            teamId: team.id,
+            missionId: mission.id,
+            completedAt: Dayjs().toISOString()
+          })
+          if (errors || !data) {
+            enqueueSnackbar('Unable to submit your answer now', { variant: 'error' })
+            console.error(errors)
+            return
+          }
+          setCompletedAt(Dayjs().toISOString())
+          enqueueSnackbar('Successfully submitted your answer', { variant: 'success' })
           setCompleted(true)
         }}
       >

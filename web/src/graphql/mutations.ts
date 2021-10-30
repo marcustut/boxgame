@@ -134,3 +134,15 @@ export const UPSERT_ESCAPE = gql`
     }
   }
 `
+
+export const UPSERT_SPEED = gql`
+  mutation UpsertSpeed($param: UpsertSpeedInput!) {
+    upsertSpeed(param: $param) {
+      id
+      completedAt
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`

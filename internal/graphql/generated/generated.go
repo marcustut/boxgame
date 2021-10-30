@@ -45,6 +45,7 @@ type ResolverRoot interface {
 	Post() PostResolver
 	Profile() ProfileResolver
 	Query() QueryResolver
+	Speed() SpeedResolver
 	Team() TeamResolver
 	User() UserResolver
 }
@@ -124,6 +125,7 @@ type ComplexityRoot struct {
 		UnlikePost       func(childComplexity int, param model.PostLikeInput) int
 		UpdateUser       func(childComplexity int, userID string, param model.UpdateUserInput) int
 		UpsertEscape     func(childComplexity int, param model.UpsertEscapeInput) int
+		UpsertSpeed      func(childComplexity int, param model.UpsertSpeedInput) int
 	}
 
 	Post struct {
@@ -163,10 +165,21 @@ type ComplexityRoot struct {
 		Missions    func(childComplexity int, page model.PaginationInput) int
 		Post        func(childComplexity int, postID string) int
 		Posts       func(childComplexity int, page model.PaginationInput) int
+		Speed       func(childComplexity int, teamID string) int
 		Team        func(childComplexity int, teamID string) int
 		User        func(childComplexity int, userID string) int
 		UserCount   func(childComplexity int) int
 		Users       func(childComplexity int, page model.PaginationInput) int
+	}
+
+	Speed struct {
+		Answer      func(childComplexity int) int
+		CompletedAt func(childComplexity int) int
+		CreatedAt   func(childComplexity int) int
+		ID          func(childComplexity int) int
+		Mission     func(childComplexity int) int
+		Team        func(childComplexity int) int
+		UpdatedAt   func(childComplexity int) int
 	}
 
 	Team struct {
@@ -218,6 +231,7 @@ type MutationResolver interface {
 	CreateTeam(ctx context.Context, param model.NewTeam) (*model.Team, error)
 	UpdateUser(ctx context.Context, userID string, param model.UpdateUserInput) (*model.User, error)
 	UpsertEscape(ctx context.Context, param model.UpsertEscapeInput) (*model.Escape, error)
+	UpsertSpeed(ctx context.Context, param model.UpsertSpeedInput) (*model.Speed, error)
 	LikePost(ctx context.Context, param model.PostLikeInput) (*bool, error)
 	UnlikePost(ctx context.Context, param model.PostLikeInput) (*bool, error)
 	LikeComment(ctx context.Context, param model.CommentLikeInput) (*bool, error)
@@ -239,6 +253,7 @@ type QueryResolver interface {
 	Users(ctx context.Context, page model.PaginationInput) ([]*model.User, error)
 	UserCount(ctx context.Context) (int, error)
 	Team(ctx context.Context, teamID string) (*model.Team, error)
+	Speed(ctx context.Context, teamID string) (*model.Speed, error)
 	Cluster(ctx context.Context, clusterID string) (*model.Cluster, error)
 	Mission(ctx context.Context, missionID string) (*model.Mission, error)
 	Missions(ctx context.Context, page model.PaginationInput) ([]*model.Mission, error)
@@ -246,6 +261,10 @@ type QueryResolver interface {
 	Post(ctx context.Context, postID string) (*model.Post, error)
 	Posts(ctx context.Context, page model.PaginationInput) ([]*model.Post, error)
 	Invitations(ctx context.Context, userID string, page model.PaginationInput) ([]*model.Invitation, error)
+}
+type SpeedResolver interface {
+	Team(ctx context.Context, obj *model.Speed) (*model.Team, error)
+	Mission(ctx context.Context, obj *model.Speed) (*model.Mission, error)
 }
 type TeamResolver interface {
 	Cluster(ctx context.Context, obj *model.Team) (*model.Cluster, error)
@@ -702,6 +721,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpsertEscape(childComplexity, args["param"].(model.UpsertEscapeInput)), true
 
+	case "Mutation.upsertSpeed":
+		if e.complexity.Mutation.UpsertSpeed == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_upsertSpeed_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpsertSpeed(childComplexity, args["param"].(model.UpsertSpeedInput)), true
+
 	case "Post.comments":
 		if e.complexity.Post.Comments == nil {
 			break
@@ -957,6 +988,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Posts(childComplexity, args["page"].(model.PaginationInput)), true
 
+	case "Query.speed":
+		if e.complexity.Query.Speed == nil {
+			break
+		}
+
+		args, err := ec.field_Query_speed_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Speed(childComplexity, args["team_id"].(string)), true
+
 	case "Query.team":
 		if e.complexity.Query.Team == nil {
 			break
@@ -999,6 +1042,55 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Users(childComplexity, args["page"].(model.PaginationInput)), true
+
+	case "Speed.answer":
+		if e.complexity.Speed.Answer == nil {
+			break
+		}
+
+		return e.complexity.Speed.Answer(childComplexity), true
+
+	case "Speed.completedAt":
+		if e.complexity.Speed.CompletedAt == nil {
+			break
+		}
+
+		return e.complexity.Speed.CompletedAt(childComplexity), true
+
+	case "Speed.createdAt":
+		if e.complexity.Speed.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.Speed.CreatedAt(childComplexity), true
+
+	case "Speed.id":
+		if e.complexity.Speed.ID == nil {
+			break
+		}
+
+		return e.complexity.Speed.ID(childComplexity), true
+
+	case "Speed.mission":
+		if e.complexity.Speed.Mission == nil {
+			break
+		}
+
+		return e.complexity.Speed.Mission(childComplexity), true
+
+	case "Speed.team":
+		if e.complexity.Speed.Team == nil {
+			break
+		}
+
+		return e.complexity.Speed.Team(childComplexity), true
+
+	case "Speed.updatedAt":
+		if e.complexity.Speed.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.Speed.UpdatedAt(childComplexity), true
 
 	case "Team.avatarUrl":
 		if e.complexity.Team.AvatarUrl == nil {
@@ -1228,6 +1320,16 @@ type Team {
   members: [User!]!
 }
 
+type Speed {
+  id: ID!
+  completedAt: Time
+  answer: String
+  createdAt: Time!
+  updatedAt: Time!
+  team: Team!
+  mission: Mission!
+}
+
 type Mission {
   id: ID!
   title: String!
@@ -1323,6 +1425,7 @@ type Query {
   users(page: PaginationInput!): [User!]!
   userCount: Int!
   team(team_id: ID!): Team
+  speed(team_id: ID!): Speed
   cluster(cluster_id: ID!): Cluster
   mission(mission_id: ID!): Mission
   missions(page: PaginationInput!): [Mission!]!
@@ -1340,6 +1443,7 @@ type Mutation {
   createTeam(param: NewTeam!): Team
   updateUser(user_id: ID!, param: UpdateUserInput!): User
   upsertEscape(param: UpsertEscapeInput!): Escape
+  upsertSpeed(param: UpsertSpeedInput!): Speed
   likePost(param: PostLikeInput!): Boolean
   unlikePost(param: PostLikeInput!): Boolean
   likeComment(param: CommentLikeInput!): Boolean
@@ -1358,6 +1462,13 @@ input UpsertEscapeInput {
   missionOne: Boolean
   missionTwo: Boolean
   missionThree: Float
+}
+
+input UpsertSpeedInput {
+  teamId: ID!
+  missionId: ID!
+  completedAt: Time
+  answer: String
 }
 
 input PostLikeInput {
@@ -1641,6 +1752,21 @@ func (ec *executionContext) field_Mutation_upsertEscape_args(ctx context.Context
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_upsertSpeed_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpsertSpeedInput
+	if tmp, ok := rawArgs["param"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
+		arg0, err = ec.unmarshalNUpsertSpeedInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpsertSpeedInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["param"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Post_comments_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1797,6 +1923,21 @@ func (ec *executionContext) field_Query_posts_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["page"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_speed_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["team_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("team_id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["team_id"] = arg0
 	return args, nil
 }
 
@@ -3527,6 +3668,45 @@ func (ec *executionContext) _Mutation_upsertEscape(ctx context.Context, field gr
 	return ec.marshalOEscape2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐEscape(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_upsertSpeed(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_upsertSpeed_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpsertSpeed(rctx, args["param"].(model.UpsertSpeedInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Speed)
+	fc.Result = res
+	return ec.marshalOSpeed2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSpeed(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_likePost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4714,6 +4894,45 @@ func (ec *executionContext) _Query_team(ctx context.Context, field graphql.Colle
 	return ec.marshalOTeam2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeam(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_speed(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_speed_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Speed(rctx, args["team_id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Speed)
+	fc.Result = res
+	return ec.marshalOSpeed2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSpeed(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_cluster(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5065,6 +5284,245 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	res := resTmp.(*introspection.Schema)
 	fc.Result = res
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Speed_id(ctx context.Context, field graphql.CollectedField, obj *model.Speed) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Speed",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Speed_completedAt(ctx context.Context, field graphql.CollectedField, obj *model.Speed) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Speed",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CompletedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Speed_answer(ctx context.Context, field graphql.CollectedField, obj *model.Speed) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Speed",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Answer, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Speed_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.Speed) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Speed",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Speed_updatedAt(ctx context.Context, field graphql.CollectedField, obj *model.Speed) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Speed",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Speed_team(ctx context.Context, field graphql.CollectedField, obj *model.Speed) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Speed",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Speed().Team(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Team)
+	fc.Result = res
+	return ec.marshalNTeam2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeam(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Speed_mission(ctx context.Context, field graphql.CollectedField, obj *model.Speed) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Speed",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Speed().Mission(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Mission)
+	fc.Result = res
+	return ec.marshalNMission2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐMission(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Team_id(ctx context.Context, field graphql.CollectedField, obj *model.Team) (ret graphql.Marshaler) {
@@ -7254,6 +7712,53 @@ func (ec *executionContext) unmarshalInputUpsertEscapeInput(ctx context.Context,
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpsertSpeedInput(ctx context.Context, obj interface{}) (model.UpsertSpeedInput, error) {
+	var it model.UpsertSpeedInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "teamId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teamId"))
+			it.TeamID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "missionId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("missionId"))
+			it.MissionID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "completedAt":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("completedAt"))
+			it.CompletedAt, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "answer":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("answer"))
+			it.Answer, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -7690,6 +8195,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_updateUser(ctx, field)
 		case "upsertEscape":
 			out.Values[i] = ec._Mutation_upsertEscape(ctx, field)
+		case "upsertSpeed":
+			out.Values[i] = ec._Mutation_upsertSpeed(ctx, field)
 		case "likePost":
 			out.Values[i] = ec._Mutation_likePost(ctx, field)
 		case "unlikePost":
@@ -7961,6 +8468,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_team(ctx, field)
 				return res
 			})
+		case "speed":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_speed(ctx, field)
+				return res
+			})
 		case "cluster":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -8051,6 +8569,75 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
 			out.Values[i] = ec._Query___schema(ctx, field)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var speedImplementors = []string{"Speed"}
+
+func (ec *executionContext) _Speed(ctx context.Context, sel ast.SelectionSet, obj *model.Speed) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, speedImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Speed")
+		case "id":
+			out.Values[i] = ec._Speed_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "completedAt":
+			out.Values[i] = ec._Speed_completedAt(ctx, field, obj)
+		case "answer":
+			out.Values[i] = ec._Speed_answer(ctx, field, obj)
+		case "createdAt":
+			out.Values[i] = ec._Speed_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "updatedAt":
+			out.Values[i] = ec._Speed_updatedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "team":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Speed_team(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "mission":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Speed_mission(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -8653,6 +9240,10 @@ func (ec *executionContext) marshalNInvitation2ᚖgithubᚗcomᚋmarcustutᚋthe
 	return ec._Invitation(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNMission2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐMission(ctx context.Context, sel ast.SelectionSet, v model.Mission) graphql.Marshaler {
+	return ec._Mission(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNMission2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐMissionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Mission) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -9011,6 +9602,11 @@ func (ec *executionContext) unmarshalNUpdateUserInput2githubᚗcomᚋmarcustut�
 
 func (ec *executionContext) unmarshalNUpsertEscapeInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpsertEscapeInput(ctx context.Context, v interface{}) (model.UpsertEscapeInput, error) {
 	res, err := ec.unmarshalInputUpsertEscapeInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpsertSpeedInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpsertSpeedInput(ctx context.Context, v interface{}) (model.UpsertSpeedInput, error) {
+	res, err := ec.unmarshalInputUpsertSpeedInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -9494,6 +10090,13 @@ func (ec *executionContext) marshalOSatellite2ᚖgithubᚗcomᚋmarcustutᚋtheb
 	return v
 }
 
+func (ec *executionContext) marshalOSpeed2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSpeed(ctx context.Context, sel ast.SelectionSet, v *model.Speed) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Speed(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -9523,6 +10126,21 @@ func (ec *executionContext) marshalOTeam2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋ
 		return graphql.Null
 	}
 	return ec._Team(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalTime(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel ast.SelectionSet, v *time.Time) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.MarshalTime(*v)
 }
 
 func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {

@@ -115,6 +115,13 @@ export interface UpsertEscapeInput {
   missionThree?: number | null;
 }
 
+export interface UpsertSpeedInput {
+  teamId: string;
+  missionId: string;
+  completedAt?: TheBox.Time | null;
+  answer?: string | null;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================
