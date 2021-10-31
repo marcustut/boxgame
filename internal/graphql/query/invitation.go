@@ -30,10 +30,8 @@ func GetManyInvitation(ctx context.Context, db *postgresql.PrismaClient, page mo
 	query := db.Invitation.FindMany(params...)
 
 	// apply pagination
-	query = query.Take(page.First)
-	if page.Offset != nil {
-		query = query.Skip(*page.Offset)
-	}
+	query = query.Take(page.Limit)
+	query = query.Skip(page.Offset)
 
 	// fetch the invitations
 	fetchedInvitation, err := query.Exec(ctx)

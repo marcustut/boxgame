@@ -1,5 +1,4 @@
 export * from './NewPostForm'
-export * from './CommentForm'
 export * from './ActionButton'
-export * from './SocialPosts'
+export * from './CommentForm'
 export * from './Post'

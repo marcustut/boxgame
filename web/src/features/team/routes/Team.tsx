@@ -18,8 +18,8 @@ export const Team: React.FC = () => {
 
   useEffect(() => {
     if (!user) return
-    fetchInvitations(user.user.id, { first: 5 }).then(() => console.log('fetched invitations'))
-    fetchUsers({ first: 400 }).then(() => console.log('fetched 400 users'))
+    fetchInvitations(user.user.id, { limit: 5, offset: 0 }).then(() => console.log('fetched invitations'))
+    fetchUsers({ limit: 400, offset: 0 }).then(() => console.log('fetched 400 users'))
   }, [fetchInvitations, fetchUsers, user])
 
   if (!user) return <LoadingPage />

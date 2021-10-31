@@ -95,8 +95,8 @@ export interface NewUser {
 }
 
 export interface PaginationInput {
-  first: number;
-  offset?: number | null;
+  offset: number;
+  limit: number;
 }
 
 export interface PostLikeInput {

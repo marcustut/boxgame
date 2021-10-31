@@ -21,7 +21,7 @@ Dayjs.extend(RelativeTime)
 export const Mission: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar()
   const { user } = useAuth()
-  const { missions, fetchMissions } = useFetchMissions({ first: 5 })
+  const { missions, fetchMissions } = useFetchMissions({ limit: 5, offset: 0 })
 
   useEffectOnce(() => {
     fetchMissions().then(() => console.log('fetched 5 missions'))

@@ -185,8 +185,8 @@ type Mutation {
 }
 
 input PaginationInput {
-  first: Int!
-  offset: Int
+  offset: Int!
+  limit: Int!
 }
 
 input UpsertEscapeInput {

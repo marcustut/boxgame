@@ -29,10 +29,8 @@ func GetManyUser(ctx context.Context, db *postgresql.PrismaClient, page model.Pa
 	query := db.User.FindMany(params...)
 
 	// apply pagination
-	query = query.Take(page.First)
-	if page.Offset != nil {
-		query = query.Skip(*page.Offset)
-	}
+	query = query.Take(page.Limit)
+	query = query.Skip(page.Offset)
 
 	// fetch the users
 	fetchedUsers, err := query.Exec(ctx)

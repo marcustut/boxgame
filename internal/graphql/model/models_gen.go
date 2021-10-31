@@ -71,8 +71,8 @@ type NewUser struct {
 }
 
 type PaginationInput struct {
-	First  int  `json:"first"`
-	Offset *int `json:"offset"`
+	Offset int `json:"offset"`
+	Limit  int `json:"limit"`
 }
 
 type PostLikeInput struct {

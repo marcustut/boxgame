@@ -197,7 +197,7 @@ func (r *teamResolver) Completed(ctx context.Context, obj *model.Team, page mode
 }
 
 func (r *teamResolver) Members(ctx context.Context, obj *model.Team) ([]*model.User, error) {
-	return query.GetManyUser(ctx, r.db, model.PaginationInput{First: 100}, postgresql.User.TeamID.Equals(obj.ID))
+	return query.GetManyUser(ctx, r.db, model.PaginationInput{Limit: 100}, postgresql.User.TeamID.Equals(obj.ID))
 }
 
 func (r *userResolver) Profile(ctx context.Context, obj *model.User) (*model.Profile, error) {

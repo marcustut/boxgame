@@ -28,10 +28,8 @@ func GetManyMission(ctx context.Context, db *postgresql.PrismaClient, page model
 	query := db.Mission.FindMany(params...)
 
 	// apply pagination
-	query = query.Take(page.First)
-	if page.Offset != nil {
-		query = query.Skip(*page.Offset)
-	}
+	query = query.Take(page.Limit)
+	query = query.Skip(page.Offset)
 
 	// fetch the missions
 	fetchedMissions, err := query.Exec(ctx)

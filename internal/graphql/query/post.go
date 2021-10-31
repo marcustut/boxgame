@@ -30,10 +30,8 @@ func GetManyPost(ctx context.Context, db *postgresql.PrismaClient, page model.Pa
 	query := db.Post.FindMany(params...)
 
 	// apply pagination
-	query = query.Take(page.First)
-	if page.Offset != nil {
-		query = query.Skip(*page.Offset)
-	}
+	query = query.Take(page.Limit)
+	query = query.Skip(page.Offset)
 
 	// fetch the posts
 	fetchedPost, err := query.Exec(ctx)

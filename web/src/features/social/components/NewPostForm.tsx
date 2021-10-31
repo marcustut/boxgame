@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { Transition, Dialog } from '@headlessui/react'
 import { Icon } from '@iconify/react'
 import { Formik, Form } from 'formik'
@@ -6,38 +6,38 @@ import { useSnackbar } from 'notistack'
 import React, { Fragment, useState } from 'react'
 
 import { Avatar, InputField, Button } from '@/components/Elements'
-import { useCreatePost } from '@/features/social'
-import { GetPostsWithComments } from '@/graphql/types/GetPostsWithComments'
+import { CREATE_POST } from '@/graphql'
+import { CreatePost, CreatePostVariables } from '@/graphql/types/CreatePost'
 import { UserWithAuth } from '@/lib/auth'
 
 type NewPostFormProps = {
   user: UserWithAuth
-  refetchPosts: () => Promise<
-    | {
-        data: GetPostsWithComments
-        loading: boolean
-        error: ApolloError | undefined
-      }
-    | undefined
-  >
   className?: string
 }
 
-export const NewPostForm: React.FC<NewPostFormProps> = ({ user, refetchPosts, className = '' }) => {
+export const NewPostForm: React.FC<NewPostFormProps> = ({ user, className = '' }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
-  const { createPost } = useCreatePost(refetchPosts)
+  const [createPost] = useMutation<CreatePost, CreatePostVariables>(CREATE_POST)
 
   return (
     <Formik
       initialValues={{ content: '' }}
       onSubmit={async values => {
         const { data, errors } = await createPost({
-          userId: user.user.id,
-          content: values.content,
-          images: [],
-          postsPage: { first: 5 },
-          commentsPage: { first: 5 }
+          variables: {
+            user_id: user.user.id,
+            commentsPage: { limit: 5, offset: 0 },
+            param: { userId: user.user.id, content: values.content, images: [] }
+          },
+          update: (cache, { data }) => {
+            if (!data) throw new Error('Unable to submit post')
+            cache.modify({
+              fields: {
+                posts(existingPostRefs = [], { readField }) {}
+              }
+            })
+          }
         })
         if (errors || !data) {
           console.error(errors)

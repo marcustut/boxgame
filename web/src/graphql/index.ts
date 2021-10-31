@@ -1,5 +1,6 @@
 export * from './queries'
 export * from './mutations'
+export * from './useQueryWithTypes'
 export * from './types/globalTypes'
 export * from './types/CreateNewUser'
 export * from './types/GetUserCount'
