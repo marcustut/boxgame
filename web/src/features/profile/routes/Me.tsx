@@ -6,7 +6,7 @@ import { LoadingPage } from '@/components/Misc'
 import { Gender } from '@/graphql'
 import { useAuth } from '@/lib/auth'
 
-export const Profile: React.FC = () => {
+export const Me: React.FC = () => {
   const { user } = useAuth()
 
   if (!user) return <LoadingPage />

@@ -1,12 +1,14 @@
 import React from 'react'
+import { useEffectOnce } from 'react-use'
 
-import { CheckAuth } from '@/components/Misc'
-import { Profile } from '@/features/profile'
+import { LoadingPage } from '@/components/Misc'
 
-const ProfilePage: React.FC = () => (
-  <CheckAuth>
-    <Profile />
-  </CheckAuth>
-)
+const ProfileIndex: React.FC = () => {
+  useEffectOnce(() => {
+    if (window) window.location.href = `${window.location.pathname}/me`
+  })
 
-export default ProfilePage
+  return <LoadingPage />
+}
+
+export default ProfileIndex

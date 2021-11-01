@@ -1,11 +1,13 @@
 import React from 'react'
 
-import { CheckAuth } from '@/components/Misc'
+import { CheckAuth, LockPage } from '@/components/Misc'
 import { Download } from '@/features/speed'
 
 const DownloadPage: React.FC = () => (
   <CheckAuth>
-    <Download />
+    <LockPage>
+      <Download />
+    </LockPage>
   </CheckAuth>
 )
 

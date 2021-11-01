@@ -18,6 +18,6 @@ export const LockPage: React.FC = ({ children }) => {
 
   if (import.meta.env.DEV) return <>{children}</>
 
-  if (password === 'cyc_m100_abcd') return <>{children}</>
+  if (password === 'thebox2021_m100_abcd') return <>{children}</>
   else return <LoadingPage />
 }
