@@ -70,7 +70,9 @@ export const Social: React.FC<SocialProps> = ({ user }) => {
       ) : (
         <>
           {data.posts.length > 0 ? (
-            renderPosts(data.posts)
+            renderPosts(
+              [...data.posts].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+            )
           ) : (
             <div className='flex flex-col justify-center items-center mt-8 text-true-gray-500'>
               <Icon icon='mdi:tray-remove' className='w-10 h-10' />

@@ -30,6 +30,7 @@ export interface CreateNewUser_createUser_profile {
   nameChi: string | null;
   contact: string;
   dob: TheBox.Time;
+  bio: string | null;
   tngReceiptUrl: string | null;
   avatarUrl: string | null;
   createdAt: TheBox.Time;

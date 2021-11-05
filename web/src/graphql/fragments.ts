@@ -47,6 +47,7 @@ export const CORE_PROFILE_FIELDS = gql`
     nameChi
     contact
     dob
+    bio
     tngReceiptUrl
     avatarUrl
     createdAt
