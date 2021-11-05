@@ -104,8 +104,16 @@ export interface PostLikeInput {
   userId: string;
 }
 
+export interface UpdateProfileInput {
+  avatarUrl?: string | null;
+  nameEng?: string | null;
+  nameChi?: string | null;
+  bio?: string | null;
+}
+
 export interface UpdateUserInput {
   teamId?: string | null;
+  profile?: UpdateProfileInput | null;
 }
 
 export interface UpsertEscapeInput {

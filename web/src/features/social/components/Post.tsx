@@ -62,7 +62,7 @@ export const Post: React.FC<PostProps> = ({
         {/* TODO: Make this into a menu */}
         <Icon icon='eva:more-horizontal-fill' className='w-5 h-5 ml-auto mr-1 text-true-gray-400' />
       </div>
-      <p className='mt-4 text-sm self-start'>{post.content}</p>
+      <p className='mt-4 text-sm self-start whitespace-pre-wrap'>{post.content}</p>
 
       <div className='flex items-center mt-4 mb-2 w-full text-sm text-true-gray-400'>
         <div className='flex items-center'>

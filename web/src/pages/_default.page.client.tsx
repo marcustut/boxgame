@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 import type { NormalizedCacheObject } from '@apollo/client'
-import { offsetLimitPagination } from '@apollo/client/utilities'
+// import { offsetLimitPagination } from '@apollo/client/utilities'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { getPage } from 'vite-plugin-ssr/client'

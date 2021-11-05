@@ -85,6 +85,7 @@ model Profile {
   satellite     Satellite?
   nameChi       String?
   invitedBy     String?
+  bio           String?
   address       Address?        @relation(fields: [addressId], references: [id])
   user          User?
 }

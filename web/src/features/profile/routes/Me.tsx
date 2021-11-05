@@ -1,13 +1,21 @@
+import { useMutation } from '@apollo/client'
 import { Icon } from '@iconify/react'
-import React from 'react'
+import { useSnackbar } from 'notistack'
+import React, { useRef, useState } from 'react'
 
 import { AppLayout, Avatar } from '@/components/Elements'
 import { LoadingPage } from '@/components/Misc'
-import { Gender } from '@/graphql'
+import { Gender, UPDATE_USER } from '@/graphql'
+import { UpdateUser, UpdateUserVariables } from '@/graphql/types/UpdateUser'
 import { useAuth } from '@/lib/auth'
+import { supabase } from '@/lib/supabase'
 
 export const Me: React.FC = () => {
-  const { user } = useAuth()
+  const { enqueueSnackbar } = useSnackbar()
+  const { user, refetch } = useAuth()
+  const [uploading, setUploading] = useState<boolean>(false)
+  const uploadRef = useRef<HTMLInputElement>(null)
+  const [updateUser] = useMutation<UpdateUser, UpdateUserVariables>(UPDATE_USER)
 
   if (!user) return <LoadingPage />
 
@@ -28,12 +36,70 @@ export const Me: React.FC = () => {
             />
           </div>
 
+          <input
+            type='file'
+            ref={uploadRef}
+            accept='image/png, image/jpeg'
+            className='hidden'
+            onChange={async event => {
+              if (event.target.files && event.target.files.length !== 0) {
+                setUploading(true)
+                const { error: uploadErr } = await supabase.storage
+                  .from('users')
+                  .upload(`${user.user.id}/${event.target.files[0].name}`, event.target.files[0], {
+                    cacheControl: '3600',
+                    upsert: true
+                  })
+                if (uploadErr) {
+                  console.error(uploadErr)
+                  enqueueSnackbar('Unable to upload your avatar', { variant: 'error' })
+                  return
+                }
+                const { publicURL, error: getURLErr } = supabase.storage
+                  .from('users')
+                  .getPublicUrl(`${user.user.id}/${event.target.files[0].name}`)
+                if (getURLErr) {
+                  console.error(getURLErr)
+                  enqueueSnackbar('Unable to fetch your avatar', { variant: 'error' })
+                  return
+                }
+                const { data, errors } = await updateUser({
+                  variables: { user_id: user.user.id, param: { profile: { avatarUrl: publicURL } } }
+                })
+                if (errors || !data) {
+                  console.error(errors)
+                  enqueueSnackbar('Unable to update your avatar', { variant: 'error' })
+                  return
+                }
+                event.target.value = ''
+                setUploading(false)
+                refetch()
+              }
+            }}
+          />
+
           <Avatar
             src={user.user.profile.avatarUrl}
             name={user.user.profile.nameEng}
             gender={user.user.profile.gender}
             upload
-            uploadOnClick={() => alert('To be continued...')}
+            uploadRender={onClick => {
+              return (
+                <button
+                  data-blobity-tooltip='Upload your avatar'
+                  data-blobity-magnetic='false'
+                  className='bg-dark-200 rounded-full p-1.5 absolute right-0 bottom-0 shadow-sm hover:bg-dark-100 focus:outline-none transition duration-200 ease-in-out focus:ring-2 focus:ring-primary-ring'
+                  onClick={onClick}
+                >
+                  {uploading ? (
+                    <Icon icon='eos-icons:loading' className='text-secondary' />
+                  ) : (
+                    <Icon icon='mdi:camera' className='text-true-gray-400' />
+                  )}
+                </button>
+              )
+            }}
+            uploadOnClick={() => uploadRef && uploadRef.current?.click()}
             utilities={{ m: 'mt-4' }}
           />
 

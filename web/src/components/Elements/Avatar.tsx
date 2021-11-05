@@ -10,6 +10,7 @@ type AvatarProps = {
   gender: Gender
   name: string
   upload?: boolean
+  uploadRender?: (uploadOnClick?: () => void) => React.ReactChild
   uploadOnClick?: () => void
   className?: string
   utilities?: WindiUtilities
@@ -20,6 +21,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   gender,
   name,
   upload = false,
+  uploadRender,
   uploadOnClick,
   className = '',
   utilities
@@ -27,9 +29,10 @@ export const Avatar: React.FC<AvatarProps> = ({
   const defaultUtilities: WindiUtilities = {
     w: 'w-24',
     h: 'h-24',
-    p: 'p-2',
+    p: !src ? 'p-2' : '',
     bg: 'bg-dark-200',
-    border: 'border-2 border-true-gray-500 rounded-full'
+    border: 'border-2 border-true-gray-500 rounded-full',
+    object: 'object-cover'
   }
 
   const avatar = (
@@ -45,14 +48,18 @@ export const Avatar: React.FC<AvatarProps> = ({
       {upload ? (
         <div className='relative'>
           {avatar}
-          <button
-            data-blobity-tooltip='Upload your avatar'
-            data-blobity-magnetic='false'
-            className='bg-dark-200 rounded-full p-1.5 absolute right-0 bottom-0 shadow-sm hover:bg-dark-100 focus:outline-none transition duration-200 ease-in-out focus:ring-2 focus:ring-primary-ring'
-            onClick={uploadOnClick}
-          >
-            <Icon icon='mdi:camera' className='text-true-gray-400' />
-          </button>
+          {uploadRender ? (
+            uploadRender(uploadOnClick)
+          ) : (
+            <button
+              data-blobity-tooltip='Upload your avatar'
+              data-blobity-magnetic='false'
+              className='bg-dark-200 rounded-full p-1.5 absolute right-0 bottom-0 shadow-sm hover:bg-dark-100 focus:outline-none transition duration-200 ease-in-out focus:ring-2 focus:ring-primary-ring'
+              onClick={uploadOnClick}
+            >
+              <Icon icon='mdi:camera' className='text-true-gray-400' />
+            </button>
+          )}
         </div>
       ) : (
         avatar

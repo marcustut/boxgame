@@ -80,8 +80,16 @@ type PostLikeInput struct {
 	UserID string `json:"userId"`
 }
 
+type UpdateProfileInput struct {
+	AvatarURL *string `json:"avatarUrl"`
+	NameEng   *string `json:"nameEng"`
+	NameChi   *string `json:"nameChi"`
+	Bio       *string `json:"bio"`
+}
+
 type UpdateUserInput struct {
-	TeamID *string `json:"teamId"`
+	TeamID  *string             `json:"teamId"`
+	Profile *UpdateProfileInput `json:"profile"`
 }
 
 type UpsertEscapeInput struct {

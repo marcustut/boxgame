@@ -2,6 +2,14 @@ html {
   -webkit-tap-highlight-color: transparent; /* Disable the blue highlight in Chrome  */
 }
 
+/* Disable chrome autofill background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: all 0s 50000s;
+}
+
 /* Targtes on Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
   width: 8px;

@@ -112,6 +112,7 @@ type Profile {
   nameChi: String
   contact: String!
   dob: Time!
+  bio: String
   tngReceiptUrl: String
   avatarUrl: String
   createdAt: Time!
@@ -271,4 +272,12 @@ input NewAddress {
 
 input UpdateUserInput {
   teamId: ID
+  profile: UpdateProfileInput
+}
+
+input UpdateProfileInput {
+  avatarUrl: String
+  nameEng: String
+  nameChi: String
+  bio: String
 }
