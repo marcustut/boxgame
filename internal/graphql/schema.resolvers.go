@@ -33,6 +33,14 @@ func (r *escapeResolver) Team(ctx context.Context, obj *model.Escape) (*model.Te
 	return query.GetUniqueTeam(ctx, r.db, postgresql.Team.ID.Equals(obj.TeamID))
 }
 
+func (r *humanityResolver) Team(ctx context.Context, obj *model.Humanity) (*model.Team, error) {
+	return query.GetUniqueTeam(ctx, r.db, postgresql.Team.ID.Equals(obj.TeamID))
+}
+
+func (r *humanityResolver) Mission(ctx context.Context, obj *model.Humanity) (*model.Mission, error) {
+	return query.GetUniqueMission(ctx, r.db, postgresql.Mission.ID.Equals(obj.MissionID))
+}
+
 func (r *invitationResolver) From(ctx context.Context, obj *model.Invitation) (*model.User, error) {
 	return query.GetUniqueUser(ctx, r.db, postgresql.User.ID.EqualsIfPresent(obj.FromID))
 }
@@ -84,6 +92,10 @@ func (r *mutationResolver) UpsertEscape(ctx context.Context, param model.UpsertE
 
 func (r *mutationResolver) UpsertSpeed(ctx context.Context, param model.UpsertSpeedInput) (*model.Speed, error) {
 	return query.UpsertUniqueSpeed(ctx, r.db, &param)
+}
+
+func (r *mutationResolver) UpsertHumanity(ctx context.Context, param model.UpsertHumanityInput) (*model.Humanity, error) {
+	return query.UpsertUniqueHumanity(ctx, r.db, &param)
 }
 
 func (r *mutationResolver) LikePost(ctx context.Context, param model.PostLikeInput) (*bool, error) {
@@ -149,8 +161,16 @@ func (r *queryResolver) Team(ctx context.Context, teamID string) (*model.Team, e
 	return query.GetUniqueTeam(ctx, r.db, postgresql.Team.ID.Equals(teamID))
 }
 
+func (r *queryResolver) Escape(ctx context.Context, teamID string) (*model.Escape, error) {
+	return query.GetUniqueEscape(ctx, r.db, postgresql.Escape.TeamID.Equals(teamID))
+}
+
 func (r *queryResolver) Speed(ctx context.Context, teamID string) (*model.Speed, error) {
 	return query.GetUniqueSpeed(ctx, r.db, postgresql.Speed.TeamID.Equals(teamID))
+}
+
+func (r *queryResolver) Humanity(ctx context.Context, teamID string) (*model.Humanity, error) {
+	return query.GetUniqueHumanity(ctx, r.db, postgresql.Humanity.TeamID.Equals(teamID))
 }
 
 func (r *queryResolver) Cluster(ctx context.Context, clusterID string) (*model.Cluster, error) {
@@ -163,10 +183,6 @@ func (r *queryResolver) Mission(ctx context.Context, missionID string) (*model.M
 
 func (r *queryResolver) Missions(ctx context.Context, page model.PaginationInput) ([]*model.Mission, error) {
 	return query.GetManyMission(ctx, r.db, page)
-}
-
-func (r *queryResolver) Escape(ctx context.Context, teamID string) (*model.Escape, error) {
-	return query.GetUniqueEscape(ctx, r.db, postgresql.Escape.TeamID.Equals(teamID))
 }
 
 func (r *queryResolver) Post(ctx context.Context, postID string) (*model.Post, error) {
@@ -230,6 +246,9 @@ func (r *Resolver) Comment() generated.CommentResolver { return &commentResolver
 // Escape returns generated.EscapeResolver implementation.
 func (r *Resolver) Escape() generated.EscapeResolver { return &escapeResolver{r} }
 
+// Humanity returns generated.HumanityResolver implementation.
+func (r *Resolver) Humanity() generated.HumanityResolver { return &humanityResolver{r} }
+
 // Invitation returns generated.InvitationResolver implementation.
 func (r *Resolver) Invitation() generated.InvitationResolver { return &invitationResolver{r} }
 
@@ -260,6 +279,7 @@ func (r *Resolver) User() generated.UserResolver { return &userResolver{r} }
 type clusterResolver struct{ *Resolver }
 type commentResolver struct{ *Resolver }
 type escapeResolver struct{ *Resolver }
+type humanityResolver struct{ *Resolver }
 type invitationResolver struct{ *Resolver }
 type missionResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }

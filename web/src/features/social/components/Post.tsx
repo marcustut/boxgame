@@ -63,6 +63,8 @@ export const Post: React.FC<PostProps> = ({
         <Icon icon='eva:more-horizontal-fill' className='w-5 h-5 ml-auto mr-1 text-true-gray-400' />
       </div>
       <p className='mt-4 text-sm self-start whitespace-pre-wrap'>{post.content}</p>
+      {post.images.length !== 0 &&
+        post.images.map(image => <img src={image} alt='' className='object-cover h-96 w-full' />)}
 
       <div className='flex items-center mt-4 mb-2 w-full text-sm text-true-gray-400'>
         <div className='flex items-center'>
@@ -118,31 +120,33 @@ export const Post: React.FC<PostProps> = ({
 
       {post.comments ? (
         post.comments.length > 0 ? (
-          post.comments.map(comment => (
-            <div key={comment.id} className={`flex w-full text-sm mt-4`}>
-              <Avatar
-                src={comment.user.profile!.avatarUrl}
-                name={comment.user.profile!.nameEng}
-                gender={comment.user.profile!.gender}
-                utilities={{ w: 'w-10', h: 'h-10', border: 'rounded-full' }}
-              />
-              <div className='flex flex-col ml-2'>
-                <div className='px-3 py-2 bg-dark-100 rounded-md'>
-                  <span className='text-xs font-medium text-true-gray-300'>{comment.user.profile!.nameEng}</span>
-                  <p className='text-true-gray-100'>{comment.content}</p>
-                </div>
-                <div className='flex items-center mt-1 text-xs font-medium text-true-gray-500'>
-                  <button
-                    data-blobity-magnetic='false'
-                    className='focus:outline-none focus:text-primary hover:underline focus:underline'
-                  >
-                    Like
-                  </button>
-                  <span className='ml-1'> · {Dayjs(comment.createdAt).fromNow(true)}</span>
+          [...post.comments]
+            .sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())
+            .map(comment => (
+              <div key={comment.id} className={`flex w-full text-sm mt-4`}>
+                <Avatar
+                  src={comment.user.profile!.avatarUrl}
+                  name={comment.user.profile!.nameEng}
+                  gender={comment.user.profile!.gender}
+                  utilities={{ w: 'w-10', h: 'h-10', border: 'rounded-full' }}
+                />
+                <div className='flex flex-col ml-2'>
+                  <div className='px-3 py-2 bg-dark-100 rounded-md'>
+                    <span className='text-xs font-medium text-true-gray-300'>{comment.user.profile!.nameEng}</span>
+                    <p className='text-true-gray-100'>{comment.content}</p>
+                  </div>
+                  <div className='flex items-center mt-1 text-xs font-medium text-true-gray-500'>
+                    <button
+                      data-blobity-magnetic='false'
+                      className='focus:outline-none focus:text-primary hover:underline focus:underline'
+                    >
+                      Like
+                    </button>
+                    <span className='ml-1'> · {Dayjs(comment.createdAt).fromNow(true)}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            ))
         ) : (
           <div className='text-true-gray-500 text-sm mt-2 flex items-center'>
             <Icon icon='ph:tray' className='mr-1' /> no comments

@@ -123,6 +123,17 @@ export interface UpsertEscapeInput {
   missionThree?: number | null;
 }
 
+export interface UpsertHumanityInput {
+  teamId: string;
+  missionId: string;
+  batch: number;
+  gatherLink: string;
+  photo1?: string | null;
+  photo2?: string | null;
+  photo3?: string | null;
+  submittedAt?: TheBox.Time | null;
+}
+
 export interface UpsertSpeedInput {
   teamId: string;
   missionId: string;

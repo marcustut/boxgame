@@ -109,6 +109,7 @@ model Team {
   clusterId   String?       @db.Uuid
   cluster     Cluster?      @relation(fields: [clusterId], references: [id])
   Escape      Escape?
+  Humanity    Humanity?
   Invitation  Invitation[]
   Speed       Speed?
   teamMission TeamMission[]
@@ -141,6 +142,7 @@ model Mission {
   startAt     DateTime      @db.Timestamp(6)
   endAt       DateTime      @db.Timestamp(6)
   slug        String
+  Humanity    Humanity[]
   Speed       Speed[]
   teamMission TeamMission[]
 }
@@ -183,6 +185,22 @@ model Speed {
   updatedAt   DateTime
   teamId      String    @unique @db.Uuid
   missionId   String    @db.Uuid
+  Mission     Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  Team        Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+}
+
+model Humanity {
+  id          String    @id @db.Uuid
+  photo1      String?
+  photo2      String?
+  photo3      String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  teamId      String    @unique @db.Uuid
+  missionId   String    @db.Uuid
+  batch       Int       @db.SmallInt
+  gatherLink  String
+  submittedAt DateTime?
   Mission     Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade)
   Team        Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }

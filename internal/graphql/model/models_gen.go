@@ -99,6 +99,17 @@ type UpsertEscapeInput struct {
 	MissionThree *float64 `json:"missionThree"`
 }
 
+type UpsertHumanityInput struct {
+	TeamID      string     `json:"teamId"`
+	MissionID   string     `json:"missionId"`
+	Batch       int        `json:"batch"`
+	GatherLink  string     `json:"gatherLink"`
+	Photo1      *string    `json:"photo1"`
+	Photo2      *string    `json:"photo2"`
+	Photo3      *string    `json:"photo3"`
+	SubmittedAt *time.Time `json:"submittedAt"`
+}
+
 type UpsertSpeedInput struct {
 	TeamID      string     `json:"teamId"`
 	MissionID   string     `json:"missionId"`

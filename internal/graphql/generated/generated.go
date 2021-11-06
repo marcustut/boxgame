@@ -39,6 +39,7 @@ type ResolverRoot interface {
 	Cluster() ClusterResolver
 	Comment() CommentResolver
 	Escape() EscapeResolver
+	Humanity() HumanityResolver
 	Invitation() InvitationResolver
 	Mission() MissionResolver
 	Mutation() MutationResolver
@@ -89,6 +90,20 @@ type ComplexityRoot struct {
 		Team         func(childComplexity int) int
 	}
 
+	Humanity struct {
+		Batch       func(childComplexity int) int
+		CreatedAt   func(childComplexity int) int
+		GatherLink  func(childComplexity int) int
+		ID          func(childComplexity int) int
+		Mission     func(childComplexity int) int
+		Photo1      func(childComplexity int) int
+		Photo2      func(childComplexity int) int
+		Photo3      func(childComplexity int) int
+		SubmittedAt func(childComplexity int) int
+		Team        func(childComplexity int) int
+		UpdatedAt   func(childComplexity int) int
+	}
+
 	Invitation struct {
 		CreatedAt func(childComplexity int) int
 		From      func(childComplexity int) int
@@ -125,6 +140,7 @@ type ComplexityRoot struct {
 		UnlikePost       func(childComplexity int, param model.PostLikeInput) int
 		UpdateUser       func(childComplexity int, userID string, param model.UpdateUserInput) int
 		UpsertEscape     func(childComplexity int, param model.UpsertEscapeInput) int
+		UpsertHumanity   func(childComplexity int, param model.UpsertHumanityInput) int
 		UpsertSpeed      func(childComplexity int, param model.UpsertSpeedInput) int
 	}
 
@@ -161,6 +177,7 @@ type ComplexityRoot struct {
 	Query struct {
 		Cluster     func(childComplexity int, clusterID string) int
 		Escape      func(childComplexity int, teamID string) int
+		Humanity    func(childComplexity int, teamID string) int
 		Invitations func(childComplexity int, userID string, page model.PaginationInput) int
 		Mission     func(childComplexity int, missionID string) int
 		Missions    func(childComplexity int, page model.PaginationInput) int
@@ -216,6 +233,10 @@ type CommentResolver interface {
 type EscapeResolver interface {
 	Team(ctx context.Context, obj *model.Escape) (*model.Team, error)
 }
+type HumanityResolver interface {
+	Team(ctx context.Context, obj *model.Humanity) (*model.Team, error)
+	Mission(ctx context.Context, obj *model.Humanity) (*model.Mission, error)
+}
 type InvitationResolver interface {
 	From(ctx context.Context, obj *model.Invitation) (*model.User, error)
 	User(ctx context.Context, obj *model.Invitation) (*model.User, error)
@@ -233,6 +254,7 @@ type MutationResolver interface {
 	UpdateUser(ctx context.Context, userID string, param model.UpdateUserInput) (*model.User, error)
 	UpsertEscape(ctx context.Context, param model.UpsertEscapeInput) (*model.Escape, error)
 	UpsertSpeed(ctx context.Context, param model.UpsertSpeedInput) (*model.Speed, error)
+	UpsertHumanity(ctx context.Context, param model.UpsertHumanityInput) (*model.Humanity, error)
 	LikePost(ctx context.Context, param model.PostLikeInput) (*bool, error)
 	UnlikePost(ctx context.Context, param model.PostLikeInput) (*bool, error)
 	LikeComment(ctx context.Context, param model.CommentLikeInput) (*bool, error)
@@ -254,11 +276,12 @@ type QueryResolver interface {
 	Users(ctx context.Context, page model.PaginationInput) ([]*model.User, error)
 	UserCount(ctx context.Context) (int, error)
 	Team(ctx context.Context, teamID string) (*model.Team, error)
+	Escape(ctx context.Context, teamID string) (*model.Escape, error)
 	Speed(ctx context.Context, teamID string) (*model.Speed, error)
+	Humanity(ctx context.Context, teamID string) (*model.Humanity, error)
 	Cluster(ctx context.Context, clusterID string) (*model.Cluster, error)
 	Mission(ctx context.Context, missionID string) (*model.Mission, error)
 	Missions(ctx context.Context, page model.PaginationInput) ([]*model.Mission, error)
-	Escape(ctx context.Context, teamID string) (*model.Escape, error)
 	Post(ctx context.Context, postID string) (*model.Post, error)
 	Posts(ctx context.Context, page model.PaginationInput) ([]*model.Post, error)
 	Invitations(ctx context.Context, userID string, page model.PaginationInput) ([]*model.Invitation, error)
@@ -453,6 +476,83 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Escape.Team(childComplexity), true
+
+	case "Humanity.batch":
+		if e.complexity.Humanity.Batch == nil {
+			break
+		}
+
+		return e.complexity.Humanity.Batch(childComplexity), true
+
+	case "Humanity.createdAt":
+		if e.complexity.Humanity.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.Humanity.CreatedAt(childComplexity), true
+
+	case "Humanity.gatherLink":
+		if e.complexity.Humanity.GatherLink == nil {
+			break
+		}
+
+		return e.complexity.Humanity.GatherLink(childComplexity), true
+
+	case "Humanity.id":
+		if e.complexity.Humanity.ID == nil {
+			break
+		}
+
+		return e.complexity.Humanity.ID(childComplexity), true
+
+	case "Humanity.mission":
+		if e.complexity.Humanity.Mission == nil {
+			break
+		}
+
+		return e.complexity.Humanity.Mission(childComplexity), true
+
+	case "Humanity.photo1":
+		if e.complexity.Humanity.Photo1 == nil {
+			break
+		}
+
+		return e.complexity.Humanity.Photo1(childComplexity), true
+
+	case "Humanity.photo2":
+		if e.complexity.Humanity.Photo2 == nil {
+			break
+		}
+
+		return e.complexity.Humanity.Photo2(childComplexity), true
+
+	case "Humanity.photo3":
+		if e.complexity.Humanity.Photo3 == nil {
+			break
+		}
+
+		return e.complexity.Humanity.Photo3(childComplexity), true
+
+	case "Humanity.submittedAt":
+		if e.complexity.Humanity.SubmittedAt == nil {
+			break
+		}
+
+		return e.complexity.Humanity.SubmittedAt(childComplexity), true
+
+	case "Humanity.team":
+		if e.complexity.Humanity.Team == nil {
+			break
+		}
+
+		return e.complexity.Humanity.Team(childComplexity), true
+
+	case "Humanity.updatedAt":
+		if e.complexity.Humanity.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.Humanity.UpdatedAt(childComplexity), true
 
 	case "Invitation.createdAt":
 		if e.complexity.Invitation.CreatedAt == nil {
@@ -722,6 +822,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpsertEscape(childComplexity, args["param"].(model.UpsertEscapeInput)), true
 
+	case "Mutation.upsertHumanity":
+		if e.complexity.Mutation.UpsertHumanity == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_upsertHumanity_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpsertHumanity(childComplexity, args["param"].(model.UpsertHumanityInput)), true
+
 	case "Mutation.upsertSpeed":
 		if e.complexity.Mutation.UpsertSpeed == nil {
 			break
@@ -935,6 +1047,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Escape(childComplexity, args["team_id"].(string)), true
+
+	case "Query.humanity":
+		if e.complexity.Query.Humanity == nil {
+			break
+		}
+
+		args, err := ec.field_Query_humanity_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Humanity(childComplexity, args["team_id"].(string)), true
 
 	case "Query.invitations":
 		if e.complexity.Query.Invitations == nil {
@@ -1359,6 +1483,20 @@ type Escape {
   team: Team!
 }
 
+type Humanity {
+  id: ID!
+  gatherLink: String!
+  batch: Int!
+  photo1: String
+  photo2: String
+  photo3: String
+  team: Team!
+  mission: Mission!
+  createdAt: Time!
+  updatedAt: Time!
+  submittedAt: Time
+}
+
 type User {
   id: ID!
   username: String!
@@ -1434,11 +1572,12 @@ type Query {
   users(page: PaginationInput!): [User!]!
   userCount: Int!
   team(team_id: ID!): Team
+  escape(team_id: ID!): Escape
   speed(team_id: ID!): Speed
+  humanity(team_id: ID!): Humanity
   cluster(cluster_id: ID!): Cluster
   mission(mission_id: ID!): Mission
   missions(page: PaginationInput!): [Mission!]!
-  escape(team_id: ID!): Escape
   post(post_id: ID!): Post
   posts(page: PaginationInput!): [Post!]!
   invitations(user_id: ID!, page: PaginationInput!): [Invitation!]!
@@ -1453,6 +1592,7 @@ type Mutation {
   updateUser(user_id: ID!, param: UpdateUserInput!): User
   upsertEscape(param: UpsertEscapeInput!): Escape
   upsertSpeed(param: UpsertSpeedInput!): Speed
+  upsertHumanity(param: UpsertHumanityInput!): Humanity
   likePost(param: PostLikeInput!): Boolean
   unlikePost(param: PostLikeInput!): Boolean
   likeComment(param: CommentLikeInput!): Boolean
@@ -1478,6 +1618,17 @@ input UpsertSpeedInput {
   missionId: ID!
   completedAt: Time
   answer: String
+}
+
+input UpsertHumanityInput {
+  teamId: ID!
+  missionId: ID!
+  batch: Int!
+  gatherLink: String!
+  photo1: String
+  photo2: String
+  photo3: String
+  submittedAt: Time
 }
 
 input PostLikeInput {
@@ -1769,6 +1920,21 @@ func (ec *executionContext) field_Mutation_upsertEscape_args(ctx context.Context
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_upsertHumanity_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpsertHumanityInput
+	if tmp, ok := rawArgs["param"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
+		arg0, err = ec.unmarshalNUpsertHumanityInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpsertHumanityInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["param"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_upsertSpeed_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1845,6 +2011,21 @@ func (ec *executionContext) field_Query_cluster_args(ctx context.Context, rawArg
 }
 
 func (ec *executionContext) field_Query_escape_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["team_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("team_id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["team_id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_humanity_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -2858,6 +3039,379 @@ func (ec *executionContext) _Escape_team(ctx context.Context, field graphql.Coll
 	return ec.marshalNTeam2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeam(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Humanity_id(ctx context.Context, field graphql.CollectedField, obj *model.Humanity) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Humanity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Humanity_gatherLink(ctx context.Context, field graphql.CollectedField, obj *model.Humanity) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Humanity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GatherLink, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Humanity_batch(ctx context.Context, field graphql.CollectedField, obj *model.Humanity) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Humanity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Batch, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Humanity_photo1(ctx context.Context, field graphql.CollectedField, obj *model.Humanity) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Humanity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Photo1, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Humanity_photo2(ctx context.Context, field graphql.CollectedField, obj *model.Humanity) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Humanity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Photo2, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Humanity_photo3(ctx context.Context, field graphql.CollectedField, obj *model.Humanity) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Humanity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Photo3, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Humanity_team(ctx context.Context, field graphql.CollectedField, obj *model.Humanity) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Humanity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Humanity().Team(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Team)
+	fc.Result = res
+	return ec.marshalNTeam2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeam(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Humanity_mission(ctx context.Context, field graphql.CollectedField, obj *model.Humanity) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Humanity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Humanity().Mission(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Mission)
+	fc.Result = res
+	return ec.marshalNMission2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐMission(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Humanity_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.Humanity) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Humanity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Humanity_updatedAt(ctx context.Context, field graphql.CollectedField, obj *model.Humanity) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Humanity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Humanity_submittedAt(ctx context.Context, field graphql.CollectedField, obj *model.Humanity) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Humanity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SubmittedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Invitation_id(ctx context.Context, field graphql.CollectedField, obj *model.Invitation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3722,6 +4276,45 @@ func (ec *executionContext) _Mutation_upsertSpeed(ctx context.Context, field gra
 	res := resTmp.(*model.Speed)
 	fc.Result = res
 	return ec.marshalOSpeed2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSpeed(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_upsertHumanity(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_upsertHumanity_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpsertHumanity(rctx, args["param"].(model.UpsertHumanityInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Humanity)
+	fc.Result = res
+	return ec.marshalOHumanity2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐHumanity(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_likePost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4943,6 +5536,45 @@ func (ec *executionContext) _Query_team(ctx context.Context, field graphql.Colle
 	return ec.marshalOTeam2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeam(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_escape(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_escape_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Escape(rctx, args["team_id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Escape)
+	fc.Result = res
+	return ec.marshalOEscape2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐEscape(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_speed(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4980,6 +5612,45 @@ func (ec *executionContext) _Query_speed(ctx context.Context, field graphql.Coll
 	res := resTmp.(*model.Speed)
 	fc.Result = res
 	return ec.marshalOSpeed2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSpeed(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_humanity(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_humanity_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Humanity(rctx, args["team_id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Humanity)
+	fc.Result = res
+	return ec.marshalOHumanity2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐHumanity(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_cluster(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5100,45 +5771,6 @@ func (ec *executionContext) _Query_missions(ctx context.Context, field graphql.C
 	res := resTmp.([]*model.Mission)
 	fc.Result = res
 	return ec.marshalNMission2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐMissionᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Query_escape(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_escape_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Escape(rctx, args["team_id"].(string))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.Escape)
-	fc.Result = res
-	return ec.marshalOEscape2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐEscape(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_post(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -7816,6 +8448,85 @@ func (ec *executionContext) unmarshalInputUpsertEscapeInput(ctx context.Context,
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpsertHumanityInput(ctx context.Context, obj interface{}) (model.UpsertHumanityInput, error) {
+	var it model.UpsertHumanityInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "teamId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teamId"))
+			it.TeamID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "missionId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("missionId"))
+			it.MissionID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "batch":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("batch"))
+			it.Batch, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "gatherLink":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("gatherLink"))
+			it.GatherLink, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "photo1":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("photo1"))
+			it.Photo1, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "photo2":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("photo2"))
+			it.Photo2, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "photo3":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("photo3"))
+			it.Photo3, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "submittedAt":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("submittedAt"))
+			it.SubmittedAt, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpsertSpeedInput(ctx context.Context, obj interface{}) (model.UpsertSpeedInput, error) {
 	var it model.UpsertSpeedInput
 	asMap := map[string]interface{}{}
@@ -8116,6 +8827,89 @@ func (ec *executionContext) _Escape(ctx context.Context, sel ast.SelectionSet, o
 	return out
 }
 
+var humanityImplementors = []string{"Humanity"}
+
+func (ec *executionContext) _Humanity(ctx context.Context, sel ast.SelectionSet, obj *model.Humanity) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, humanityImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Humanity")
+		case "id":
+			out.Values[i] = ec._Humanity_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "gatherLink":
+			out.Values[i] = ec._Humanity_gatherLink(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "batch":
+			out.Values[i] = ec._Humanity_batch(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "photo1":
+			out.Values[i] = ec._Humanity_photo1(ctx, field, obj)
+		case "photo2":
+			out.Values[i] = ec._Humanity_photo2(ctx, field, obj)
+		case "photo3":
+			out.Values[i] = ec._Humanity_photo3(ctx, field, obj)
+		case "team":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Humanity_team(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "mission":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Humanity_mission(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "createdAt":
+			out.Values[i] = ec._Humanity_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "updatedAt":
+			out.Values[i] = ec._Humanity_updatedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "submittedAt":
+			out.Values[i] = ec._Humanity_submittedAt(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var invitationImplementors = []string{"Invitation"}
 
 func (ec *executionContext) _Invitation(ctx context.Context, sel ast.SelectionSet, obj *model.Invitation) graphql.Marshaler {
@@ -8301,6 +9095,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_upsertEscape(ctx, field)
 		case "upsertSpeed":
 			out.Values[i] = ec._Mutation_upsertSpeed(ctx, field)
+		case "upsertHumanity":
+			out.Values[i] = ec._Mutation_upsertHumanity(ctx, field)
 		case "likePost":
 			out.Values[i] = ec._Mutation_likePost(ctx, field)
 		case "unlikePost":
@@ -8574,6 +9370,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_team(ctx, field)
 				return res
 			})
+		case "escape":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_escape(ctx, field)
+				return res
+			})
 		case "speed":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -8583,6 +9390,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_speed(ctx, field)
+				return res
+			})
+		case "humanity":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_humanity(ctx, field)
 				return res
 			})
 		case "cluster":
@@ -8619,17 +9437,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
-				return res
-			})
-		case "escape":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_escape(ctx, field)
 				return res
 			})
 		case "post":
@@ -9711,6 +10518,11 @@ func (ec *executionContext) unmarshalNUpsertEscapeInput2githubᚗcomᚋmarcustut
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNUpsertHumanityInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpsertHumanityInput(ctx context.Context, v interface{}) (model.UpsertHumanityInput, error) {
+	res, err := ec.unmarshalInputUpsertHumanityInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNUpsertSpeedInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpsertSpeedInput(ctx context.Context, v interface{}) (model.UpsertSpeedInput, error) {
 	res, err := ec.unmarshalInputUpsertSpeedInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -10096,6 +10908,13 @@ func (ec *executionContext) marshalOFloat2ᚖfloat64(ctx context.Context, sel as
 		return graphql.Null
 	}
 	return graphql.MarshalFloat(*v)
+}
+
+func (ec *executionContext) marshalOHumanity2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐHumanity(ctx context.Context, sel ast.SelectionSet, v *model.Humanity) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Humanity(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOID2ᚖstring(ctx context.Context, v interface{}) (*string, error) {

@@ -194,3 +194,19 @@ export const GET_SPEED = gql`
     }
   }
 `
+
+export const GET_HUMANITY = gql`
+  query GetHumanity($team_id: ID!) {
+    humanity(team_id: $team_id) {
+      id
+      gatherLink
+      batch
+      photo1
+      photo2
+      photo3
+      createdAt
+      updatedAt
+      submittedAt
+    }
+  }
+`

@@ -146,3 +146,19 @@ export const UPSERT_SPEED = gql`
     }
   }
 `
+
+export const UPSERT_HUMANITY = gql`
+  mutation UpsertHumanity($param: UpsertHumanityInput!) {
+    upsertHumanity(param: $param) {
+      id
+      gatherLink
+      batch
+      photo1
+      photo2
+      photo3
+      createdAt
+      updatedAt
+      submittedAt
+    }
+  }
+`
