@@ -120,7 +120,7 @@ const TEAM_GATHER_LINK: Record<string, string> = {
 
 const INTRO_VIDEO = 'https://www.youtube.com/embed/MEoIkhIAoYM'
 const BRIEFING_VIDEO = 'https://www.youtube.com/embed/jpy0bGkedzo'
-const COMPLETED_VIDEO = 'https://www.youtube.com/watch?O62VFKxnXDc'
+const COMPLETED_VIDEO = 'https://youtu.be/O62VFKxnXDc'
 
 const MISSION_ID = 'b9498ffd-5702-4a7e-aa7b-9cdcfd71b126'
 
