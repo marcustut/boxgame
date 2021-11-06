@@ -187,7 +187,7 @@ export const Humanity: React.FC = () => {
   if (!humanity.data.humanity) return <div>Error loading humanity</div>
 
   // if mission is closed
-  // if (!isOngoing) return <MissionUnavailable mission={mission.data.mission} />
+  if (!isOngoing) return <MissionUnavailable mission={mission.data.mission} />
 
   return (
     <MissionLayout isHall utilities={{ p: 'px-4 pt-4 pb-96', pos: 'relative' }}>

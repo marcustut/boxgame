@@ -5,9 +5,7 @@ import { Humanity } from '@/features/humanity'
 
 const HumanityPage: React.FC = () => (
   <CheckAuth>
-    <LockPage>
-      <Humanity />
-    </LockPage>
+    <Humanity />
   </CheckAuth>
 )
 
