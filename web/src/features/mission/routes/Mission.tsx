@@ -13,7 +13,8 @@ import { useAuth } from '@/lib/auth'
 const imageBG: Record<string, string> = {
   '绝地逃离 Mystery Escape': 'https://www.ginx.tv/uploads2/Various/The_Outlast_Trials/The_Outlast_Trials.jpg',
   '极速对决 Time Hunter':
-    'https://vfqzgsbgmlvglbygosna.supabase.in/storage/v1/object/public/assets/TimeHunterWallpaper.jpg'
+    'https://vfqzgsbgmlvglbygosna.supabase.in/storage/v1/object/public/assets/TimeHunterWallpaper.jpg',
+  '善恶的金库 Bloody Treasury': 'https://cdn.corporatefinanceinstitute.com/assets/treasury-stock-image-1024x641.jpg'
 }
 
 Dayjs.extend(RelativeTime)
