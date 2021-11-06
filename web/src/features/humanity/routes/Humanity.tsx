@@ -405,7 +405,7 @@ export const Humanity: React.FC = () => {
                   const { publicURLs, error } = await bulkUploadFilesToSupabase(
                     Object.values(stagedPhotos).filter(file => file) as File[],
                     'games',
-                    `humanity/${user.user.team!.name}`,
+                    `humanity/${user.user.team!.id}`,
                     { cacheControl: '3600', upsert: true }
                   )
                   if (error || !publicURLs) {
