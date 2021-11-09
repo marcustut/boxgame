@@ -116,21 +116,19 @@ export const Discovery: React.FC = () => {
                         }
                         setLoading(true)
 
+                        const filePath = `discovery/${user.user.team.id}/submission.${file.name.split('.').pop()}`
+
                         enqueueSnackbar('Uploading might take awhile...', { variant: 'info' })
-                        const { data, error: uploadErr } = await supabase.storage
-                          .from('games')
-                          .upload(`discovery/${user.user.team.id}/${file.name}`, file, {
-                            cacheControl: '3600',
-                            upsert: true
-                          })
+                        const { data, error: uploadErr } = await supabase.storage.from('games').upload(filePath, file, {
+                          cacheControl: '3600',
+                          upsert: true
+                        })
                         if (uploadErr || !data) {
                           console.error(uploadErr)
                           enqueueSnackbar('Failed to upload the video', { variant: 'error' })
                           return
                         }
-                        const { publicURL, error: getUrlErr } = supabase.storage
-                          .from('games')
-                          .getPublicUrl(`discovery/${user.user.team.id}/${file.name}`)
+                        const { publicURL, error: getUrlErr } = supabase.storage.from('games').getPublicUrl(filePath)
                         if (getUrlErr || !publicURL) {
                           console.error(getUrlErr)
                           enqueueSnackbar("Failed to get the video's url", { variant: 'error' })
