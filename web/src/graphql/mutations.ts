@@ -1,6 +1,12 @@
 import { gql } from '@apollo/client'
 
-import { CORE_COMMENT_FIELDS, CORE_POST_FIELDS, CORE_PROFILE_FIELDS, CORE_USER_FIELDS } from './fragments'
+import {
+  CORE_COMMENT_FIELDS,
+  CORE_POST_FIELDS,
+  CORE_PROFILE_FIELDS,
+  CORE_TEAM_FIELDS,
+  CORE_USER_FIELDS
+} from './fragments'
 
 export const CREATE_NEW_USER = gql`
   ${CORE_USER_FIELDS}
@@ -91,6 +97,15 @@ export const CREATE_TEAM = gql`
       name
       avatarUrl
       points
+    }
+  }
+`
+
+export const UPDATE_TEAM = gql`
+  ${CORE_TEAM_FIELDS}
+  mutation UpdateTeam($team_id: ID!, $param: UpdateTeamInput!) {
+    updateTeam(team_id: $team_id, param: $param) {
+      ...CoreTeamFields
     }
   }
 `

@@ -14,7 +14,7 @@ import (
 )
 
 func (r *clusterResolver) Teams(ctx context.Context, obj *model.Cluster) ([]*model.Team, error) {
-	return query.GetManyTeam(ctx, r.db, postgresql.Team.ClusterID.Equals(obj.ID))
+	return query.GetManyTeam(ctx, r.db, model.PaginationInput{Limit: 50}, postgresql.Team.ClusterID.Equals(obj.ID))
 }
 
 func (r *commentResolver) User(ctx context.Context, obj *model.Comment) (*model.User, error) {
@@ -54,7 +54,7 @@ func (r *invitationResolver) Team(ctx context.Context, obj *model.Invitation) (*
 }
 
 func (r *missionResolver) CompletedBy(ctx context.Context, obj *model.Mission) ([]*model.Team, error) {
-	return query.GetManyTeam(ctx, r.db, postgresql.Team.TeamMission.Some(postgresql.TeamMission.MissionID.Equals(obj.ID)))
+	return query.GetManyTeam(ctx, r.db, model.PaginationInput{Limit: 50}, postgresql.Team.TeamMission.Some(postgresql.TeamMission.MissionID.Equals(obj.ID)))
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, param model.NewUser) (*model.User, error) {
@@ -84,6 +84,10 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, userID string, param 
 	}
 	query.UpdateUniqueProfile(ctx, r.db, postgresql.Profile.ID.Equals(user.ProfileID), param.Profile)
 	return query.UpdateUniqueUser(ctx, r.db, postgresql.User.ID.Equals(userID), &param)
+}
+
+func (r *mutationResolver) UpdateTeam(ctx context.Context, teamID string, param model.UpdateTeamInput) (*model.Team, error) {
+	return query.UpdateUniqueTeam(ctx, r.db, postgresql.Team.ID.Equals(teamID), &param)
 }
 
 func (r *mutationResolver) UpsertEscape(ctx context.Context, param model.UpsertEscapeInput) (*model.Escape, error) {
@@ -161,6 +165,10 @@ func (r *queryResolver) Team(ctx context.Context, teamID string) (*model.Team, e
 	return query.GetUniqueTeam(ctx, r.db, postgresql.Team.ID.Equals(teamID))
 }
 
+func (r *queryResolver) Teams(ctx context.Context, page model.PaginationInput) ([]*model.Team, error) {
+	return query.GetManyTeam(ctx, r.db, page)
+}
+
 func (r *queryResolver) Escape(ctx context.Context, teamID string) (*model.Escape, error) {
 	return query.GetUniqueEscape(ctx, r.db, postgresql.Escape.TeamID.Equals(teamID))
 }
@@ -169,8 +177,16 @@ func (r *queryResolver) Speed(ctx context.Context, teamID string) (*model.Speed,
 	return query.GetUniqueSpeed(ctx, r.db, postgresql.Speed.TeamID.Equals(teamID))
 }
 
+func (r *queryResolver) Speeds(ctx context.Context, page model.PaginationInput) ([]*model.Speed, error) {
+	return query.GetManySpeed(ctx, r.db, page)
+}
+
 func (r *queryResolver) Humanity(ctx context.Context, teamID string) (*model.Humanity, error) {
 	return query.GetUniqueHumanity(ctx, r.db, postgresql.Humanity.TeamID.Equals(teamID))
+}
+
+func (r *queryResolver) Humanities(ctx context.Context, page model.PaginationInput) ([]*model.Humanity, error) {
+	return query.GetManyHumanity(ctx, r.db, page)
 }
 
 func (r *queryResolver) Cluster(ctx context.Context, clusterID string) (*model.Cluster, error) {

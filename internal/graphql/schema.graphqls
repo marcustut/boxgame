@@ -172,9 +172,12 @@ type Query {
   users(page: PaginationInput!): [User!]!
   userCount: Int!
   team(team_id: ID!): Team
+  teams(page: PaginationInput!): [Team!]!
   escape(team_id: ID!): Escape
   speed(team_id: ID!): Speed
+  speeds(page: PaginationInput!): [Speed!]!
   humanity(team_id: ID!): Humanity
+  humanities(page: PaginationInput!): [Humanity!]!
   cluster(cluster_id: ID!): Cluster
   mission(mission_id: ID!): Mission
   missions(page: PaginationInput!): [Mission!]!
@@ -190,6 +193,7 @@ type Mutation {
   createInvitation(param: NewInvitation!): Invitation
   createTeam(param: NewTeam!): Team
   updateUser(user_id: ID!, param: UpdateUserInput!): User
+  updateTeam(team_id: ID!, param: UpdateTeamInput!): Team
   upsertEscape(param: UpsertEscapeInput!): Escape
   upsertSpeed(param: UpsertSpeedInput!): Speed
   upsertHumanity(param: UpsertHumanityInput!): Humanity
@@ -307,4 +311,10 @@ input UpdateProfileInput {
   nameEng: String
   nameChi: String
   bio: String
+}
+
+input UpdateTeamInput {
+  name: String
+  avatarUrl: String
+  points: Float
 }

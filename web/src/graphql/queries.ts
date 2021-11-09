@@ -195,6 +195,22 @@ export const GET_SPEED = gql`
   }
 `
 
+export const GET_SPEEDS = gql`
+  ${CORE_TEAM_FIELDS}
+  query GetSpeeds($page: PaginationInput!) {
+    speeds(page: $page) {
+      id
+      completedAt
+      answer
+      createdAt
+      updatedAt
+      team {
+        ...CoreTeamFields
+      }
+    }
+  }
+`
+
 export const GET_HUMANITY = gql`
   query GetHumanity($team_id: ID!) {
     humanity(team_id: $team_id) {
@@ -207,6 +223,26 @@ export const GET_HUMANITY = gql`
       createdAt
       updatedAt
       submittedAt
+    }
+  }
+`
+
+export const GET_HUMANITIES = gql`
+  ${CORE_TEAM_FIELDS}
+  query GetHumanities($page: PaginationInput!) {
+    humanities(page: $page) {
+      id
+      gatherLink
+      batch
+      photo1
+      photo2
+      photo3
+      createdAt
+      updatedAt
+      submittedAt
+      team {
+        ...CoreTeamFields
+      }
     }
   }
 `

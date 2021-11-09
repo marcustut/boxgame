@@ -25,6 +25,29 @@ func GetUniqueSpeed(ctx context.Context, db *postgresql.PrismaClient, param post
 	return speed, nil
 }
 
+func GetManySpeed(ctx context.Context, db *postgresql.PrismaClient, page model.PaginationInput, params ...postgresql.SpeedWhereParam) ([]*model.Speed, error) {
+	// build query
+	query := db.Speed.FindMany(params...)
+
+	// apply pagination
+	query = query.Take(page.Limit)
+	query = query.Skip(page.Offset)
+
+	// fetch the speeds
+	fetchedSpeeds, err := query.Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// parse speeds to graphql type
+	speeds, err := model.MapToSpeeds(fetchedSpeeds)
+	if err != nil {
+		return nil, err
+	}
+
+	return speeds, nil
+}
+
 func UpsertUniqueSpeed(ctx context.Context, db *postgresql.PrismaClient, param *model.UpsertSpeedInput) (*model.Speed, error) {
 	upsertedSpeed, err := db.Speed.UpsertOne(
 		postgresql.Speed.TeamID.Equals(param.TeamID),

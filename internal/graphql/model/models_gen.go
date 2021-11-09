@@ -87,6 +87,12 @@ type UpdateProfileInput struct {
 	Bio       *string `json:"bio"`
 }
 
+type UpdateTeamInput struct {
+	Name      *string  `json:"name"`
+	AvatarURL *string  `json:"avatarUrl"`
+	Points    *float64 `json:"points"`
+}
+
 type UpdateUserInput struct {
 	TeamID  *string             `json:"teamId"`
 	Profile *UpdateProfileInput `json:"profile"`

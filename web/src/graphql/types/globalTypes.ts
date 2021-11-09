@@ -111,6 +111,12 @@ export interface UpdateProfileInput {
   bio?: string | null;
 }
 
+export interface UpdateTeamInput {
+  name?: string | null;
+  avatarUrl?: string | null;
+  points?: number | null;
+}
+
 export interface UpdateUserInput {
   teamId?: string | null;
   profile?: UpdateProfileInput | null;

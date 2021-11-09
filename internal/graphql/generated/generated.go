@@ -138,6 +138,7 @@ type ComplexityRoot struct {
 		RejectInvitation func(childComplexity int, invitationID string) int
 		UnlikeComment    func(childComplexity int, param model.CommentLikeInput) int
 		UnlikePost       func(childComplexity int, param model.PostLikeInput) int
+		UpdateTeam       func(childComplexity int, teamID string, param model.UpdateTeamInput) int
 		UpdateUser       func(childComplexity int, userID string, param model.UpdateUserInput) int
 		UpsertEscape     func(childComplexity int, param model.UpsertEscapeInput) int
 		UpsertHumanity   func(childComplexity int, param model.UpsertHumanityInput) int
@@ -177,6 +178,7 @@ type ComplexityRoot struct {
 	Query struct {
 		Cluster     func(childComplexity int, clusterID string) int
 		Escape      func(childComplexity int, teamID string) int
+		Humanities  func(childComplexity int, page model.PaginationInput) int
 		Humanity    func(childComplexity int, teamID string) int
 		Invitations func(childComplexity int, userID string, page model.PaginationInput) int
 		Mission     func(childComplexity int, missionID string) int
@@ -184,7 +186,9 @@ type ComplexityRoot struct {
 		Post        func(childComplexity int, postID string) int
 		Posts       func(childComplexity int, page model.PaginationInput) int
 		Speed       func(childComplexity int, teamID string) int
+		Speeds      func(childComplexity int, page model.PaginationInput) int
 		Team        func(childComplexity int, teamID string) int
+		Teams       func(childComplexity int, page model.PaginationInput) int
 		User        func(childComplexity int, userID string) int
 		UserCount   func(childComplexity int) int
 		Users       func(childComplexity int, page model.PaginationInput) int
@@ -252,6 +256,7 @@ type MutationResolver interface {
 	CreateInvitation(ctx context.Context, param model.NewInvitation) (*model.Invitation, error)
 	CreateTeam(ctx context.Context, param model.NewTeam) (*model.Team, error)
 	UpdateUser(ctx context.Context, userID string, param model.UpdateUserInput) (*model.User, error)
+	UpdateTeam(ctx context.Context, teamID string, param model.UpdateTeamInput) (*model.Team, error)
 	UpsertEscape(ctx context.Context, param model.UpsertEscapeInput) (*model.Escape, error)
 	UpsertSpeed(ctx context.Context, param model.UpsertSpeedInput) (*model.Speed, error)
 	UpsertHumanity(ctx context.Context, param model.UpsertHumanityInput) (*model.Humanity, error)
@@ -276,9 +281,12 @@ type QueryResolver interface {
 	Users(ctx context.Context, page model.PaginationInput) ([]*model.User, error)
 	UserCount(ctx context.Context) (int, error)
 	Team(ctx context.Context, teamID string) (*model.Team, error)
+	Teams(ctx context.Context, page model.PaginationInput) ([]*model.Team, error)
 	Escape(ctx context.Context, teamID string) (*model.Escape, error)
 	Speed(ctx context.Context, teamID string) (*model.Speed, error)
+	Speeds(ctx context.Context, page model.PaginationInput) ([]*model.Speed, error)
 	Humanity(ctx context.Context, teamID string) (*model.Humanity, error)
+	Humanities(ctx context.Context, page model.PaginationInput) ([]*model.Humanity, error)
 	Cluster(ctx context.Context, clusterID string) (*model.Cluster, error)
 	Mission(ctx context.Context, missionID string) (*model.Mission, error)
 	Missions(ctx context.Context, page model.PaginationInput) ([]*model.Mission, error)
@@ -798,6 +806,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UnlikePost(childComplexity, args["param"].(model.PostLikeInput)), true
 
+	case "Mutation.updateTeam":
+		if e.complexity.Mutation.UpdateTeam == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateTeam_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateTeam(childComplexity, args["team_id"].(string), args["param"].(model.UpdateTeamInput)), true
+
 	case "Mutation.updateUser":
 		if e.complexity.Mutation.UpdateUser == nil {
 			break
@@ -1048,6 +1068,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Escape(childComplexity, args["team_id"].(string)), true
 
+	case "Query.humanities":
+		if e.complexity.Query.Humanities == nil {
+			break
+		}
+
+		args, err := ec.field_Query_humanities_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Humanities(childComplexity, args["page"].(model.PaginationInput)), true
+
 	case "Query.humanity":
 		if e.complexity.Query.Humanity == nil {
 			break
@@ -1132,6 +1164,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Speed(childComplexity, args["team_id"].(string)), true
 
+	case "Query.speeds":
+		if e.complexity.Query.Speeds == nil {
+			break
+		}
+
+		args, err := ec.field_Query_speeds_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Speeds(childComplexity, args["page"].(model.PaginationInput)), true
+
 	case "Query.team":
 		if e.complexity.Query.Team == nil {
 			break
@@ -1143,6 +1187,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Team(childComplexity, args["team_id"].(string)), true
+
+	case "Query.teams":
+		if e.complexity.Query.Teams == nil {
+			break
+		}
+
+		args, err := ec.field_Query_teams_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Teams(childComplexity, args["page"].(model.PaginationInput)), true
 
 	case "Query.user":
 		if e.complexity.Query.User == nil {
@@ -1572,9 +1628,12 @@ type Query {
   users(page: PaginationInput!): [User!]!
   userCount: Int!
   team(team_id: ID!): Team
+  teams(page: PaginationInput!): [Team!]!
   escape(team_id: ID!): Escape
   speed(team_id: ID!): Speed
+  speeds(page: PaginationInput!): [Speed!]!
   humanity(team_id: ID!): Humanity
+  humanities(page: PaginationInput!): [Humanity!]!
   cluster(cluster_id: ID!): Cluster
   mission(mission_id: ID!): Mission
   missions(page: PaginationInput!): [Mission!]!
@@ -1590,6 +1649,7 @@ type Mutation {
   createInvitation(param: NewInvitation!): Invitation
   createTeam(param: NewTeam!): Team
   updateUser(user_id: ID!, param: UpdateUserInput!): User
+  updateTeam(team_id: ID!, param: UpdateTeamInput!): Team
   upsertEscape(param: UpsertEscapeInput!): Escape
   upsertSpeed(param: UpsertSpeedInput!): Speed
   upsertHumanity(param: UpsertHumanityInput!): Humanity
@@ -1707,6 +1767,12 @@ input UpdateProfileInput {
   nameEng: String
   nameChi: String
   bio: String
+}
+
+input UpdateTeamInput {
+  name: String
+  avatarUrl: String
+  points: Float
 }
 `, BuiltIn: false},
 }
@@ -1881,6 +1947,30 @@ func (ec *executionContext) field_Mutation_unlikePost_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_updateTeam_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["team_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("team_id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["team_id"] = arg0
+	var arg1 model.UpdateTeamInput
+	if tmp, ok := rawArgs["param"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
+		arg1, err = ec.unmarshalNUpdateTeamInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpdateTeamInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["param"] = arg1
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updateUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2025,6 +2115,21 @@ func (ec *executionContext) field_Query_escape_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_humanities_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.PaginationInput
+	if tmp, ok := rawArgs["page"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("page"))
+		arg0, err = ec.unmarshalNPaginationInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPaginationInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["page"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_humanity_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2139,6 +2244,21 @@ func (ec *executionContext) field_Query_speed_args(ctx context.Context, rawArgs 
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_speeds_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.PaginationInput
+	if tmp, ok := rawArgs["page"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("page"))
+		arg0, err = ec.unmarshalNPaginationInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPaginationInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["page"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_team_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2151,6 +2271,21 @@ func (ec *executionContext) field_Query_team_args(ctx context.Context, rawArgs m
 		}
 	}
 	args["team_id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_teams_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.PaginationInput
+	if tmp, ok := rawArgs["page"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("page"))
+		arg0, err = ec.unmarshalNPaginationInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPaginationInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["page"] = arg0
 	return args, nil
 }
 
@@ -4200,6 +4335,45 @@ func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field grap
 	return ec.marshalOUser2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_updateTeam(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateTeam_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateTeam(rctx, args["team_id"].(string), args["param"].(model.UpdateTeamInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Team)
+	fc.Result = res
+	return ec.marshalOTeam2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeam(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_upsertEscape(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5536,6 +5710,48 @@ func (ec *executionContext) _Query_team(ctx context.Context, field graphql.Colle
 	return ec.marshalOTeam2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeam(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_teams(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_teams_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Teams(rctx, args["page"].(model.PaginationInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Team)
+	fc.Result = res
+	return ec.marshalNTeam2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeamᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_escape(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5614,6 +5830,48 @@ func (ec *executionContext) _Query_speed(ctx context.Context, field graphql.Coll
 	return ec.marshalOSpeed2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSpeed(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_speeds(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_speeds_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Speeds(rctx, args["page"].(model.PaginationInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Speed)
+	fc.Result = res
+	return ec.marshalNSpeed2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSpeedᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_humanity(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5651,6 +5909,48 @@ func (ec *executionContext) _Query_humanity(ctx context.Context, field graphql.C
 	res := resTmp.(*model.Humanity)
 	fc.Result = res
 	return ec.marshalOHumanity2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐHumanity(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_humanities(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_humanities_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Humanities(rctx, args["page"].(model.PaginationInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Humanity)
+	fc.Result = res
+	return ec.marshalNHumanity2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐHumanityᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_cluster(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -8370,6 +8670,45 @@ func (ec *executionContext) unmarshalInputUpdateProfileInput(ctx context.Context
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateTeamInput(ctx context.Context, obj interface{}) (model.UpdateTeamInput, error) {
+	var it model.UpdateTeamInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "avatarUrl":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("avatarUrl"))
+			it.AvatarURL, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "points":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("points"))
+			it.Points, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, obj interface{}) (model.UpdateUserInput, error) {
 	var it model.UpdateUserInput
 	asMap := map[string]interface{}{}
@@ -9091,6 +9430,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_createTeam(ctx, field)
 		case "updateUser":
 			out.Values[i] = ec._Mutation_updateUser(ctx, field)
+		case "updateTeam":
+			out.Values[i] = ec._Mutation_updateTeam(ctx, field)
 		case "upsertEscape":
 			out.Values[i] = ec._Mutation_upsertEscape(ctx, field)
 		case "upsertSpeed":
@@ -9370,6 +9711,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_team(ctx, field)
 				return res
 			})
+		case "teams":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_teams(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "escape":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -9392,6 +9747,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_speed(ctx, field)
 				return res
 			})
+		case "speeds":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_speeds(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "humanity":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -9401,6 +9770,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_humanity(ctx, field)
+				return res
+			})
+		case "humanities":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_humanities(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "cluster":
@@ -10069,6 +10452,60 @@ func (ec *executionContext) marshalNGender2githubᚗcomᚋmarcustutᚋtheboxᚋi
 	return v
 }
 
+func (ec *executionContext) marshalNHumanity2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐHumanityᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Humanity) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNHumanity2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐHumanity(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNHumanity2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐHumanity(ctx context.Context, sel ast.SelectionSet, v *model.Humanity) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Humanity(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalID(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -10384,6 +10821,60 @@ func (ec *executionContext) marshalNRole2ᚕgithubᚗcomᚋmarcustutᚋtheboxᚋ
 	return ret
 }
 
+func (ec *executionContext) marshalNSpeed2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSpeedᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Speed) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSpeed2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSpeed(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNSpeed2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSpeed(ctx context.Context, sel ast.SelectionSet, v *model.Speed) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Speed(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -10506,6 +10997,11 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNUpdateTeamInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpdateTeamInput(ctx context.Context, v interface{}) (model.UpdateTeamInput, error) {
+	res, err := ec.unmarshalInputUpdateTeamInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNUpdateUserInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpdateUserInput(ctx context.Context, v interface{}) (model.UpdateUserInput, error) {

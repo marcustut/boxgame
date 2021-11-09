@@ -24,9 +24,16 @@ func GetUniqueTeam(ctx context.Context, db *postgresql.PrismaClient, param postg
 	return team, nil
 }
 
-func GetManyTeam(ctx context.Context, db *postgresql.PrismaClient, params ...postgresql.TeamWhereParam) ([]*model.Team, error) {
-	// fetch the team
-	fetchedTeams, err := db.Team.FindMany(params...).Exec(ctx)
+func GetManyTeam(ctx context.Context, db *postgresql.PrismaClient, page model.PaginationInput, params ...postgresql.TeamWhereParam) ([]*model.Team, error) {
+	// build query
+	query := db.Team.FindMany(params...)
+
+	// apply pagination
+	query = query.Take(page.Limit)
+	query = query.Skip(page.Offset)
+
+	// fetch the teams
+	fetchedTeams, err := query.Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -53,6 +60,25 @@ func CreateTeam(ctx context.Context, db *postgresql.PrismaClient, param *model.N
 	}
 
 	team, err := model.MapToTeam(createdTeam)
+	if err != nil {
+		return nil, err
+	}
+
+	return team, nil
+}
+
+func UpdateUniqueTeam(ctx context.Context, db *postgresql.PrismaClient, param postgresql.TeamEqualsUniqueWhereParam, updateParam *model.UpdateTeamInput) (*model.Team, error) {
+	updatedTeam, err := db.Team.FindUnique(param).Update(
+		postgresql.Team.Name.SetIfPresent(updateParam.Name),
+		postgresql.Team.AvatarURL.SetIfPresent(updateParam.AvatarURL),
+		postgresql.Team.Points.SetIfPresent(updateParam.Points),
+	).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// parse team to graphql type
+	team, err := model.MapToTeam(updatedTeam)
 	if err != nil {
 		return nil, err
 	}

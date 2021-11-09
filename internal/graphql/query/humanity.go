@@ -25,6 +25,29 @@ func GetUniqueHumanity(ctx context.Context, db *postgresql.PrismaClient, param p
 	return humanity, nil
 }
 
+func GetManyHumanity(ctx context.Context, db *postgresql.PrismaClient, page model.PaginationInput, params ...postgresql.HumanityWhereParam) ([]*model.Humanity, error) {
+	// build query
+	query := db.Humanity.FindMany(params...)
+
+	// apply pagination
+	query = query.Take(page.Limit)
+	query = query.Skip(page.Offset)
+
+	// fetch the humanities
+	fetchedHumanities, err := query.Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// parse humanities to graphql type
+	humanities, err := model.MapToHumanities(fetchedHumanities)
+	if err != nil {
+		return nil, err
+	}
+
+	return humanities, nil
+}
+
 func UpsertUniqueHumanity(ctx context.Context, db *postgresql.PrismaClient, param *model.UpsertHumanityInput) (*model.Humanity, error) {
 	upsertedHumanity, err := db.Humanity.UpsertOne(
 		postgresql.Humanity.TeamID.Equals(param.TeamID),
