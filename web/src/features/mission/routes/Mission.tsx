@@ -14,7 +14,9 @@ const imageBG: Record<string, string> = {
   '绝地逃离 Mystery Escape': 'https://www.ginx.tv/uploads2/Various/The_Outlast_Trials/The_Outlast_Trials.jpg',
   '极速对决 Time Hunter':
     'https://vfqzgsbgmlvglbygosna.supabase.in/storage/v1/object/public/assets/TimeHunterWallpaper.jpg',
-  '善恶的金库 Bloody Treasury': 'https://cdn.corporatefinanceinstitute.com/assets/treasury-stock-image-1024x641.jpg'
+  '善恶的金库 Bloody Treasury': 'https://cdn.corporatefinanceinstitute.com/assets/treasury-stock-image-1024x641.jpg',
+  '超然绝活 Epic Breakout':
+    'https://inteng-storage.s3.amazonaws.com/img/iea/nR6bkaa1wo/sizes/science-wrong_resize_md.jpg'
 }
 
 Dayjs.extend(RelativeTime)
@@ -40,48 +42,50 @@ export const Mission: React.FC = () => {
       </div>
       {missions && missions.data ? (
         <>
-          {missions.data.missions.map((mission, index) => {
-            const isOngoing = Dayjs(mission.startAt).isBefore(Dayjs()) && Dayjs(Dayjs()).isBefore(mission.endAt)
-            const message = Dayjs(mission.endAt).isBefore(Dayjs())
-              ? `Closed ${Dayjs(mission.startAt).fromNow()}`
-              : `Opening ${Dayjs(mission.startAt).fromNow()}`
-            return (
-              <button
-                key={mission.id}
-                data-blobity-magnetic='false'
-                data-blobity-tooltip={!isOngoing ? message : undefined}
-                className={`relative w-full flex items-center px-4 py-3 ${
-                  index !== 0 ? 'mt-6' : ''
-                } rounded-lg border border-dark-100 bg-dark-300 focus:ring-2 ${
-                  isOngoing ? 'focus:ring-primary-ring' : 'focus:ring-secondary-ring'
-                } transition ease-in-out duration-200`}
-                style={{
-                  background: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${imageBG[mission.title]})`,
-                  backgroundPosition: 'center',
-                  backgroundSize: 'cover',
-                  backgroundRepeat: 'no-repeat'
-                }}
-                onClick={() =>
-                  isOngoing
-                    ? (window.location.href = `${window.location.pathname}/${mission.slug}`)
-                    : enqueueSnackbar(message, { variant: 'error' })
-                }
-              >
-                <div
-                  className={`absolute -top-2 right-4 rounded-full ${
-                    isOngoing ? 'bg-primary' : 'bg-secondary'
-                  } px-2 py-1 text-xs font-medium`}
+          {[...missions.data.missions]
+            .sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime())
+            .map((mission, index) => {
+              const isOngoing = Dayjs(mission.startAt).isBefore(Dayjs()) && Dayjs(Dayjs()).isBefore(mission.endAt)
+              const message = Dayjs(mission.endAt).isBefore(Dayjs())
+                ? `Closed ${Dayjs(mission.startAt).fromNow()}`
+                : `Opening ${Dayjs(mission.startAt).fromNow()}`
+              return (
+                <button
+                  key={mission.id}
+                  data-blobity-magnetic='false'
+                  data-blobity-tooltip={!isOngoing ? message : undefined}
+                  className={`relative w-full flex items-center px-4 py-3 ${
+                    index !== 0 ? 'mt-6' : ''
+                  } rounded-lg border border-dark-100 bg-dark-300 focus:ring-2 ${
+                    isOngoing ? 'focus:ring-primary-ring' : 'focus:ring-secondary-ring'
+                  } transition ease-in-out duration-200`}
+                  style={{
+                    background: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${imageBG[mission.title]})`,
+                    backgroundPosition: 'center',
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat'
+                  }}
+                  onClick={() =>
+                    isOngoing
+                      ? (window.location.href = `${window.location.pathname}/${mission.slug}`)
+                      : enqueueSnackbar(message, { variant: 'error' })
+                  }
                 >
-                  {isOngoing ? 'Available' : 'Closed'}
-                </div>
-                <div className='flex flex-col items-start'>
-                  <span className='text-true-gray-100 font-bold'>{mission.title}</span>
-                  <span className='text-true-gray-400 text-sm font-medium'>{mission.description}</span>
-                </div>
-                <Icon icon='ic:outline-chevron-right' className='w-6 h-6 ml-auto text-true-gray-50 -mr-2' />
-              </button>
-            )
-          })}
+                  <div
+                    className={`absolute -top-2 right-4 rounded-full ${
+                      isOngoing ? 'bg-primary' : 'bg-secondary'
+                    } px-2 py-1 text-xs font-medium`}
+                  >
+                    {isOngoing ? 'Available' : 'Closed'}
+                  </div>
+                  <div className='flex flex-col items-start'>
+                    <span className='text-true-gray-100 font-bold'>{mission.title}</span>
+                    <span className='text-true-gray-400 text-sm font-medium'>{mission.description}</span>
+                  </div>
+                  <Icon icon='ic:outline-chevron-right' className='w-6 h-6 ml-auto text-true-gray-50 -mr-2' />
+                </button>
+              )
+            })}
         </>
       ) : (
         <Spinner className='text-secondary mx-auto mt-4' />

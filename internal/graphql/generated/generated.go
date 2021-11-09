@@ -38,6 +38,7 @@ type Config struct {
 type ResolverRoot interface {
 	Cluster() ClusterResolver
 	Comment() CommentResolver
+	Discovery() DiscoveryResolver
 	Escape() EscapeResolver
 	Humanity() HumanityResolver
 	Invitation() InvitationResolver
@@ -80,6 +81,16 @@ type ComplexityRoot struct {
 		Post      func(childComplexity int) int
 		UpdatedAt func(childComplexity int) int
 		User      func(childComplexity int) int
+	}
+
+	Discovery struct {
+		CreatedAt   func(childComplexity int) int
+		ID          func(childComplexity int) int
+		Mission     func(childComplexity int) int
+		SubmittedAt func(childComplexity int) int
+		Team        func(childComplexity int) int
+		UpdatedAt   func(childComplexity int) int
+		VideoURL    func(childComplexity int) int
 	}
 
 	Escape struct {
@@ -140,6 +151,7 @@ type ComplexityRoot struct {
 		UnlikePost       func(childComplexity int, param model.PostLikeInput) int
 		UpdateTeam       func(childComplexity int, teamID string, param model.UpdateTeamInput) int
 		UpdateUser       func(childComplexity int, userID string, param model.UpdateUserInput) int
+		UpsertDiscovery  func(childComplexity int, param model.UpsertDiscoveryInput) int
 		UpsertEscape     func(childComplexity int, param model.UpsertEscapeInput) int
 		UpsertHumanity   func(childComplexity int, param model.UpsertHumanityInput) int
 		UpsertSpeed      func(childComplexity int, param model.UpsertSpeedInput) int
@@ -177,6 +189,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Cluster     func(childComplexity int, clusterID string) int
+		Discovery   func(childComplexity int, teamID string) int
 		Escape      func(childComplexity int, teamID string) int
 		Humanities  func(childComplexity int, page model.PaginationInput) int
 		Humanity    func(childComplexity int, teamID string) int
@@ -234,6 +247,10 @@ type CommentResolver interface {
 	Post(ctx context.Context, obj *model.Comment) (*model.Post, error)
 	Likes(ctx context.Context, obj *model.Comment) (int, error)
 }
+type DiscoveryResolver interface {
+	Team(ctx context.Context, obj *model.Discovery) (*model.Team, error)
+	Mission(ctx context.Context, obj *model.Discovery) (*model.Mission, error)
+}
 type EscapeResolver interface {
 	Team(ctx context.Context, obj *model.Escape) (*model.Team, error)
 }
@@ -260,6 +277,7 @@ type MutationResolver interface {
 	UpsertEscape(ctx context.Context, param model.UpsertEscapeInput) (*model.Escape, error)
 	UpsertSpeed(ctx context.Context, param model.UpsertSpeedInput) (*model.Speed, error)
 	UpsertHumanity(ctx context.Context, param model.UpsertHumanityInput) (*model.Humanity, error)
+	UpsertDiscovery(ctx context.Context, param model.UpsertDiscoveryInput) (*model.Discovery, error)
 	LikePost(ctx context.Context, param model.PostLikeInput) (*bool, error)
 	UnlikePost(ctx context.Context, param model.PostLikeInput) (*bool, error)
 	LikeComment(ctx context.Context, param model.CommentLikeInput) (*bool, error)
@@ -287,6 +305,7 @@ type QueryResolver interface {
 	Speeds(ctx context.Context, page model.PaginationInput) ([]*model.Speed, error)
 	Humanity(ctx context.Context, teamID string) (*model.Humanity, error)
 	Humanities(ctx context.Context, page model.PaginationInput) ([]*model.Humanity, error)
+	Discovery(ctx context.Context, teamID string) (*model.Discovery, error)
 	Cluster(ctx context.Context, clusterID string) (*model.Cluster, error)
 	Mission(ctx context.Context, missionID string) (*model.Mission, error)
 	Missions(ctx context.Context, page model.PaginationInput) ([]*model.Mission, error)
@@ -449,6 +468,55 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Comment.User(childComplexity), true
+
+	case "Discovery.createdAt":
+		if e.complexity.Discovery.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.Discovery.CreatedAt(childComplexity), true
+
+	case "Discovery.id":
+		if e.complexity.Discovery.ID == nil {
+			break
+		}
+
+		return e.complexity.Discovery.ID(childComplexity), true
+
+	case "Discovery.mission":
+		if e.complexity.Discovery.Mission == nil {
+			break
+		}
+
+		return e.complexity.Discovery.Mission(childComplexity), true
+
+	case "Discovery.submittedAt":
+		if e.complexity.Discovery.SubmittedAt == nil {
+			break
+		}
+
+		return e.complexity.Discovery.SubmittedAt(childComplexity), true
+
+	case "Discovery.team":
+		if e.complexity.Discovery.Team == nil {
+			break
+		}
+
+		return e.complexity.Discovery.Team(childComplexity), true
+
+	case "Discovery.updatedAt":
+		if e.complexity.Discovery.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.Discovery.UpdatedAt(childComplexity), true
+
+	case "Discovery.videoUrl":
+		if e.complexity.Discovery.VideoURL == nil {
+			break
+		}
+
+		return e.complexity.Discovery.VideoURL(childComplexity), true
 
 	case "Escape.id":
 		if e.complexity.Escape.ID == nil {
@@ -830,6 +898,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateUser(childComplexity, args["user_id"].(string), args["param"].(model.UpdateUserInput)), true
 
+	case "Mutation.upsertDiscovery":
+		if e.complexity.Mutation.UpsertDiscovery == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_upsertDiscovery_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpsertDiscovery(childComplexity, args["param"].(model.UpsertDiscoveryInput)), true
+
 	case "Mutation.upsertEscape":
 		if e.complexity.Mutation.UpsertEscape == nil {
 			break
@@ -1055,6 +1135,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Cluster(childComplexity, args["cluster_id"].(string)), true
+
+	case "Query.discovery":
+		if e.complexity.Query.Discovery == nil {
+			break
+		}
+
+		args, err := ec.field_Query_discovery_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Discovery(childComplexity, args["team_id"].(string)), true
 
 	case "Query.escape":
 		if e.complexity.Query.Escape == nil {
@@ -1553,6 +1645,16 @@ type Humanity {
   submittedAt: Time
 }
 
+type Discovery {
+  id: ID!
+  videoUrl: String
+  team: Team
+  mission: Mission
+  submittedAt: Time
+  createdAt: Time!
+  updatedAt: Time!
+}
+
 type User {
   id: ID!
   username: String!
@@ -1634,6 +1736,7 @@ type Query {
   speeds(page: PaginationInput!): [Speed!]!
   humanity(team_id: ID!): Humanity
   humanities(page: PaginationInput!): [Humanity!]!
+  discovery(team_id: ID!): Discovery
   cluster(cluster_id: ID!): Cluster
   mission(mission_id: ID!): Mission
   missions(page: PaginationInput!): [Mission!]!
@@ -1653,6 +1756,7 @@ type Mutation {
   upsertEscape(param: UpsertEscapeInput!): Escape
   upsertSpeed(param: UpsertSpeedInput!): Speed
   upsertHumanity(param: UpsertHumanityInput!): Humanity
+  upsertDiscovery(param: UpsertDiscoveryInput!): Discovery
   likePost(param: PostLikeInput!): Boolean
   unlikePost(param: PostLikeInput!): Boolean
   likeComment(param: CommentLikeInput!): Boolean
@@ -1688,6 +1792,13 @@ input UpsertHumanityInput {
   photo1: String
   photo2: String
   photo3: String
+  submittedAt: Time
+}
+
+input UpsertDiscoveryInput {
+  teamId: ID!
+  missionId: ID!
+  videoUrl: String
   submittedAt: Time
 }
 
@@ -1995,6 +2106,21 @@ func (ec *executionContext) field_Mutation_updateUser_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_upsertDiscovery_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpsertDiscoveryInput
+	if tmp, ok := rawArgs["param"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
+		arg0, err = ec.unmarshalNUpsertDiscoveryInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpsertDiscoveryInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["param"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_upsertEscape_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2097,6 +2223,21 @@ func (ec *executionContext) field_Query_cluster_args(ctx context.Context, rawArg
 		}
 	}
 	args["cluster_id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_discovery_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["team_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("team_id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["team_id"] = arg0
 	return args, nil
 }
 
@@ -2997,6 +3138,239 @@ func (ec *executionContext) _Comment_likes(ctx context.Context, field graphql.Co
 	res := resTmp.(int)
 	fc.Result = res
 	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Discovery_id(ctx context.Context, field graphql.CollectedField, obj *model.Discovery) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Discovery",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Discovery_videoUrl(ctx context.Context, field graphql.CollectedField, obj *model.Discovery) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Discovery",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.VideoURL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Discovery_team(ctx context.Context, field graphql.CollectedField, obj *model.Discovery) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Discovery",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Discovery().Team(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Team)
+	fc.Result = res
+	return ec.marshalOTeam2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeam(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Discovery_mission(ctx context.Context, field graphql.CollectedField, obj *model.Discovery) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Discovery",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Discovery().Mission(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Mission)
+	fc.Result = res
+	return ec.marshalOMission2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐMission(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Discovery_submittedAt(ctx context.Context, field graphql.CollectedField, obj *model.Discovery) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Discovery",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SubmittedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Discovery_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.Discovery) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Discovery",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Discovery_updatedAt(ctx context.Context, field graphql.CollectedField, obj *model.Discovery) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Discovery",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Escape_id(ctx context.Context, field graphql.CollectedField, obj *model.Escape) (ret graphql.Marshaler) {
@@ -4491,6 +4865,45 @@ func (ec *executionContext) _Mutation_upsertHumanity(ctx context.Context, field 
 	return ec.marshalOHumanity2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐHumanity(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_upsertDiscovery(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_upsertDiscovery_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpsertDiscovery(rctx, args["param"].(model.UpsertDiscoveryInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Discovery)
+	fc.Result = res
+	return ec.marshalODiscovery2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐDiscovery(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_likePost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5951,6 +6364,45 @@ func (ec *executionContext) _Query_humanities(ctx context.Context, field graphql
 	res := resTmp.([]*model.Humanity)
 	fc.Result = res
 	return ec.marshalNHumanity2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐHumanityᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_discovery(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_discovery_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Discovery(rctx, args["team_id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Discovery)
+	fc.Result = res
+	return ec.marshalODiscovery2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐDiscovery(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_cluster(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -8740,6 +9192,53 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpsertDiscoveryInput(ctx context.Context, obj interface{}) (model.UpsertDiscoveryInput, error) {
+	var it model.UpsertDiscoveryInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "teamId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teamId"))
+			it.TeamID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "missionId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("missionId"))
+			it.MissionID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "videoUrl":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("videoUrl"))
+			it.VideoURL, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "submittedAt":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("submittedAt"))
+			it.SubmittedAt, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpsertEscapeInput(ctx context.Context, obj interface{}) (model.UpsertEscapeInput, error) {
 	var it model.UpsertEscapeInput
 	asMap := map[string]interface{}{}
@@ -9110,6 +9609,69 @@ func (ec *executionContext) _Comment(ctx context.Context, sel ast.SelectionSet, 
 	return out
 }
 
+var discoveryImplementors = []string{"Discovery"}
+
+func (ec *executionContext) _Discovery(ctx context.Context, sel ast.SelectionSet, obj *model.Discovery) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, discoveryImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Discovery")
+		case "id":
+			out.Values[i] = ec._Discovery_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "videoUrl":
+			out.Values[i] = ec._Discovery_videoUrl(ctx, field, obj)
+		case "team":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Discovery_team(ctx, field, obj)
+				return res
+			})
+		case "mission":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Discovery_mission(ctx, field, obj)
+				return res
+			})
+		case "submittedAt":
+			out.Values[i] = ec._Discovery_submittedAt(ctx, field, obj)
+		case "createdAt":
+			out.Values[i] = ec._Discovery_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "updatedAt":
+			out.Values[i] = ec._Discovery_updatedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var escapeImplementors = []string{"Escape"}
 
 func (ec *executionContext) _Escape(ctx context.Context, sel ast.SelectionSet, obj *model.Escape) graphql.Marshaler {
@@ -9438,6 +10000,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_upsertSpeed(ctx, field)
 		case "upsertHumanity":
 			out.Values[i] = ec._Mutation_upsertHumanity(ctx, field)
+		case "upsertDiscovery":
+			out.Values[i] = ec._Mutation_upsertDiscovery(ctx, field)
 		case "likePost":
 			out.Values[i] = ec._Mutation_likePost(ctx, field)
 		case "unlikePost":
@@ -9784,6 +10348,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			})
+		case "discovery":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_discovery(ctx, field)
 				return res
 			})
 		case "cluster":
@@ -11009,6 +11584,11 @@ func (ec *executionContext) unmarshalNUpdateUserInput2githubᚗcomᚋmarcustut�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNUpsertDiscoveryInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpsertDiscoveryInput(ctx context.Context, v interface{}) (model.UpsertDiscoveryInput, error) {
+	res, err := ec.unmarshalInputUpsertDiscoveryInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNUpsertEscapeInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpsertEscapeInput(ctx context.Context, v interface{}) (model.UpsertEscapeInput, error) {
 	res, err := ec.unmarshalInputUpsertEscapeInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -11382,6 +11962,13 @@ func (ec *executionContext) marshalOComment2ᚖgithubᚗcomᚋmarcustutᚋthebox
 		return graphql.Null
 	}
 	return ec._Comment(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalODiscovery2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐDiscovery(ctx context.Context, sel ast.SelectionSet, v *model.Discovery) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Discovery(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOEscape2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐEscape(ctx context.Context, sel ast.SelectionSet, v *model.Escape) graphql.Marshaler {

@@ -246,3 +246,15 @@ export const GET_HUMANITIES = gql`
     }
   }
 `
+
+export const GET_DISCOVERY = gql`
+  query GetDiscovery($team_id: ID!) {
+    discovery(team_id: $team_id) {
+      id
+      videoUrl
+      submittedAt
+      createdAt
+      updatedAt
+    }
+  }
+`

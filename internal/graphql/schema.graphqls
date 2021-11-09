@@ -97,6 +97,16 @@ type Humanity {
   submittedAt: Time
 }
 
+type Discovery {
+  id: ID!
+  videoUrl: String
+  team: Team
+  mission: Mission
+  submittedAt: Time
+  createdAt: Time!
+  updatedAt: Time!
+}
+
 type User {
   id: ID!
   username: String!
@@ -178,6 +188,7 @@ type Query {
   speeds(page: PaginationInput!): [Speed!]!
   humanity(team_id: ID!): Humanity
   humanities(page: PaginationInput!): [Humanity!]!
+  discovery(team_id: ID!): Discovery
   cluster(cluster_id: ID!): Cluster
   mission(mission_id: ID!): Mission
   missions(page: PaginationInput!): [Mission!]!
@@ -197,6 +208,7 @@ type Mutation {
   upsertEscape(param: UpsertEscapeInput!): Escape
   upsertSpeed(param: UpsertSpeedInput!): Speed
   upsertHumanity(param: UpsertHumanityInput!): Humanity
+  upsertDiscovery(param: UpsertDiscoveryInput!): Discovery
   likePost(param: PostLikeInput!): Boolean
   unlikePost(param: PostLikeInput!): Boolean
   likeComment(param: CommentLikeInput!): Boolean
@@ -232,6 +244,13 @@ input UpsertHumanityInput {
   photo1: String
   photo2: String
   photo3: String
+  submittedAt: Time
+}
+
+input UpsertDiscoveryInput {
+  teamId: ID!
+  missionId: ID!
+  videoUrl: String
   submittedAt: Time
 }
 

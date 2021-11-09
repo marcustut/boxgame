@@ -122,6 +122,13 @@ export interface UpdateUserInput {
   profile?: UpdateProfileInput | null;
 }
 
+export interface UpsertDiscoveryInput {
+  teamId: string;
+  missionId: string;
+  videoUrl?: string | null;
+  submittedAt?: TheBox.Time | null;
+}
+
 export interface UpsertEscapeInput {
   teamId: string;
   missionOne?: boolean | null;

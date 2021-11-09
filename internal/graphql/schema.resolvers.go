@@ -29,6 +29,14 @@ func (r *commentResolver) Likes(ctx context.Context, obj *model.Comment) (int, e
 	return query.GetUniqueCommentLikeCount(ctx, r.db, obj.ID)
 }
 
+func (r *discoveryResolver) Team(ctx context.Context, obj *model.Discovery) (*model.Team, error) {
+	return query.GetUniqueTeam(ctx, r.db, postgresql.Team.ID.Equals(obj.TeamID))
+}
+
+func (r *discoveryResolver) Mission(ctx context.Context, obj *model.Discovery) (*model.Mission, error) {
+	return query.GetUniqueMission(ctx, r.db, postgresql.Mission.ID.Equals(obj.MissionID))
+}
+
 func (r *escapeResolver) Team(ctx context.Context, obj *model.Escape) (*model.Team, error) {
 	return query.GetUniqueTeam(ctx, r.db, postgresql.Team.ID.Equals(obj.TeamID))
 }
@@ -100,6 +108,10 @@ func (r *mutationResolver) UpsertSpeed(ctx context.Context, param model.UpsertSp
 
 func (r *mutationResolver) UpsertHumanity(ctx context.Context, param model.UpsertHumanityInput) (*model.Humanity, error) {
 	return query.UpsertUniqueHumanity(ctx, r.db, &param)
+}
+
+func (r *mutationResolver) UpsertDiscovery(ctx context.Context, param model.UpsertDiscoveryInput) (*model.Discovery, error) {
+	return query.UpsertUniqueDiscovery(ctx, r.db, &param)
 }
 
 func (r *mutationResolver) LikePost(ctx context.Context, param model.PostLikeInput) (*bool, error) {
@@ -189,6 +201,10 @@ func (r *queryResolver) Humanities(ctx context.Context, page model.PaginationInp
 	return query.GetManyHumanity(ctx, r.db, page)
 }
 
+func (r *queryResolver) Discovery(ctx context.Context, teamID string) (*model.Discovery, error) {
+	return query.GetUniqueDiscovery(ctx, r.db, postgresql.Discovery.TeamID.Equals(teamID))
+}
+
 func (r *queryResolver) Cluster(ctx context.Context, clusterID string) (*model.Cluster, error) {
 	return query.GetUniqueCluster(ctx, r.db, postgresql.Cluster.ID.Equals(clusterID))
 }
@@ -259,6 +275,9 @@ func (r *Resolver) Cluster() generated.ClusterResolver { return &clusterResolver
 // Comment returns generated.CommentResolver implementation.
 func (r *Resolver) Comment() generated.CommentResolver { return &commentResolver{r} }
 
+// Discovery returns generated.DiscoveryResolver implementation.
+func (r *Resolver) Discovery() generated.DiscoveryResolver { return &discoveryResolver{r} }
+
 // Escape returns generated.EscapeResolver implementation.
 func (r *Resolver) Escape() generated.EscapeResolver { return &escapeResolver{r} }
 
@@ -294,6 +313,7 @@ func (r *Resolver) User() generated.UserResolver { return &userResolver{r} }
 
 type clusterResolver struct{ *Resolver }
 type commentResolver struct{ *Resolver }
+type discoveryResolver struct{ *Resolver }
 type escapeResolver struct{ *Resolver }
 type humanityResolver struct{ *Resolver }
 type invitationResolver struct{ *Resolver }

@@ -98,6 +98,13 @@ type UpdateUserInput struct {
 	Profile *UpdateProfileInput `json:"profile"`
 }
 
+type UpsertDiscoveryInput struct {
+	TeamID      string     `json:"teamId"`
+	MissionID   string     `json:"missionId"`
+	VideoURL    *string    `json:"videoUrl"`
+	SubmittedAt *time.Time `json:"submittedAt"`
+}
+
 type UpsertEscapeInput struct {
 	TeamID       string   `json:"teamId"`
 	MissionOne   *bool    `json:"missionOne"`

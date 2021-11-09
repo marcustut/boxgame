@@ -108,6 +108,7 @@ model Team {
   points      Float         @default(0)
   clusterId   String?       @db.Uuid
   cluster     Cluster?      @relation(fields: [clusterId], references: [id])
+  Discovery   Discovery?
   Escape      Escape?
   Humanity    Humanity?
   Invitation  Invitation[]
@@ -142,6 +143,7 @@ model Mission {
   startAt     DateTime      @db.Timestamp(6)
   endAt       DateTime      @db.Timestamp(6)
   slug        String
+  Discovery   Discovery[]
   Humanity    Humanity[]
   Speed       Speed[]
   teamMission TeamMission[]
@@ -201,6 +203,18 @@ model Humanity {
   batch       Int       @db.SmallInt
   gatherLink  String
   submittedAt DateTime?
+  Mission     Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  Team        Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+}
+
+model Discovery {
+  id          String    @id @db.Uuid
+  videoUrl    String?
+  submittedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  teamId      String    @unique @db.Uuid
+  missionId   String    @db.Uuid
   Mission     Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade)
   Team        Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }

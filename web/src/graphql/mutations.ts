@@ -177,3 +177,15 @@ export const UPSERT_HUMANITY = gql`
     }
   }
 `
+
+export const UPSERT_DISCOVERY = gql`
+  mutation UpsertDiscovery($param: UpsertDiscoveryInput!) {
+    upsertDiscovery(param: $param) {
+      id
+      videoUrl
+      submittedAt
+      createdAt
+      updatedAt
+    }
+  }
+`
