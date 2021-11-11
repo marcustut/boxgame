@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { PaginationInput } from "./globalTypes";
+import { PaginationInput, Powercard } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetHumanities
@@ -22,6 +22,8 @@ export interface GetHumanities_humanities_team {
   name: string | null;
   avatarUrl: string | null;
   points: number;
+  powercard: Powercard | null;
+  eligiblePowercards: Powercard[];
   cluster: GetHumanities_humanities_team_cluster | null;
 }
 

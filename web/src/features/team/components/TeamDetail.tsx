@@ -1,14 +1,20 @@
+import { useMutation } from '@apollo/client'
+import { useSnackbar } from 'notistack'
 import React, { useEffect } from 'react'
 
 import { Avatar, Spinner } from '@/components/Elements'
-import { useFetchTeam } from '@/features/team'
+import { cards, Powercard, useFetchTeam } from '@/features/team'
+import { UPDATE_TEAM } from '@/graphql'
+import { UpdateTeam, UpdateTeamVariables } from '@/graphql/types/UpdateTeam'
 
 type TeamDetailProps = {
   teamId: string
 }
 
 export const TeamDetail: React.FC<TeamDetailProps> = ({ teamId }) => {
+  const { enqueueSnackbar } = useSnackbar()
   const { team, fetchTeam } = useFetchTeam()
+  const [updateTeam] = useMutation<UpdateTeam, UpdateTeamVariables>(UPDATE_TEAM)
 
   useEffect(() => {
     console.log(teamId)
@@ -21,7 +27,8 @@ export const TeamDetail: React.FC<TeamDetailProps> = ({ teamId }) => {
     <>
       {team.data.team.members.length > 0 && (
         <>
-          <h3 className='self-start font-medium text-sm mb-1'>Team Members</h3>
+          <p className='font-bold text-3xl mt-2'>{team.data.team.points} Points</p>
+          <h3 className='self-start font-medium text-sm mt-4 mb-1'>Team Members</h3>
           {team.data.team.members.map((member, index) =>
             member.profile ? (
               <div
@@ -41,9 +48,54 @@ export const TeamDetail: React.FC<TeamDetailProps> = ({ teamId }) => {
               </div>
             ) : null
           )}
+          <h3 className='self-start font-medium text-sm mt-4 mb-1'>Powercard</h3>
+          <p className='self-start text-xs text-true-gray-400'>
+            Powercard are special ability that you will be able to use during the final challenge.{' '}
+            {!team.data.team.powercard && (
+              <>
+                <br /> Choose one if you have not already. Pick wisely, you can only choose once.
+              </>
+            )}
+          </p>
+          <div className='flex justify-around mt-4'>
+            {!team.data.team.powercard ? (
+              team.data.team.eligiblePowercards.map((p, idx) => (
+                <Powercard
+                  key={p}
+                  powercard={p}
+                  onClick={async () => {
+                    if (!team.data.team) return
+
+                    if (
+                      window.confirm(`Are you sure you want to choose 《${cards[p].name}》?\nThere is no turning back`)
+                    ) {
+                      try {
+                        const { data, errors } = await updateTeam({
+                          variables: { team_id: team.data.team.id, param: { powercard: p } }
+                        })
+                        if (errors || !data) {
+                          enqueueSnackbar(`Unable to select powercard\n${errors}`, { variant: 'error' })
+                          console.error(errors)
+                          return
+                        }
+                        fetchTeam(team.data.team.id)
+                        enqueueSnackbar(`Successfully selected ${cards[p].name}`, { variant: 'success' })
+                      } catch (err) {
+                        enqueueSnackbar(`Unable to select powercard\n${err}`, { variant: 'error' })
+                        console.error(err)
+                        return
+                      }
+                    }
+                  }}
+                  utilities={{ m: idx !== 0 ? 'ml-4' : '' }}
+                />
+              ))
+            ) : (
+              <Powercard powercard={team.data.team.powercard} />
+            )}
+          </div>
         </>
       )}
-      <span className='font-medium text-true-gray-500'></span>
     </>
   )
 }

@@ -23,11 +23,23 @@ export enum PastoralStatus {
   SCGL = "SCGL",
 }
 
+export enum Powercard {
+  BLOCK = "BLOCK",
+  ONEMORECHANCE = "ONEMORECHANCE",
+  REVERSE = "REVERSE",
+}
+
 export enum Role {
   CLUSTERLEADER = "CLUSTERLEADER",
   CREW = "CREW",
   PLAYER = "PLAYER",
   TEAMLEADER = "TEAMLEADER",
+}
+
+export enum RoomStatus {
+  ENDED = "ENDED",
+  ONGOING = "ONGOING",
+  PREPARING = "PREPARING",
 }
 
 export enum Satellite {
@@ -45,6 +57,10 @@ export interface NewAddress {
   state: string;
   country: string;
   postalCode: string;
+}
+
+export interface NewBattlegroundRoom {
+  teamIds: string[];
 }
 
 export interface NewComment {
@@ -104,6 +120,11 @@ export interface PostLikeInput {
   userId: string;
 }
 
+export interface UpdateBattlegroundRoomInput {
+  teamIds?: string[] | null;
+  status?: RoomStatus | null;
+}
+
 export interface UpdateProfileInput {
   avatarUrl?: string | null;
   nameEng?: string | null;
@@ -115,6 +136,7 @@ export interface UpdateTeamInput {
   name?: string | null;
   avatarUrl?: string | null;
   points?: number | null;
+  powercard?: Powercard | null;
 }
 
 export interface UpdateUserInput {

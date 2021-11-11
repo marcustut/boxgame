@@ -35,6 +35,18 @@ enum Satellite {
   FGAUSJ
 }
 
+enum RoomStatus {
+  PREPARING
+  ONGOING
+  ENDED
+}
+
+enum Powercard {
+  REVERSE
+  BLOCK
+  ONEMORECHANCE
+}
+
 type Cluster {
   id: ID!
   name: String!
@@ -47,6 +59,8 @@ type Team {
   name: String
   avatarUrl: String
   points: Float!
+  powercard: Powercard
+  eligiblePowercards: [Powercard!]!
   cluster: Cluster
   completed(page: PaginationInput!): [Mission!]!
   members: [User!]!
@@ -145,6 +159,14 @@ type Profile {
   invitedBy: String
 }
 
+type BattlegroundRoom {
+  code: String!
+  teamIds: [String!]!
+  createdAt: Time!
+  updatedAt: Time!
+  status: RoomStatus!
+}
+
 type Address {
   id: ID!
   city: String!
@@ -192,6 +214,8 @@ type Query {
   cluster(cluster_id: ID!): Cluster
   mission(mission_id: ID!): Mission
   missions(page: PaginationInput!): [Mission!]!
+  battlegroundRoom(code: String!): BattlegroundRoom!
+  battlegroundRooms(page: PaginationInput!): [BattlegroundRoom!]!
   post(post_id: ID!): Post
   posts(page: PaginationInput!): [Post!]!
   invitations(user_id: ID!, page: PaginationInput!): [Invitation!]!
@@ -203,8 +227,13 @@ type Mutation {
   createComment(param: NewComment!): Comment
   createInvitation(param: NewInvitation!): Invitation
   createTeam(param: NewTeam!): Team
+  createBattlegroundRoom(param: NewBattlegroundRoom!): BattlegroundRoom
   updateUser(user_id: ID!, param: UpdateUserInput!): User
   updateTeam(team_id: ID!, param: UpdateTeamInput!): Team
+  updateBattlegroundRoom(
+    code: String!
+    param: UpdateBattlegroundRoomInput!
+  ): BattlegroundRoom
   upsertEscape(param: UpsertEscapeInput!): Escape
   upsertSpeed(param: UpsertSpeedInput!): Speed
   upsertHumanity(param: UpsertHumanityInput!): Humanity
@@ -262,6 +291,15 @@ input PostLikeInput {
 input CommentLikeInput {
   commentId: ID!
   userId: ID!
+}
+
+input NewBattlegroundRoom {
+  teamIds: [String!]!
+}
+
+input UpdateBattlegroundRoomInput {
+  teamIds: [String!]
+  status: RoomStatus
 }
 
 input NewComment {
@@ -336,4 +374,5 @@ input UpdateTeamInput {
   name: String
   avatarUrl: String
   points: Float
+  powercard: Powercard
 }

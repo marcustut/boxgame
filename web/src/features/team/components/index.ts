@@ -1,5 +1,6 @@
 export * from './InvitationList'
 export * from './TeamDetail'
 export * from './UserSearch'
+export * from './Powercard'
 export * from './CreateTeamDialog'
 export * from './ConfirmInviteDialog'

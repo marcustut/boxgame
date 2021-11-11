@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { Role, Gender } from "./globalTypes";
+import { Powercard, Role, Gender } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetTeam
@@ -40,6 +40,8 @@ export interface GetTeam_team {
   name: string | null;
   avatarUrl: string | null;
   points: number;
+  powercard: Powercard | null;
+  eligiblePowercards: Powercard[];
   cluster: GetTeam_team_cluster | null;
   members: GetTeam_team_members[];
 }

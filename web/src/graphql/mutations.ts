@@ -189,3 +189,27 @@ export const UPSERT_DISCOVERY = gql`
     }
   }
 `
+
+export const CREATE_BATTLEGROUND_ROOM = gql`
+  mutation CreateBattlegroundRoom($param: NewBattlegroundRoom!) {
+    createBattlegroundRoom(param: $param) {
+      code
+      teamIds
+      createdAt
+      updatedAt
+      status
+    }
+  }
+`
+
+export const UPDATE_BATTLEGROUND_ROOM = gql`
+  mutation UpdateBattlegroundRoom($code: String!, $param: UpdateBattlegroundRoomInput!) {
+    updateBattlegroundRoom(code: $code, param: $param) {
+      code
+      teamIds
+      createdAt
+      updatedAt
+      status
+    }
+  }
+`

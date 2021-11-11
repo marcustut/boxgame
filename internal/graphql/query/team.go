@@ -72,6 +72,7 @@ func UpdateUniqueTeam(ctx context.Context, db *postgresql.PrismaClient, param po
 		postgresql.Team.Name.SetIfPresent(updateParam.Name),
 		postgresql.Team.AvatarURL.SetIfPresent(updateParam.AvatarURL),
 		postgresql.Team.Points.SetIfPresent(updateParam.Points),
+		postgresql.Team.Powercard.SetIfPresent((*postgresql.Powercard)(updateParam.Powercard)),
 	).Exec(ctx)
 	if err != nil {
 		return nil, err

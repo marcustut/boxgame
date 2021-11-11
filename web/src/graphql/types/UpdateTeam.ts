@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UpdateTeamInput } from "./globalTypes";
+import { UpdateTeamInput, Powercard } from "./globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: UpdateTeam
@@ -22,6 +22,8 @@ export interface UpdateTeam_updateTeam {
   name: string | null;
   avatarUrl: string | null;
   points: number;
+  powercard: Powercard | null;
+  eligiblePowercards: Powercard[];
   cluster: UpdateTeam_updateTeam_cluster | null;
 }
 

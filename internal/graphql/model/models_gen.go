@@ -23,6 +23,10 @@ type NewAddress struct {
 	PostalCode string  `json:"postalCode"`
 }
 
+type NewBattlegroundRoom struct {
+	TeamIds []string `json:"teamIds"`
+}
+
 type NewComment struct {
 	Content string `json:"content"`
 	PostID  string `json:"postId"`
@@ -80,6 +84,11 @@ type PostLikeInput struct {
 	UserID string `json:"userId"`
 }
 
+type UpdateBattlegroundRoomInput struct {
+	TeamIds []string    `json:"teamIds"`
+	Status  *RoomStatus `json:"status"`
+}
+
 type UpdateProfileInput struct {
 	AvatarURL *string `json:"avatarUrl"`
 	NameEng   *string `json:"nameEng"`
@@ -88,9 +97,10 @@ type UpdateProfileInput struct {
 }
 
 type UpdateTeamInput struct {
-	Name      *string  `json:"name"`
-	AvatarURL *string  `json:"avatarUrl"`
-	Points    *float64 `json:"points"`
+	Name      *string    `json:"name"`
+	AvatarURL *string    `json:"avatarUrl"`
+	Points    *float64   `json:"points"`
+	Powercard *Powercard `json:"powercard"`
 }
 
 type UpdateUserInput struct {
@@ -224,6 +234,49 @@ func (e PastoralStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+type Powercard string
+
+const (
+	PowercardReverse       Powercard = "REVERSE"
+	PowercardBlock         Powercard = "BLOCK"
+	PowercardOnemorechance Powercard = "ONEMORECHANCE"
+)
+
+var AllPowercard = []Powercard{
+	PowercardReverse,
+	PowercardBlock,
+	PowercardOnemorechance,
+}
+
+func (e Powercard) IsValid() bool {
+	switch e {
+	case PowercardReverse, PowercardBlock, PowercardOnemorechance:
+		return true
+	}
+	return false
+}
+
+func (e Powercard) String() string {
+	return string(e)
+}
+
+func (e *Powercard) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Powercard(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Powercard", str)
+	}
+	return nil
+}
+
+func (e Powercard) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 type Role string
 
 const (
@@ -266,6 +319,49 @@ func (e *Role) UnmarshalGQL(v interface{}) error {
 }
 
 func (e Role) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type RoomStatus string
+
+const (
+	RoomStatusPreparing RoomStatus = "PREPARING"
+	RoomStatusOngoing   RoomStatus = "ONGOING"
+	RoomStatusEnded     RoomStatus = "ENDED"
+)
+
+var AllRoomStatus = []RoomStatus{
+	RoomStatusPreparing,
+	RoomStatusOngoing,
+	RoomStatusEnded,
+}
+
+func (e RoomStatus) IsValid() bool {
+	switch e {
+	case RoomStatusPreparing, RoomStatusOngoing, RoomStatusEnded:
+		return true
+	}
+	return false
+}
+
+func (e RoomStatus) String() string {
+	return string(e)
+}
+
+func (e *RoomStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = RoomStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid RoomStatus", str)
+	}
+	return nil
+}
+
+func (e RoomStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

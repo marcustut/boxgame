@@ -29,6 +29,8 @@ export const CORE_TEAM_FIELDS = gql`
     name
     avatarUrl
     points
+    powercard
+    eligiblePowercards
     cluster {
       id
       name

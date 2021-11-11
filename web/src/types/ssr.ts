@@ -11,6 +11,7 @@ export type PageContext = {
     description?: string
   }
   redirectTo: string
+  routeParams: Record<string, string>
   apolloClient?: ApolloClient<NormalizedCacheObject>
   apolloInitialState?: NormalizedCacheObject
 }

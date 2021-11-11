@@ -67,6 +67,15 @@ export const GET_TEAM = gql`
   }
 `
 
+export const GET_TEAMS_WITHOUT_MEMBERS = gql`
+  ${CORE_TEAM_FIELDS}
+  query GetTeamsWithoutMembers($page: PaginationInput!) {
+    teams(page: $page) {
+      ...CoreTeamFields
+    }
+  }
+`
+
 export const GET_POST = gql`
   ${CORE_POST_FIELDS}
   query GetPost($post_id: ID!, $user_id: ID!) {
@@ -253,6 +262,18 @@ export const GET_DISCOVERY = gql`
       id
       videoUrl
       submittedAt
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+export const GET_BATTLEGROUND_ROOM = gql`
+  query GetBattlegroundRoom($code: String!) {
+    battlegroundRoom(code: $code) {
+      code
+      teamIds
+      status
       createdAt
       updatedAt
     }

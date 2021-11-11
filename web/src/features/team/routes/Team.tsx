@@ -25,9 +25,22 @@ export const Team: React.FC = () => {
   if (!user) return <LoadingPage />
 
   return (
-    <AppLayout>
-      <h2 className='text-2xl font-bold mb-2'>{user.user.team ? user.user.team.name : 'Team Invitations'}</h2>
-      <div className='bg-dark-300 min-h-24 p-4 rounded-lg flex flex-col justify-center items-center'>
+    <AppLayout className='pb-96'>
+      <div className='flex items-center my-6'>
+        {user.user.team && (
+          <img
+            src={
+              user.user.team.avatarUrl
+                ? user.user.team.avatarUrl
+                : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.user.team.name!)}`
+            }
+            alt={`${user.user.team.name}'s avatar'`}
+            className='w-8 h-8 rounded-full object-cover mr-2'
+          />
+        )}
+        <h2 className='text-2xl font-bold'>{user.user.team ? user.user.team.name : 'Team Invitations'}</h2>
+      </div>
+      <div className='bg-dark-300/50 min-h-24 p-4 rounded-lg flex flex-col justify-center items-center'>
         {user.user.team ? (
           <TeamDetail teamId={user.user.team.id} />
         ) : (
@@ -50,10 +63,10 @@ export const Team: React.FC = () => {
           </button>
         ) : (
           <>
-            <div className='px-4 py-2 w-full flex items-center bg-dark-300 rounded-lg text-true-gray-500 focus-within:text-true-gray-100'>
+            <div className='px-4 py-2 w-full flex items-center bg-dark-300/50 rounded-lg text-true-gray-500 focus-within:text-true-gray-100'>
               <Icon icon='bx:bx-search-alt' className='w-6 h-6' />
               <Input
-                className='w-full bg-dark-300 text-true-gray-100 hover:ring-0 border-0 focus:outline-none focus:ring-0'
+                className='w-full bg-dark-300/50 text-true-gray-100 hover:ring-0 border-0 focus:outline-none focus:ring-0'
                 type='text'
                 onChange={e => setSearchText(e.target.value)}
                 placeholder='Invite new teammates...'

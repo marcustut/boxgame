@@ -66,6 +66,14 @@ type ComplexityRoot struct {
 		State      func(childComplexity int) int
 	}
 
+	BattlegroundRoom struct {
+		Code      func(childComplexity int) int
+		CreatedAt func(childComplexity int) int
+		Status    func(childComplexity int) int
+		TeamIds   func(childComplexity int) int
+		UpdatedAt func(childComplexity int) int
+	}
+
 	Cluster struct {
 		Color func(childComplexity int) int
 		ID    func(childComplexity int) int
@@ -138,23 +146,25 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		AcceptInvitation func(childComplexity int, invitationID string) int
-		CreateComment    func(childComplexity int, param model.NewComment) int
-		CreateInvitation func(childComplexity int, param model.NewInvitation) int
-		CreatePost       func(childComplexity int, param model.NewPost) int
-		CreateTeam       func(childComplexity int, param model.NewTeam) int
-		CreateUser       func(childComplexity int, param model.NewUser) int
-		LikeComment      func(childComplexity int, param model.CommentLikeInput) int
-		LikePost         func(childComplexity int, param model.PostLikeInput) int
-		RejectInvitation func(childComplexity int, invitationID string) int
-		UnlikeComment    func(childComplexity int, param model.CommentLikeInput) int
-		UnlikePost       func(childComplexity int, param model.PostLikeInput) int
-		UpdateTeam       func(childComplexity int, teamID string, param model.UpdateTeamInput) int
-		UpdateUser       func(childComplexity int, userID string, param model.UpdateUserInput) int
-		UpsertDiscovery  func(childComplexity int, param model.UpsertDiscoveryInput) int
-		UpsertEscape     func(childComplexity int, param model.UpsertEscapeInput) int
-		UpsertHumanity   func(childComplexity int, param model.UpsertHumanityInput) int
-		UpsertSpeed      func(childComplexity int, param model.UpsertSpeedInput) int
+		AcceptInvitation       func(childComplexity int, invitationID string) int
+		CreateBattlegroundRoom func(childComplexity int, param model.NewBattlegroundRoom) int
+		CreateComment          func(childComplexity int, param model.NewComment) int
+		CreateInvitation       func(childComplexity int, param model.NewInvitation) int
+		CreatePost             func(childComplexity int, param model.NewPost) int
+		CreateTeam             func(childComplexity int, param model.NewTeam) int
+		CreateUser             func(childComplexity int, param model.NewUser) int
+		LikeComment            func(childComplexity int, param model.CommentLikeInput) int
+		LikePost               func(childComplexity int, param model.PostLikeInput) int
+		RejectInvitation       func(childComplexity int, invitationID string) int
+		UnlikeComment          func(childComplexity int, param model.CommentLikeInput) int
+		UnlikePost             func(childComplexity int, param model.PostLikeInput) int
+		UpdateBattlegroundRoom func(childComplexity int, code string, param model.UpdateBattlegroundRoomInput) int
+		UpdateTeam             func(childComplexity int, teamID string, param model.UpdateTeamInput) int
+		UpdateUser             func(childComplexity int, userID string, param model.UpdateUserInput) int
+		UpsertDiscovery        func(childComplexity int, param model.UpsertDiscoveryInput) int
+		UpsertEscape           func(childComplexity int, param model.UpsertEscapeInput) int
+		UpsertHumanity         func(childComplexity int, param model.UpsertHumanityInput) int
+		UpsertSpeed            func(childComplexity int, param model.UpsertSpeedInput) int
 	}
 
 	Post struct {
@@ -188,23 +198,25 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Cluster     func(childComplexity int, clusterID string) int
-		Discovery   func(childComplexity int, teamID string) int
-		Escape      func(childComplexity int, teamID string) int
-		Humanities  func(childComplexity int, page model.PaginationInput) int
-		Humanity    func(childComplexity int, teamID string) int
-		Invitations func(childComplexity int, userID string, page model.PaginationInput) int
-		Mission     func(childComplexity int, missionID string) int
-		Missions    func(childComplexity int, page model.PaginationInput) int
-		Post        func(childComplexity int, postID string) int
-		Posts       func(childComplexity int, page model.PaginationInput) int
-		Speed       func(childComplexity int, teamID string) int
-		Speeds      func(childComplexity int, page model.PaginationInput) int
-		Team        func(childComplexity int, teamID string) int
-		Teams       func(childComplexity int, page model.PaginationInput) int
-		User        func(childComplexity int, userID string) int
-		UserCount   func(childComplexity int) int
-		Users       func(childComplexity int, page model.PaginationInput) int
+		BattlegroundRoom  func(childComplexity int, code string) int
+		BattlegroundRooms func(childComplexity int, page model.PaginationInput) int
+		Cluster           func(childComplexity int, clusterID string) int
+		Discovery         func(childComplexity int, teamID string) int
+		Escape            func(childComplexity int, teamID string) int
+		Humanities        func(childComplexity int, page model.PaginationInput) int
+		Humanity          func(childComplexity int, teamID string) int
+		Invitations       func(childComplexity int, userID string, page model.PaginationInput) int
+		Mission           func(childComplexity int, missionID string) int
+		Missions          func(childComplexity int, page model.PaginationInput) int
+		Post              func(childComplexity int, postID string) int
+		Posts             func(childComplexity int, page model.PaginationInput) int
+		Speed             func(childComplexity int, teamID string) int
+		Speeds            func(childComplexity int, page model.PaginationInput) int
+		Team              func(childComplexity int, teamID string) int
+		Teams             func(childComplexity int, page model.PaginationInput) int
+		User              func(childComplexity int, userID string) int
+		UserCount         func(childComplexity int) int
+		Users             func(childComplexity int, page model.PaginationInput) int
 	}
 
 	Speed struct {
@@ -218,13 +230,15 @@ type ComplexityRoot struct {
 	}
 
 	Team struct {
-		AvatarUrl func(childComplexity int) int
-		Cluster   func(childComplexity int) int
-		Completed func(childComplexity int, page model.PaginationInput) int
-		ID        func(childComplexity int) int
-		Members   func(childComplexity int) int
-		Name      func(childComplexity int) int
-		Points    func(childComplexity int) int
+		AvatarUrl          func(childComplexity int) int
+		Cluster            func(childComplexity int) int
+		Completed          func(childComplexity int, page model.PaginationInput) int
+		EligiblePowercards func(childComplexity int) int
+		ID                 func(childComplexity int) int
+		Members            func(childComplexity int) int
+		Name               func(childComplexity int) int
+		Points             func(childComplexity int) int
+		Powercard          func(childComplexity int) int
 	}
 
 	User struct {
@@ -272,8 +286,10 @@ type MutationResolver interface {
 	CreateComment(ctx context.Context, param model.NewComment) (*model.Comment, error)
 	CreateInvitation(ctx context.Context, param model.NewInvitation) (*model.Invitation, error)
 	CreateTeam(ctx context.Context, param model.NewTeam) (*model.Team, error)
+	CreateBattlegroundRoom(ctx context.Context, param model.NewBattlegroundRoom) (*model.BattlegroundRoom, error)
 	UpdateUser(ctx context.Context, userID string, param model.UpdateUserInput) (*model.User, error)
 	UpdateTeam(ctx context.Context, teamID string, param model.UpdateTeamInput) (*model.Team, error)
+	UpdateBattlegroundRoom(ctx context.Context, code string, param model.UpdateBattlegroundRoomInput) (*model.BattlegroundRoom, error)
 	UpsertEscape(ctx context.Context, param model.UpsertEscapeInput) (*model.Escape, error)
 	UpsertSpeed(ctx context.Context, param model.UpsertSpeedInput) (*model.Speed, error)
 	UpsertHumanity(ctx context.Context, param model.UpsertHumanityInput) (*model.Humanity, error)
@@ -309,6 +325,8 @@ type QueryResolver interface {
 	Cluster(ctx context.Context, clusterID string) (*model.Cluster, error)
 	Mission(ctx context.Context, missionID string) (*model.Mission, error)
 	Missions(ctx context.Context, page model.PaginationInput) ([]*model.Mission, error)
+	BattlegroundRoom(ctx context.Context, code string) (*model.BattlegroundRoom, error)
+	BattlegroundRooms(ctx context.Context, page model.PaginationInput) ([]*model.BattlegroundRoom, error)
 	Post(ctx context.Context, postID string) (*model.Post, error)
 	Posts(ctx context.Context, page model.PaginationInput) ([]*model.Post, error)
 	Invitations(ctx context.Context, userID string, page model.PaginationInput) ([]*model.Invitation, error)
@@ -391,6 +409,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Address.State(childComplexity), true
+
+	case "BattlegroundRoom.code":
+		if e.complexity.BattlegroundRoom.Code == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRoom.Code(childComplexity), true
+
+	case "BattlegroundRoom.createdAt":
+		if e.complexity.BattlegroundRoom.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRoom.CreatedAt(childComplexity), true
+
+	case "BattlegroundRoom.status":
+		if e.complexity.BattlegroundRoom.Status == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRoom.Status(childComplexity), true
+
+	case "BattlegroundRoom.teamIds":
+		if e.complexity.BattlegroundRoom.TeamIds == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRoom.TeamIds(childComplexity), true
+
+	case "BattlegroundRoom.updatedAt":
+		if e.complexity.BattlegroundRoom.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRoom.UpdatedAt(childComplexity), true
 
 	case "Cluster.color":
 		if e.complexity.Cluster.Color == nil {
@@ -754,6 +807,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.AcceptInvitation(childComplexity, args["invitation_id"].(string)), true
 
+	case "Mutation.createBattlegroundRoom":
+		if e.complexity.Mutation.CreateBattlegroundRoom == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createBattlegroundRoom_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateBattlegroundRoom(childComplexity, args["param"].(model.NewBattlegroundRoom)), true
+
 	case "Mutation.createComment":
 		if e.complexity.Mutation.CreateComment == nil {
 			break
@@ -873,6 +938,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UnlikePost(childComplexity, args["param"].(model.PostLikeInput)), true
+
+	case "Mutation.updateBattlegroundRoom":
+		if e.complexity.Mutation.UpdateBattlegroundRoom == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateBattlegroundRoom_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateBattlegroundRoom(childComplexity, args["code"].(string), args["param"].(model.UpdateBattlegroundRoomInput)), true
 
 	case "Mutation.updateTeam":
 		if e.complexity.Mutation.UpdateTeam == nil {
@@ -1123,6 +1200,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Profile.UpdatedAt(childComplexity), true
+
+	case "Query.battlegroundRoom":
+		if e.complexity.Query.BattlegroundRoom == nil {
+			break
+		}
+
+		args, err := ec.field_Query_battlegroundRoom_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.BattlegroundRoom(childComplexity, args["code"].(string)), true
+
+	case "Query.battlegroundRooms":
+		if e.complexity.Query.BattlegroundRooms == nil {
+			break
+		}
+
+		args, err := ec.field_Query_battlegroundRooms_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.BattlegroundRooms(childComplexity, args["page"].(model.PaginationInput)), true
 
 	case "Query.cluster":
 		if e.complexity.Query.Cluster == nil {
@@ -1398,6 +1499,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Team.Completed(childComplexity, args["page"].(model.PaginationInput)), true
 
+	case "Team.eligiblePowercards":
+		if e.complexity.Team.EligiblePowercards == nil {
+			break
+		}
+
+		return e.complexity.Team.EligiblePowercards(childComplexity), true
+
 	case "Team.id":
 		if e.complexity.Team.ID == nil {
 			break
@@ -1425,6 +1533,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Team.Points(childComplexity), true
+
+	case "Team.powercard":
+		if e.complexity.Team.Powercard == nil {
+			break
+		}
+
+		return e.complexity.Team.Powercard(childComplexity), true
 
 	case "User.createdAt":
 		if e.complexity.User.CreatedAt == nil {
@@ -1583,6 +1698,18 @@ enum Satellite {
   FGAUSJ
 }
 
+enum RoomStatus {
+  PREPARING
+  ONGOING
+  ENDED
+}
+
+enum Powercard {
+  REVERSE
+  BLOCK
+  ONEMORECHANCE
+}
+
 type Cluster {
   id: ID!
   name: String!
@@ -1595,6 +1722,8 @@ type Team {
   name: String
   avatarUrl: String
   points: Float!
+  powercard: Powercard
+  eligiblePowercards: [Powercard!]!
   cluster: Cluster
   completed(page: PaginationInput!): [Mission!]!
   members: [User!]!
@@ -1693,6 +1822,14 @@ type Profile {
   invitedBy: String
 }
 
+type BattlegroundRoom {
+  code: String!
+  teamIds: [String!]!
+  createdAt: Time!
+  updatedAt: Time!
+  status: RoomStatus!
+}
+
 type Address {
   id: ID!
   city: String!
@@ -1740,6 +1877,8 @@ type Query {
   cluster(cluster_id: ID!): Cluster
   mission(mission_id: ID!): Mission
   missions(page: PaginationInput!): [Mission!]!
+  battlegroundRoom(code: String!): BattlegroundRoom!
+  battlegroundRooms(page: PaginationInput!): [BattlegroundRoom!]!
   post(post_id: ID!): Post
   posts(page: PaginationInput!): [Post!]!
   invitations(user_id: ID!, page: PaginationInput!): [Invitation!]!
@@ -1751,8 +1890,13 @@ type Mutation {
   createComment(param: NewComment!): Comment
   createInvitation(param: NewInvitation!): Invitation
   createTeam(param: NewTeam!): Team
+  createBattlegroundRoom(param: NewBattlegroundRoom!): BattlegroundRoom
   updateUser(user_id: ID!, param: UpdateUserInput!): User
   updateTeam(team_id: ID!, param: UpdateTeamInput!): Team
+  updateBattlegroundRoom(
+    code: String!
+    param: UpdateBattlegroundRoomInput!
+  ): BattlegroundRoom
   upsertEscape(param: UpsertEscapeInput!): Escape
   upsertSpeed(param: UpsertSpeedInput!): Speed
   upsertHumanity(param: UpsertHumanityInput!): Humanity
@@ -1810,6 +1954,15 @@ input PostLikeInput {
 input CommentLikeInput {
   commentId: ID!
   userId: ID!
+}
+
+input NewBattlegroundRoom {
+  teamIds: [String!]!
+}
+
+input UpdateBattlegroundRoomInput {
+  teamIds: [String!]
+  status: RoomStatus
 }
 
 input NewComment {
@@ -1884,6 +2037,7 @@ input UpdateTeamInput {
   name: String
   avatarUrl: String
   points: Float
+  powercard: Powercard
 }
 `, BuiltIn: false},
 }
@@ -1905,6 +2059,21 @@ func (ec *executionContext) field_Mutation_acceptInvitation_args(ctx context.Con
 		}
 	}
 	args["invitation_id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createBattlegroundRoom_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.NewBattlegroundRoom
+	if tmp, ok := rawArgs["param"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
+		arg0, err = ec.unmarshalNNewBattlegroundRoom2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewBattlegroundRoom(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["param"] = arg0
 	return args, nil
 }
 
@@ -2058,6 +2227,30 @@ func (ec *executionContext) field_Mutation_unlikePost_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_updateBattlegroundRoom_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["code"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("code"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["code"] = arg0
+	var arg1 model.UpdateBattlegroundRoomInput
+	if tmp, ok := rawArgs["param"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("param"))
+		arg1, err = ec.unmarshalNUpdateBattlegroundRoomInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpdateBattlegroundRoomInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["param"] = arg1
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updateTeam_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2208,6 +2401,36 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_battlegroundRoom_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["code"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("code"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["code"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_battlegroundRooms_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.PaginationInput
+	if tmp, ok := rawArgs["page"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("page"))
+		arg0, err = ec.unmarshalNPaginationInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPaginationInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["page"] = arg0
 	return args, nil
 }
 
@@ -2753,6 +2976,181 @@ func (ec *executionContext) _Address_postalCode(ctx context.Context, field graph
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRoom_code(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRoom) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRoom",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRoom_teamIds(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRoom) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRoom",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TeamIds, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRoom_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRoom) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRoom",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRoom_updatedAt(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRoom) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRoom",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRoom_status(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRoom) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRoom",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.RoomStatus)
+	fc.Result = res
+	return ec.marshalNRoomStatus2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐRoomStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Cluster_id(ctx context.Context, field graphql.CollectedField, obj *model.Cluster) (ret graphql.Marshaler) {
@@ -4670,6 +5068,45 @@ func (ec *executionContext) _Mutation_createTeam(ctx context.Context, field grap
 	return ec.marshalOTeam2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeam(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_createBattlegroundRoom(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createBattlegroundRoom_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateBattlegroundRoom(rctx, args["param"].(model.NewBattlegroundRoom))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.BattlegroundRoom)
+	fc.Result = res
+	return ec.marshalOBattlegroundRoom2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundRoom(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4746,6 +5183,45 @@ func (ec *executionContext) _Mutation_updateTeam(ctx context.Context, field grap
 	res := resTmp.(*model.Team)
 	fc.Result = res
 	return ec.marshalOTeam2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐTeam(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateBattlegroundRoom(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateBattlegroundRoom_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateBattlegroundRoom(rctx, args["code"].(string), args["param"].(model.UpdateBattlegroundRoomInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.BattlegroundRoom)
+	fc.Result = res
+	return ec.marshalOBattlegroundRoom2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundRoom(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_upsertEscape(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -6525,6 +7001,90 @@ func (ec *executionContext) _Query_missions(ctx context.Context, field graphql.C
 	return ec.marshalNMission2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐMissionᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_battlegroundRoom(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_battlegroundRoom_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().BattlegroundRoom(rctx, args["code"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.BattlegroundRoom)
+	fc.Result = res
+	return ec.marshalNBattlegroundRoom2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundRoom(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_battlegroundRooms(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_battlegroundRooms_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().BattlegroundRooms(rctx, args["page"].(model.PaginationInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.BattlegroundRoom)
+	fc.Result = res
+	return ec.marshalNBattlegroundRoom2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundRoomᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_post(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7090,6 +7650,73 @@ func (ec *executionContext) _Team_points(ctx context.Context, field graphql.Coll
 	res := resTmp.(float64)
 	fc.Result = res
 	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Team_powercard(ctx context.Context, field graphql.CollectedField, obj *model.Team) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Team",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Powercard, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Powercard)
+	fc.Result = res
+	return ec.marshalOPowercard2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPowercard(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Team_eligiblePowercards(ctx context.Context, field graphql.CollectedField, obj *model.Team) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Team",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EligiblePowercards, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]model.Powercard)
+	fc.Result = res
+	return ec.marshalNPowercard2ᚕgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPowercardᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Team_cluster(ctx context.Context, field graphql.CollectedField, obj *model.Team) (ret graphql.Marshaler) {
@@ -8691,6 +9318,29 @@ func (ec *executionContext) unmarshalInputNewAddress(ctx context.Context, obj in
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputNewBattlegroundRoom(ctx context.Context, obj interface{}) (model.NewBattlegroundRoom, error) {
+	var it model.NewBattlegroundRoom
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "teamIds":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teamIds"))
+			it.TeamIds, err = ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputNewComment(ctx context.Context, obj interface{}) (model.NewComment, error) {
 	var it model.NewComment
 	asMap := map[string]interface{}{}
@@ -9075,6 +9725,37 @@ func (ec *executionContext) unmarshalInputPostLikeInput(ctx context.Context, obj
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateBattlegroundRoomInput(ctx context.Context, obj interface{}) (model.UpdateBattlegroundRoomInput, error) {
+	var it model.UpdateBattlegroundRoomInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "teamIds":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teamIds"))
+			it.TeamIds, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "status":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+			it.Status, err = ec.unmarshalORoomStatus2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐRoomStatus(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdateProfileInput(ctx context.Context, obj interface{}) (model.UpdateProfileInput, error) {
 	var it model.UpdateProfileInput
 	asMap := map[string]interface{}{}
@@ -9152,6 +9833,14 @@ func (ec *executionContext) unmarshalInputUpdateTeamInput(ctx context.Context, o
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("points"))
 			it.Points, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "powercard":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("powercard"))
+			it.Powercard, err = ec.unmarshalOPowercard2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPowercard(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -9460,6 +10149,53 @@ func (ec *executionContext) _Address(ctx context.Context, sel ast.SelectionSet, 
 			}
 		case "postalCode":
 			out.Values[i] = ec._Address_postalCode(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var battlegroundRoomImplementors = []string{"BattlegroundRoom"}
+
+func (ec *executionContext) _BattlegroundRoom(ctx context.Context, sel ast.SelectionSet, obj *model.BattlegroundRoom) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, battlegroundRoomImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("BattlegroundRoom")
+		case "code":
+			out.Values[i] = ec._BattlegroundRoom_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "teamIds":
+			out.Values[i] = ec._BattlegroundRoom_teamIds(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createdAt":
+			out.Values[i] = ec._BattlegroundRoom_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "updatedAt":
+			out.Values[i] = ec._BattlegroundRoom_updatedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "status":
+			out.Values[i] = ec._BattlegroundRoom_status(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -9990,10 +10726,14 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_createInvitation(ctx, field)
 		case "createTeam":
 			out.Values[i] = ec._Mutation_createTeam(ctx, field)
+		case "createBattlegroundRoom":
+			out.Values[i] = ec._Mutation_createBattlegroundRoom(ctx, field)
 		case "updateUser":
 			out.Values[i] = ec._Mutation_updateUser(ctx, field)
 		case "updateTeam":
 			out.Values[i] = ec._Mutation_updateTeam(ctx, field)
+		case "updateBattlegroundRoom":
+			out.Values[i] = ec._Mutation_updateBattlegroundRoom(ctx, field)
 		case "upsertEscape":
 			out.Values[i] = ec._Mutation_upsertEscape(ctx, field)
 		case "upsertSpeed":
@@ -10397,6 +11137,34 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "battlegroundRoom":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_battlegroundRoom(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "battlegroundRooms":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_battlegroundRooms(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "post":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -10542,6 +11310,13 @@ func (ec *executionContext) _Team(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._Team_avatarUrl(ctx, field, obj)
 		case "points":
 			out.Values[i] = ec._Team_points(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "powercard":
+			out.Values[i] = ec._Team_powercard(ctx, field, obj)
+		case "eligiblePowercards":
+			out.Values[i] = ec._Team_eligiblePowercards(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
@@ -10928,6 +11703,64 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
+func (ec *executionContext) marshalNBattlegroundRoom2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundRoom(ctx context.Context, sel ast.SelectionSet, v model.BattlegroundRoom) graphql.Marshaler {
+	return ec._BattlegroundRoom(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNBattlegroundRoom2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundRoomᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.BattlegroundRoom) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNBattlegroundRoom2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundRoom(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNBattlegroundRoom2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundRoom(ctx context.Context, sel ast.SelectionSet, v *model.BattlegroundRoom) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._BattlegroundRoom(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -11223,6 +12056,11 @@ func (ec *executionContext) marshalNMission2ᚖgithubᚗcomᚋmarcustutᚋthebox
 	return ec._Mission(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNNewBattlegroundRoom2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewBattlegroundRoom(ctx context.Context, v interface{}) (model.NewBattlegroundRoom, error) {
+	res, err := ec.unmarshalInputNewBattlegroundRoom(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNNewComment2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐNewComment(ctx context.Context, v interface{}) (model.NewComment, error) {
 	res, err := ec.unmarshalInputNewComment(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -11321,6 +12159,81 @@ func (ec *executionContext) unmarshalNPostLikeInput2githubᚗcomᚋmarcustutᚋt
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNPowercard2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPowercard(ctx context.Context, v interface{}) (model.Powercard, error) {
+	var res model.Powercard
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNPowercard2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPowercard(ctx context.Context, sel ast.SelectionSet, v model.Powercard) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalNPowercard2ᚕgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPowercardᚄ(ctx context.Context, v interface{}) ([]model.Powercard, error) {
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]model.Powercard, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNPowercard2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPowercard(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNPowercard2ᚕgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPowercardᚄ(ctx context.Context, sel ast.SelectionSet, v []model.Powercard) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNPowercard2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPowercard(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) unmarshalNRole2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐRole(ctx context.Context, v interface{}) (model.Role, error) {
 	var res model.Role
 	err := res.UnmarshalGQL(v)
@@ -11394,6 +12307,16 @@ func (ec *executionContext) marshalNRole2ᚕgithubᚗcomᚋmarcustutᚋtheboxᚋ
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalNRoomStatus2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐRoomStatus(ctx context.Context, v interface{}) (model.RoomStatus, error) {
+	var res model.RoomStatus
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNRoomStatus2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐRoomStatus(ctx context.Context, sel ast.SelectionSet, v model.RoomStatus) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) marshalNSpeed2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSpeedᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Speed) graphql.Marshaler {
@@ -11572,6 +12495,11 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNUpdateBattlegroundRoomInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpdateBattlegroundRoomInput(ctx context.Context, v interface{}) (model.UpdateBattlegroundRoomInput, error) {
+	res, err := ec.unmarshalInputUpdateBattlegroundRoomInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNUpdateTeamInput2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUpdateTeamInput(ctx context.Context, v interface{}) (model.UpdateTeamInput, error) {
@@ -11926,6 +12854,13 @@ func (ec *executionContext) marshalOAddress2ᚖgithubᚗcomᚋmarcustutᚋthebox
 	return ec._Address(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOBattlegroundRoom2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundRoom(ctx context.Context, sel ast.SelectionSet, v *model.BattlegroundRoom) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._BattlegroundRoom(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -12060,11 +12995,43 @@ func (ec *executionContext) marshalOPost2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋ
 	return ec._Post(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOPowercard2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPowercard(ctx context.Context, v interface{}) (*model.Powercard, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.Powercard)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOPowercard2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPowercard(ctx context.Context, sel ast.SelectionSet, v *model.Powercard) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) marshalOProfile2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐProfile(ctx context.Context, sel ast.SelectionSet, v *model.Profile) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Profile(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalORoomStatus2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐRoomStatus(ctx context.Context, v interface{}) (*model.RoomStatus, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.RoomStatus)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalORoomStatus2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐRoomStatus(ctx context.Context, sel ast.SelectionSet, v *model.RoomStatus) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) unmarshalOSatellite2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐSatellite(ctx context.Context, v interface{}) (*model.Satellite, error) {
@@ -12097,6 +13064,48 @@ func (ec *executionContext) unmarshalOString2string(ctx context.Context, v inter
 
 func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
 	return graphql.MarshalString(v)
+}
+
+func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]string, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNString2string(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOString2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNString2string(ctx, sel, v[i])
+	}
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {

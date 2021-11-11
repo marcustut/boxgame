@@ -4,1371 +4,1912 @@
  */
 
 export interface paths {
-  '/': {
+  "/": {
     get: {
       responses: {
         /** OK */
-        200: unknown
-      }
-    }
-  }
-  '/Address': {
+        200: unknown;
+      };
+    };
+  };
+  "/Address": {
     get: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Address.id']
-          city?: parameters['rowFilter.Address.city']
-          line1?: parameters['rowFilter.Address.line1']
-          line2?: parameters['rowFilter.Address.line2']
-          state?: parameters['rowFilter.Address.state']
-          country?: parameters['rowFilter.Address.country']
-          postalCode?: parameters['rowFilter.Address.postalCode']
+          id?: parameters["rowFilter.Address.id"];
+          city?: parameters["rowFilter.Address.city"];
+          line1?: parameters["rowFilter.Address.line1"];
+          line2?: parameters["rowFilter.Address.line2"];
+          state?: parameters["rowFilter.Address.state"];
+          country?: parameters["rowFilter.Address.country"];
+          postalCode?: parameters["rowFilter.Address.postalCode"];
           /** Filtering Columns */
-          select?: parameters['select']
+          select?: parameters["select"];
           /** Ordering */
-          order?: parameters['order']
+          order?: parameters["order"];
           /** Limiting and Pagination */
-          offset?: parameters['offset']
+          offset?: parameters["offset"];
           /** Limiting and Pagination */
-          limit?: parameters['limit']
-        }
+          limit?: parameters["limit"];
+        };
         header: {
           /** Limiting and Pagination */
-          Range?: parameters['range']
+          Range?: parameters["range"];
           /** Limiting and Pagination */
-          'Range-Unit'?: parameters['rangeUnit']
+          "Range-Unit"?: parameters["rangeUnit"];
           /** Preference */
-          Prefer?: parameters['preferCount']
-        }
-      }
+          Prefer?: parameters["preferCount"];
+        };
+      };
       responses: {
         /** OK */
         200: {
-          schema: definitions['Address'][]
-        }
+          schema: definitions["Address"][];
+        };
         /** Partial Content */
-        206: unknown
-      }
-    }
+        206: unknown;
+      };
+    };
     post: {
       parameters: {
         body: {
           /** Address */
-          Address?: definitions['Address']
-        }
+          Address?: definitions["Address"];
+        };
         query: {
           /** Filtering Columns */
-          select?: parameters['select']
-        }
+          select?: parameters["select"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** Created */
-        201: unknown
-      }
-    }
+        201: unknown;
+      };
+    };
     delete: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Address.id']
-          city?: parameters['rowFilter.Address.city']
-          line1?: parameters['rowFilter.Address.line1']
-          line2?: parameters['rowFilter.Address.line2']
-          state?: parameters['rowFilter.Address.state']
-          country?: parameters['rowFilter.Address.country']
-          postalCode?: parameters['rowFilter.Address.postalCode']
-        }
+          id?: parameters["rowFilter.Address.id"];
+          city?: parameters["rowFilter.Address.city"];
+          line1?: parameters["rowFilter.Address.line1"];
+          line2?: parameters["rowFilter.Address.line2"];
+          state?: parameters["rowFilter.Address.state"];
+          country?: parameters["rowFilter.Address.country"];
+          postalCode?: parameters["rowFilter.Address.postalCode"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
+        204: never;
+      };
+    };
     patch: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Address.id']
-          city?: parameters['rowFilter.Address.city']
-          line1?: parameters['rowFilter.Address.line1']
-          line2?: parameters['rowFilter.Address.line2']
-          state?: parameters['rowFilter.Address.state']
-          country?: parameters['rowFilter.Address.country']
-          postalCode?: parameters['rowFilter.Address.postalCode']
-        }
+          id?: parameters["rowFilter.Address.id"];
+          city?: parameters["rowFilter.Address.city"];
+          line1?: parameters["rowFilter.Address.line1"];
+          line2?: parameters["rowFilter.Address.line2"];
+          state?: parameters["rowFilter.Address.state"];
+          country?: parameters["rowFilter.Address.country"];
+          postalCode?: parameters["rowFilter.Address.postalCode"];
+        };
         body: {
           /** Address */
-          Address?: definitions['Address']
-        }
+          Address?: definitions["Address"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
-  }
-  '/Cluster': {
+        204: never;
+      };
+    };
+  };
+  "/Cluster": {
     get: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Cluster.id']
-          name?: parameters['rowFilter.Cluster.name']
-          color?: parameters['rowFilter.Cluster.color']
+          id?: parameters["rowFilter.Cluster.id"];
+          name?: parameters["rowFilter.Cluster.name"];
+          color?: parameters["rowFilter.Cluster.color"];
           /** Filtering Columns */
-          select?: parameters['select']
+          select?: parameters["select"];
           /** Ordering */
-          order?: parameters['order']
+          order?: parameters["order"];
           /** Limiting and Pagination */
-          offset?: parameters['offset']
+          offset?: parameters["offset"];
           /** Limiting and Pagination */
-          limit?: parameters['limit']
-        }
+          limit?: parameters["limit"];
+        };
         header: {
           /** Limiting and Pagination */
-          Range?: parameters['range']
+          Range?: parameters["range"];
           /** Limiting and Pagination */
-          'Range-Unit'?: parameters['rangeUnit']
+          "Range-Unit"?: parameters["rangeUnit"];
           /** Preference */
-          Prefer?: parameters['preferCount']
-        }
-      }
+          Prefer?: parameters["preferCount"];
+        };
+      };
       responses: {
         /** OK */
         200: {
-          schema: definitions['Cluster'][]
-        }
+          schema: definitions["Cluster"][];
+        };
         /** Partial Content */
-        206: unknown
-      }
-    }
+        206: unknown;
+      };
+    };
     post: {
       parameters: {
         body: {
           /** Cluster */
-          Cluster?: definitions['Cluster']
-        }
+          Cluster?: definitions["Cluster"];
+        };
         query: {
           /** Filtering Columns */
-          select?: parameters['select']
-        }
+          select?: parameters["select"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** Created */
-        201: unknown
-      }
-    }
+        201: unknown;
+      };
+    };
     delete: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Cluster.id']
-          name?: parameters['rowFilter.Cluster.name']
-          color?: parameters['rowFilter.Cluster.color']
-        }
+          id?: parameters["rowFilter.Cluster.id"];
+          name?: parameters["rowFilter.Cluster.name"];
+          color?: parameters["rowFilter.Cluster.color"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
+        204: never;
+      };
+    };
     patch: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Cluster.id']
-          name?: parameters['rowFilter.Cluster.name']
-          color?: parameters['rowFilter.Cluster.color']
-        }
+          id?: parameters["rowFilter.Cluster.id"];
+          name?: parameters["rowFilter.Cluster.name"];
+          color?: parameters["rowFilter.Cluster.color"];
+        };
         body: {
           /** Cluster */
-          Cluster?: definitions['Cluster']
-        }
+          Cluster?: definitions["Cluster"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
-  }
-  '/Comment': {
+        204: never;
+      };
+    };
+  };
+  "/Comment": {
     get: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Comment.id']
-          content?: parameters['rowFilter.Comment.content']
-          created_at?: parameters['rowFilter.Comment.created_at']
-          updated_at?: parameters['rowFilter.Comment.updated_at']
-          userId?: parameters['rowFilter.Comment.userId']
-          postId?: parameters['rowFilter.Comment.postId']
+          id?: parameters["rowFilter.Comment.id"];
+          content?: parameters["rowFilter.Comment.content"];
+          created_at?: parameters["rowFilter.Comment.created_at"];
+          updated_at?: parameters["rowFilter.Comment.updated_at"];
+          userId?: parameters["rowFilter.Comment.userId"];
+          postId?: parameters["rowFilter.Comment.postId"];
           /** Filtering Columns */
-          select?: parameters['select']
+          select?: parameters["select"];
           /** Ordering */
-          order?: parameters['order']
+          order?: parameters["order"];
           /** Limiting and Pagination */
-          offset?: parameters['offset']
+          offset?: parameters["offset"];
           /** Limiting and Pagination */
-          limit?: parameters['limit']
-        }
+          limit?: parameters["limit"];
+        };
         header: {
           /** Limiting and Pagination */
-          Range?: parameters['range']
+          Range?: parameters["range"];
           /** Limiting and Pagination */
-          'Range-Unit'?: parameters['rangeUnit']
+          "Range-Unit"?: parameters["rangeUnit"];
           /** Preference */
-          Prefer?: parameters['preferCount']
-        }
-      }
+          Prefer?: parameters["preferCount"];
+        };
+      };
       responses: {
         /** OK */
         200: {
-          schema: definitions['Comment'][]
-        }
+          schema: definitions["Comment"][];
+        };
         /** Partial Content */
-        206: unknown
-      }
-    }
+        206: unknown;
+      };
+    };
     post: {
       parameters: {
         body: {
           /** Comment */
-          Comment?: definitions['Comment']
-        }
+          Comment?: definitions["Comment"];
+        };
         query: {
           /** Filtering Columns */
-          select?: parameters['select']
-        }
+          select?: parameters["select"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** Created */
-        201: unknown
-      }
-    }
+        201: unknown;
+      };
+    };
     delete: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Comment.id']
-          content?: parameters['rowFilter.Comment.content']
-          created_at?: parameters['rowFilter.Comment.created_at']
-          updated_at?: parameters['rowFilter.Comment.updated_at']
-          userId?: parameters['rowFilter.Comment.userId']
-          postId?: parameters['rowFilter.Comment.postId']
-        }
+          id?: parameters["rowFilter.Comment.id"];
+          content?: parameters["rowFilter.Comment.content"];
+          created_at?: parameters["rowFilter.Comment.created_at"];
+          updated_at?: parameters["rowFilter.Comment.updated_at"];
+          userId?: parameters["rowFilter.Comment.userId"];
+          postId?: parameters["rowFilter.Comment.postId"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
+        204: never;
+      };
+    };
     patch: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Comment.id']
-          content?: parameters['rowFilter.Comment.content']
-          created_at?: parameters['rowFilter.Comment.created_at']
-          updated_at?: parameters['rowFilter.Comment.updated_at']
-          userId?: parameters['rowFilter.Comment.userId']
-          postId?: parameters['rowFilter.Comment.postId']
-        }
+          id?: parameters["rowFilter.Comment.id"];
+          content?: parameters["rowFilter.Comment.content"];
+          created_at?: parameters["rowFilter.Comment.created_at"];
+          updated_at?: parameters["rowFilter.Comment.updated_at"];
+          userId?: parameters["rowFilter.Comment.userId"];
+          postId?: parameters["rowFilter.Comment.postId"];
+        };
         body: {
           /** Comment */
-          Comment?: definitions['Comment']
-        }
+          Comment?: definitions["Comment"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
-  }
-  '/CommentLike': {
+        204: never;
+      };
+    };
+  };
+  "/CommentLike": {
     get: {
       parameters: {
         query: {
-          commentId?: parameters['rowFilter.CommentLike.commentId']
-          userId?: parameters['rowFilter.CommentLike.userId']
+          commentId?: parameters["rowFilter.CommentLike.commentId"];
+          userId?: parameters["rowFilter.CommentLike.userId"];
           /** Filtering Columns */
-          select?: parameters['select']
+          select?: parameters["select"];
           /** Ordering */
-          order?: parameters['order']
+          order?: parameters["order"];
           /** Limiting and Pagination */
-          offset?: parameters['offset']
+          offset?: parameters["offset"];
           /** Limiting and Pagination */
-          limit?: parameters['limit']
-        }
+          limit?: parameters["limit"];
+        };
         header: {
           /** Limiting and Pagination */
-          Range?: parameters['range']
+          Range?: parameters["range"];
           /** Limiting and Pagination */
-          'Range-Unit'?: parameters['rangeUnit']
+          "Range-Unit"?: parameters["rangeUnit"];
           /** Preference */
-          Prefer?: parameters['preferCount']
-        }
-      }
+          Prefer?: parameters["preferCount"];
+        };
+      };
       responses: {
         /** OK */
         200: {
-          schema: definitions['CommentLike'][]
-        }
+          schema: definitions["CommentLike"][];
+        };
         /** Partial Content */
-        206: unknown
-      }
-    }
+        206: unknown;
+      };
+    };
     post: {
       parameters: {
         body: {
           /** CommentLike */
-          CommentLike?: definitions['CommentLike']
-        }
+          CommentLike?: definitions["CommentLike"];
+        };
         query: {
           /** Filtering Columns */
-          select?: parameters['select']
-        }
+          select?: parameters["select"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** Created */
-        201: unknown
-      }
-    }
+        201: unknown;
+      };
+    };
     delete: {
       parameters: {
         query: {
-          commentId?: parameters['rowFilter.CommentLike.commentId']
-          userId?: parameters['rowFilter.CommentLike.userId']
-        }
+          commentId?: parameters["rowFilter.CommentLike.commentId"];
+          userId?: parameters["rowFilter.CommentLike.userId"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
+        204: never;
+      };
+    };
     patch: {
       parameters: {
         query: {
-          commentId?: parameters['rowFilter.CommentLike.commentId']
-          userId?: parameters['rowFilter.CommentLike.userId']
-        }
+          commentId?: parameters["rowFilter.CommentLike.commentId"];
+          userId?: parameters["rowFilter.CommentLike.userId"];
+        };
         body: {
           /** CommentLike */
-          CommentLike?: definitions['CommentLike']
-        }
+          CommentLike?: definitions["CommentLike"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
-  }
-  '/Mission': {
+        204: never;
+      };
+    };
+  };
+  "/Discovery": {
     get: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Mission.id']
-          title?: parameters['rowFilter.Mission.title']
-          description?: parameters['rowFilter.Mission.description']
-          points?: parameters['rowFilter.Mission.points']
-          createdAt?: parameters['rowFilter.Mission.createdAt']
-          updatedAt?: parameters['rowFilter.Mission.updatedAt']
+          id?: parameters["rowFilter.Discovery.id"];
+          videoUrl?: parameters["rowFilter.Discovery.videoUrl"];
+          submittedAt?: parameters["rowFilter.Discovery.submittedAt"];
+          createdAt?: parameters["rowFilter.Discovery.createdAt"];
+          updatedAt?: parameters["rowFilter.Discovery.updatedAt"];
+          teamId?: parameters["rowFilter.Discovery.teamId"];
+          missionId?: parameters["rowFilter.Discovery.missionId"];
           /** Filtering Columns */
-          select?: parameters['select']
+          select?: parameters["select"];
           /** Ordering */
-          order?: parameters['order']
+          order?: parameters["order"];
           /** Limiting and Pagination */
-          offset?: parameters['offset']
+          offset?: parameters["offset"];
           /** Limiting and Pagination */
-          limit?: parameters['limit']
-        }
+          limit?: parameters["limit"];
+        };
         header: {
           /** Limiting and Pagination */
-          Range?: parameters['range']
+          Range?: parameters["range"];
           /** Limiting and Pagination */
-          'Range-Unit'?: parameters['rangeUnit']
+          "Range-Unit"?: parameters["rangeUnit"];
           /** Preference */
-          Prefer?: parameters['preferCount']
-        }
-      }
+          Prefer?: parameters["preferCount"];
+        };
+      };
       responses: {
         /** OK */
         200: {
-          schema: definitions['Mission'][]
-        }
+          schema: definitions["Discovery"][];
+        };
         /** Partial Content */
-        206: unknown
-      }
-    }
+        206: unknown;
+      };
+    };
+    post: {
+      parameters: {
+        body: {
+          /** Discovery */
+          Discovery?: definitions["Discovery"];
+        };
+        query: {
+          /** Filtering Columns */
+          select?: parameters["select"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** Created */
+        201: unknown;
+      };
+    };
+    delete: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Discovery.id"];
+          videoUrl?: parameters["rowFilter.Discovery.videoUrl"];
+          submittedAt?: parameters["rowFilter.Discovery.submittedAt"];
+          createdAt?: parameters["rowFilter.Discovery.createdAt"];
+          updatedAt?: parameters["rowFilter.Discovery.updatedAt"];
+          teamId?: parameters["rowFilter.Discovery.teamId"];
+          missionId?: parameters["rowFilter.Discovery.missionId"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+    patch: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Discovery.id"];
+          videoUrl?: parameters["rowFilter.Discovery.videoUrl"];
+          submittedAt?: parameters["rowFilter.Discovery.submittedAt"];
+          createdAt?: parameters["rowFilter.Discovery.createdAt"];
+          updatedAt?: parameters["rowFilter.Discovery.updatedAt"];
+          teamId?: parameters["rowFilter.Discovery.teamId"];
+          missionId?: parameters["rowFilter.Discovery.missionId"];
+        };
+        body: {
+          /** Discovery */
+          Discovery?: definitions["Discovery"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+  };
+  "/Escape": {
+    get: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Escape.id"];
+          missionOne?: parameters["rowFilter.Escape.missionOne"];
+          missionTwo?: parameters["rowFilter.Escape.missionTwo"];
+          missionThree?: parameters["rowFilter.Escape.missionThree"];
+          teamId?: parameters["rowFilter.Escape.teamId"];
+          /** Filtering Columns */
+          select?: parameters["select"];
+          /** Ordering */
+          order?: parameters["order"];
+          /** Limiting and Pagination */
+          offset?: parameters["offset"];
+          /** Limiting and Pagination */
+          limit?: parameters["limit"];
+        };
+        header: {
+          /** Limiting and Pagination */
+          Range?: parameters["range"];
+          /** Limiting and Pagination */
+          "Range-Unit"?: parameters["rangeUnit"];
+          /** Preference */
+          Prefer?: parameters["preferCount"];
+        };
+      };
+      responses: {
+        /** OK */
+        200: {
+          schema: definitions["Escape"][];
+        };
+        /** Partial Content */
+        206: unknown;
+      };
+    };
+    post: {
+      parameters: {
+        body: {
+          /** Escape */
+          Escape?: definitions["Escape"];
+        };
+        query: {
+          /** Filtering Columns */
+          select?: parameters["select"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** Created */
+        201: unknown;
+      };
+    };
+    delete: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Escape.id"];
+          missionOne?: parameters["rowFilter.Escape.missionOne"];
+          missionTwo?: parameters["rowFilter.Escape.missionTwo"];
+          missionThree?: parameters["rowFilter.Escape.missionThree"];
+          teamId?: parameters["rowFilter.Escape.teamId"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+    patch: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Escape.id"];
+          missionOne?: parameters["rowFilter.Escape.missionOne"];
+          missionTwo?: parameters["rowFilter.Escape.missionTwo"];
+          missionThree?: parameters["rowFilter.Escape.missionThree"];
+          teamId?: parameters["rowFilter.Escape.teamId"];
+        };
+        body: {
+          /** Escape */
+          Escape?: definitions["Escape"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+  };
+  "/Humanity": {
+    get: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Humanity.id"];
+          photo1?: parameters["rowFilter.Humanity.photo1"];
+          photo2?: parameters["rowFilter.Humanity.photo2"];
+          photo3?: parameters["rowFilter.Humanity.photo3"];
+          createdAt?: parameters["rowFilter.Humanity.createdAt"];
+          updatedAt?: parameters["rowFilter.Humanity.updatedAt"];
+          teamId?: parameters["rowFilter.Humanity.teamId"];
+          missionId?: parameters["rowFilter.Humanity.missionId"];
+          batch?: parameters["rowFilter.Humanity.batch"];
+          gatherLink?: parameters["rowFilter.Humanity.gatherLink"];
+          submittedAt?: parameters["rowFilter.Humanity.submittedAt"];
+          /** Filtering Columns */
+          select?: parameters["select"];
+          /** Ordering */
+          order?: parameters["order"];
+          /** Limiting and Pagination */
+          offset?: parameters["offset"];
+          /** Limiting and Pagination */
+          limit?: parameters["limit"];
+        };
+        header: {
+          /** Limiting and Pagination */
+          Range?: parameters["range"];
+          /** Limiting and Pagination */
+          "Range-Unit"?: parameters["rangeUnit"];
+          /** Preference */
+          Prefer?: parameters["preferCount"];
+        };
+      };
+      responses: {
+        /** OK */
+        200: {
+          schema: definitions["Humanity"][];
+        };
+        /** Partial Content */
+        206: unknown;
+      };
+    };
+    post: {
+      parameters: {
+        body: {
+          /** Humanity */
+          Humanity?: definitions["Humanity"];
+        };
+        query: {
+          /** Filtering Columns */
+          select?: parameters["select"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** Created */
+        201: unknown;
+      };
+    };
+    delete: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Humanity.id"];
+          photo1?: parameters["rowFilter.Humanity.photo1"];
+          photo2?: parameters["rowFilter.Humanity.photo2"];
+          photo3?: parameters["rowFilter.Humanity.photo3"];
+          createdAt?: parameters["rowFilter.Humanity.createdAt"];
+          updatedAt?: parameters["rowFilter.Humanity.updatedAt"];
+          teamId?: parameters["rowFilter.Humanity.teamId"];
+          missionId?: parameters["rowFilter.Humanity.missionId"];
+          batch?: parameters["rowFilter.Humanity.batch"];
+          gatherLink?: parameters["rowFilter.Humanity.gatherLink"];
+          submittedAt?: parameters["rowFilter.Humanity.submittedAt"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+    patch: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Humanity.id"];
+          photo1?: parameters["rowFilter.Humanity.photo1"];
+          photo2?: parameters["rowFilter.Humanity.photo2"];
+          photo3?: parameters["rowFilter.Humanity.photo3"];
+          createdAt?: parameters["rowFilter.Humanity.createdAt"];
+          updatedAt?: parameters["rowFilter.Humanity.updatedAt"];
+          teamId?: parameters["rowFilter.Humanity.teamId"];
+          missionId?: parameters["rowFilter.Humanity.missionId"];
+          batch?: parameters["rowFilter.Humanity.batch"];
+          gatherLink?: parameters["rowFilter.Humanity.gatherLink"];
+          submittedAt?: parameters["rowFilter.Humanity.submittedAt"];
+        };
+        body: {
+          /** Humanity */
+          Humanity?: definitions["Humanity"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+  };
+  "/Invitation": {
+    get: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Invitation.id"];
+          from?: parameters["rowFilter.Invitation.from"];
+          userId?: parameters["rowFilter.Invitation.userId"];
+          teamId?: parameters["rowFilter.Invitation.teamId"];
+          createdAt?: parameters["rowFilter.Invitation.createdAt"];
+          updatedAt?: parameters["rowFilter.Invitation.updatedAt"];
+          /** Filtering Columns */
+          select?: parameters["select"];
+          /** Ordering */
+          order?: parameters["order"];
+          /** Limiting and Pagination */
+          offset?: parameters["offset"];
+          /** Limiting and Pagination */
+          limit?: parameters["limit"];
+        };
+        header: {
+          /** Limiting and Pagination */
+          Range?: parameters["range"];
+          /** Limiting and Pagination */
+          "Range-Unit"?: parameters["rangeUnit"];
+          /** Preference */
+          Prefer?: parameters["preferCount"];
+        };
+      };
+      responses: {
+        /** OK */
+        200: {
+          schema: definitions["Invitation"][];
+        };
+        /** Partial Content */
+        206: unknown;
+      };
+    };
+    post: {
+      parameters: {
+        body: {
+          /** Invitation */
+          Invitation?: definitions["Invitation"];
+        };
+        query: {
+          /** Filtering Columns */
+          select?: parameters["select"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** Created */
+        201: unknown;
+      };
+    };
+    delete: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Invitation.id"];
+          from?: parameters["rowFilter.Invitation.from"];
+          userId?: parameters["rowFilter.Invitation.userId"];
+          teamId?: parameters["rowFilter.Invitation.teamId"];
+          createdAt?: parameters["rowFilter.Invitation.createdAt"];
+          updatedAt?: parameters["rowFilter.Invitation.updatedAt"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+    patch: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Invitation.id"];
+          from?: parameters["rowFilter.Invitation.from"];
+          userId?: parameters["rowFilter.Invitation.userId"];
+          teamId?: parameters["rowFilter.Invitation.teamId"];
+          createdAt?: parameters["rowFilter.Invitation.createdAt"];
+          updatedAt?: parameters["rowFilter.Invitation.updatedAt"];
+        };
+        body: {
+          /** Invitation */
+          Invitation?: definitions["Invitation"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+  };
+  "/Mission": {
+    get: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Mission.id"];
+          title?: parameters["rowFilter.Mission.title"];
+          description?: parameters["rowFilter.Mission.description"];
+          points?: parameters["rowFilter.Mission.points"];
+          createdAt?: parameters["rowFilter.Mission.createdAt"];
+          updatedAt?: parameters["rowFilter.Mission.updatedAt"];
+          startAt?: parameters["rowFilter.Mission.startAt"];
+          endAt?: parameters["rowFilter.Mission.endAt"];
+          slug?: parameters["rowFilter.Mission.slug"];
+          /** Filtering Columns */
+          select?: parameters["select"];
+          /** Ordering */
+          order?: parameters["order"];
+          /** Limiting and Pagination */
+          offset?: parameters["offset"];
+          /** Limiting and Pagination */
+          limit?: parameters["limit"];
+        };
+        header: {
+          /** Limiting and Pagination */
+          Range?: parameters["range"];
+          /** Limiting and Pagination */
+          "Range-Unit"?: parameters["rangeUnit"];
+          /** Preference */
+          Prefer?: parameters["preferCount"];
+        };
+      };
+      responses: {
+        /** OK */
+        200: {
+          schema: definitions["Mission"][];
+        };
+        /** Partial Content */
+        206: unknown;
+      };
+    };
     post: {
       parameters: {
         body: {
           /** Mission */
-          Mission?: definitions['Mission']
-        }
+          Mission?: definitions["Mission"];
+        };
         query: {
           /** Filtering Columns */
-          select?: parameters['select']
-        }
+          select?: parameters["select"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** Created */
-        201: unknown
-      }
-    }
+        201: unknown;
+      };
+    };
     delete: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Mission.id']
-          title?: parameters['rowFilter.Mission.title']
-          description?: parameters['rowFilter.Mission.description']
-          points?: parameters['rowFilter.Mission.points']
-          createdAt?: parameters['rowFilter.Mission.createdAt']
-          updatedAt?: parameters['rowFilter.Mission.updatedAt']
-        }
+          id?: parameters["rowFilter.Mission.id"];
+          title?: parameters["rowFilter.Mission.title"];
+          description?: parameters["rowFilter.Mission.description"];
+          points?: parameters["rowFilter.Mission.points"];
+          createdAt?: parameters["rowFilter.Mission.createdAt"];
+          updatedAt?: parameters["rowFilter.Mission.updatedAt"];
+          startAt?: parameters["rowFilter.Mission.startAt"];
+          endAt?: parameters["rowFilter.Mission.endAt"];
+          slug?: parameters["rowFilter.Mission.slug"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
+        204: never;
+      };
+    };
     patch: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Mission.id']
-          title?: parameters['rowFilter.Mission.title']
-          description?: parameters['rowFilter.Mission.description']
-          points?: parameters['rowFilter.Mission.points']
-          createdAt?: parameters['rowFilter.Mission.createdAt']
-          updatedAt?: parameters['rowFilter.Mission.updatedAt']
-        }
+          id?: parameters["rowFilter.Mission.id"];
+          title?: parameters["rowFilter.Mission.title"];
+          description?: parameters["rowFilter.Mission.description"];
+          points?: parameters["rowFilter.Mission.points"];
+          createdAt?: parameters["rowFilter.Mission.createdAt"];
+          updatedAt?: parameters["rowFilter.Mission.updatedAt"];
+          startAt?: parameters["rowFilter.Mission.startAt"];
+          endAt?: parameters["rowFilter.Mission.endAt"];
+          slug?: parameters["rowFilter.Mission.slug"];
+        };
         body: {
           /** Mission */
-          Mission?: definitions['Mission']
-        }
+          Mission?: definitions["Mission"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
-  }
-  '/Post': {
+        204: never;
+      };
+    };
+  };
+  "/Post": {
     get: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Post.id']
-          content?: parameters['rowFilter.Post.content']
-          images?: parameters['rowFilter.Post.images']
-          created_at?: parameters['rowFilter.Post.created_at']
-          updated_at?: parameters['rowFilter.Post.updated_at']
-          userId?: parameters['rowFilter.Post.userId']
+          id?: parameters["rowFilter.Post.id"];
+          content?: parameters["rowFilter.Post.content"];
+          images?: parameters["rowFilter.Post.images"];
+          created_at?: parameters["rowFilter.Post.created_at"];
+          updated_at?: parameters["rowFilter.Post.updated_at"];
+          userId?: parameters["rowFilter.Post.userId"];
           /** Filtering Columns */
-          select?: parameters['select']
+          select?: parameters["select"];
           /** Ordering */
-          order?: parameters['order']
+          order?: parameters["order"];
           /** Limiting and Pagination */
-          offset?: parameters['offset']
+          offset?: parameters["offset"];
           /** Limiting and Pagination */
-          limit?: parameters['limit']
-        }
+          limit?: parameters["limit"];
+        };
         header: {
           /** Limiting and Pagination */
-          Range?: parameters['range']
+          Range?: parameters["range"];
           /** Limiting and Pagination */
-          'Range-Unit'?: parameters['rangeUnit']
+          "Range-Unit"?: parameters["rangeUnit"];
           /** Preference */
-          Prefer?: parameters['preferCount']
-        }
-      }
+          Prefer?: parameters["preferCount"];
+        };
+      };
       responses: {
         /** OK */
         200: {
-          schema: definitions['Post'][]
-        }
+          schema: definitions["Post"][];
+        };
         /** Partial Content */
-        206: unknown
-      }
-    }
+        206: unknown;
+      };
+    };
     post: {
       parameters: {
         body: {
           /** Post */
-          Post?: definitions['Post']
-        }
+          Post?: definitions["Post"];
+        };
         query: {
           /** Filtering Columns */
-          select?: parameters['select']
-        }
+          select?: parameters["select"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** Created */
-        201: unknown
-      }
-    }
+        201: unknown;
+      };
+    };
     delete: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Post.id']
-          content?: parameters['rowFilter.Post.content']
-          images?: parameters['rowFilter.Post.images']
-          created_at?: parameters['rowFilter.Post.created_at']
-          updated_at?: parameters['rowFilter.Post.updated_at']
-          userId?: parameters['rowFilter.Post.userId']
-        }
+          id?: parameters["rowFilter.Post.id"];
+          content?: parameters["rowFilter.Post.content"];
+          images?: parameters["rowFilter.Post.images"];
+          created_at?: parameters["rowFilter.Post.created_at"];
+          updated_at?: parameters["rowFilter.Post.updated_at"];
+          userId?: parameters["rowFilter.Post.userId"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
+        204: never;
+      };
+    };
     patch: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Post.id']
-          content?: parameters['rowFilter.Post.content']
-          images?: parameters['rowFilter.Post.images']
-          created_at?: parameters['rowFilter.Post.created_at']
-          updated_at?: parameters['rowFilter.Post.updated_at']
-          userId?: parameters['rowFilter.Post.userId']
-        }
+          id?: parameters["rowFilter.Post.id"];
+          content?: parameters["rowFilter.Post.content"];
+          images?: parameters["rowFilter.Post.images"];
+          created_at?: parameters["rowFilter.Post.created_at"];
+          updated_at?: parameters["rowFilter.Post.updated_at"];
+          userId?: parameters["rowFilter.Post.userId"];
+        };
         body: {
           /** Post */
-          Post?: definitions['Post']
-        }
+          Post?: definitions["Post"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
-  }
-  '/PostLike': {
+        204: never;
+      };
+    };
+  };
+  "/PostLike": {
     get: {
       parameters: {
         query: {
-          postId?: parameters['rowFilter.PostLike.postId']
-          userId?: parameters['rowFilter.PostLike.userId']
+          postId?: parameters["rowFilter.PostLike.postId"];
+          userId?: parameters["rowFilter.PostLike.userId"];
           /** Filtering Columns */
-          select?: parameters['select']
+          select?: parameters["select"];
           /** Ordering */
-          order?: parameters['order']
+          order?: parameters["order"];
           /** Limiting and Pagination */
-          offset?: parameters['offset']
+          offset?: parameters["offset"];
           /** Limiting and Pagination */
-          limit?: parameters['limit']
-        }
+          limit?: parameters["limit"];
+        };
         header: {
           /** Limiting and Pagination */
-          Range?: parameters['range']
+          Range?: parameters["range"];
           /** Limiting and Pagination */
-          'Range-Unit'?: parameters['rangeUnit']
+          "Range-Unit"?: parameters["rangeUnit"];
           /** Preference */
-          Prefer?: parameters['preferCount']
-        }
-      }
+          Prefer?: parameters["preferCount"];
+        };
+      };
       responses: {
         /** OK */
         200: {
-          schema: definitions['PostLike'][]
-        }
+          schema: definitions["PostLike"][];
+        };
         /** Partial Content */
-        206: unknown
-      }
-    }
+        206: unknown;
+      };
+    };
     post: {
       parameters: {
         body: {
           /** PostLike */
-          PostLike?: definitions['PostLike']
-        }
+          PostLike?: definitions["PostLike"];
+        };
         query: {
           /** Filtering Columns */
-          select?: parameters['select']
-        }
+          select?: parameters["select"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** Created */
-        201: unknown
-      }
-    }
+        201: unknown;
+      };
+    };
     delete: {
       parameters: {
         query: {
-          postId?: parameters['rowFilter.PostLike.postId']
-          userId?: parameters['rowFilter.PostLike.userId']
-        }
+          postId?: parameters["rowFilter.PostLike.postId"];
+          userId?: parameters["rowFilter.PostLike.userId"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
+        204: never;
+      };
+    };
     patch: {
       parameters: {
         query: {
-          postId?: parameters['rowFilter.PostLike.postId']
-          userId?: parameters['rowFilter.PostLike.userId']
-        }
+          postId?: parameters["rowFilter.PostLike.postId"];
+          userId?: parameters["rowFilter.PostLike.userId"];
+        };
         body: {
           /** PostLike */
-          PostLike?: definitions['PostLike']
-        }
+          PostLike?: definitions["PostLike"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
-  }
-  '/Profile': {
+        204: never;
+      };
+    };
+  };
+  "/Profile": {
     get: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Profile.id']
-          status?: parameters['rowFilter.Profile.status']
-          gender?: parameters['rowFilter.Profile.gender']
-          nameEng?: parameters['rowFilter.Profile.nameEng']
-          contact?: parameters['rowFilter.Profile.contact']
-          dob?: parameters['rowFilter.Profile.dob']
-          tngReceiptUrl?: parameters['rowFilter.Profile.tngReceiptUrl']
-          avatarUrl?: parameters['rowFilter.Profile.avatarUrl']
-          createdAt?: parameters['rowFilter.Profile.createdAt']
-          updatedAt?: parameters['rowFilter.Profile.updatedAt']
-          addressId?: parameters['rowFilter.Profile.addressId']
-          satellite?: parameters['rowFilter.Profile.satellite']
-          nameChi?: parameters['rowFilter.Profile.nameChi']
-          invitedBy?: parameters['rowFilter.Profile.invitedBy']
+          id?: parameters["rowFilter.Profile.id"];
+          status?: parameters["rowFilter.Profile.status"];
+          gender?: parameters["rowFilter.Profile.gender"];
+          nameEng?: parameters["rowFilter.Profile.nameEng"];
+          contact?: parameters["rowFilter.Profile.contact"];
+          dob?: parameters["rowFilter.Profile.dob"];
+          tngReceiptUrl?: parameters["rowFilter.Profile.tngReceiptUrl"];
+          avatarUrl?: parameters["rowFilter.Profile.avatarUrl"];
+          createdAt?: parameters["rowFilter.Profile.createdAt"];
+          updatedAt?: parameters["rowFilter.Profile.updatedAt"];
+          addressId?: parameters["rowFilter.Profile.addressId"];
+          satellite?: parameters["rowFilter.Profile.satellite"];
+          nameChi?: parameters["rowFilter.Profile.nameChi"];
+          invitedBy?: parameters["rowFilter.Profile.invitedBy"];
+          bio?: parameters["rowFilter.Profile.bio"];
           /** Filtering Columns */
-          select?: parameters['select']
+          select?: parameters["select"];
           /** Ordering */
-          order?: parameters['order']
+          order?: parameters["order"];
           /** Limiting and Pagination */
-          offset?: parameters['offset']
+          offset?: parameters["offset"];
           /** Limiting and Pagination */
-          limit?: parameters['limit']
-        }
+          limit?: parameters["limit"];
+        };
         header: {
           /** Limiting and Pagination */
-          Range?: parameters['range']
+          Range?: parameters["range"];
           /** Limiting and Pagination */
-          'Range-Unit'?: parameters['rangeUnit']
+          "Range-Unit"?: parameters["rangeUnit"];
           /** Preference */
-          Prefer?: parameters['preferCount']
-        }
-      }
+          Prefer?: parameters["preferCount"];
+        };
+      };
       responses: {
         /** OK */
         200: {
-          schema: definitions['Profile'][]
-        }
+          schema: definitions["Profile"][];
+        };
         /** Partial Content */
-        206: unknown
-      }
-    }
+        206: unknown;
+      };
+    };
     post: {
       parameters: {
         body: {
           /** Profile */
-          Profile?: definitions['Profile']
-        }
+          Profile?: definitions["Profile"];
+        };
         query: {
           /** Filtering Columns */
-          select?: parameters['select']
-        }
+          select?: parameters["select"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** Created */
-        201: unknown
-      }
-    }
+        201: unknown;
+      };
+    };
     delete: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Profile.id']
-          status?: parameters['rowFilter.Profile.status']
-          gender?: parameters['rowFilter.Profile.gender']
-          nameEng?: parameters['rowFilter.Profile.nameEng']
-          contact?: parameters['rowFilter.Profile.contact']
-          dob?: parameters['rowFilter.Profile.dob']
-          tngReceiptUrl?: parameters['rowFilter.Profile.tngReceiptUrl']
-          avatarUrl?: parameters['rowFilter.Profile.avatarUrl']
-          createdAt?: parameters['rowFilter.Profile.createdAt']
-          updatedAt?: parameters['rowFilter.Profile.updatedAt']
-          addressId?: parameters['rowFilter.Profile.addressId']
-          satellite?: parameters['rowFilter.Profile.satellite']
-          nameChi?: parameters['rowFilter.Profile.nameChi']
-          invitedBy?: parameters['rowFilter.Profile.invitedBy']
-        }
+          id?: parameters["rowFilter.Profile.id"];
+          status?: parameters["rowFilter.Profile.status"];
+          gender?: parameters["rowFilter.Profile.gender"];
+          nameEng?: parameters["rowFilter.Profile.nameEng"];
+          contact?: parameters["rowFilter.Profile.contact"];
+          dob?: parameters["rowFilter.Profile.dob"];
+          tngReceiptUrl?: parameters["rowFilter.Profile.tngReceiptUrl"];
+          avatarUrl?: parameters["rowFilter.Profile.avatarUrl"];
+          createdAt?: parameters["rowFilter.Profile.createdAt"];
+          updatedAt?: parameters["rowFilter.Profile.updatedAt"];
+          addressId?: parameters["rowFilter.Profile.addressId"];
+          satellite?: parameters["rowFilter.Profile.satellite"];
+          nameChi?: parameters["rowFilter.Profile.nameChi"];
+          invitedBy?: parameters["rowFilter.Profile.invitedBy"];
+          bio?: parameters["rowFilter.Profile.bio"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
+        204: never;
+      };
+    };
     patch: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Profile.id']
-          status?: parameters['rowFilter.Profile.status']
-          gender?: parameters['rowFilter.Profile.gender']
-          nameEng?: parameters['rowFilter.Profile.nameEng']
-          contact?: parameters['rowFilter.Profile.contact']
-          dob?: parameters['rowFilter.Profile.dob']
-          tngReceiptUrl?: parameters['rowFilter.Profile.tngReceiptUrl']
-          avatarUrl?: parameters['rowFilter.Profile.avatarUrl']
-          createdAt?: parameters['rowFilter.Profile.createdAt']
-          updatedAt?: parameters['rowFilter.Profile.updatedAt']
-          addressId?: parameters['rowFilter.Profile.addressId']
-          satellite?: parameters['rowFilter.Profile.satellite']
-          nameChi?: parameters['rowFilter.Profile.nameChi']
-          invitedBy?: parameters['rowFilter.Profile.invitedBy']
-        }
+          id?: parameters["rowFilter.Profile.id"];
+          status?: parameters["rowFilter.Profile.status"];
+          gender?: parameters["rowFilter.Profile.gender"];
+          nameEng?: parameters["rowFilter.Profile.nameEng"];
+          contact?: parameters["rowFilter.Profile.contact"];
+          dob?: parameters["rowFilter.Profile.dob"];
+          tngReceiptUrl?: parameters["rowFilter.Profile.tngReceiptUrl"];
+          avatarUrl?: parameters["rowFilter.Profile.avatarUrl"];
+          createdAt?: parameters["rowFilter.Profile.createdAt"];
+          updatedAt?: parameters["rowFilter.Profile.updatedAt"];
+          addressId?: parameters["rowFilter.Profile.addressId"];
+          satellite?: parameters["rowFilter.Profile.satellite"];
+          nameChi?: parameters["rowFilter.Profile.nameChi"];
+          invitedBy?: parameters["rowFilter.Profile.invitedBy"];
+          bio?: parameters["rowFilter.Profile.bio"];
+        };
         body: {
           /** Profile */
-          Profile?: definitions['Profile']
-        }
+          Profile?: definitions["Profile"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
-  }
-  '/Team': {
+        204: never;
+      };
+    };
+  };
+  "/Speed": {
     get: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Team.id']
-          name?: parameters['rowFilter.Team.name']
-          color?: parameters['rowFilter.Team.color']
-          points?: parameters['rowFilter.Team.points']
-          clusterId?: parameters['rowFilter.Team.clusterId']
+          id?: parameters["rowFilter.Speed.id"];
+          completedAt?: parameters["rowFilter.Speed.completedAt"];
+          answer?: parameters["rowFilter.Speed.answer"];
+          createdAt?: parameters["rowFilter.Speed.createdAt"];
+          updatedAt?: parameters["rowFilter.Speed.updatedAt"];
+          teamId?: parameters["rowFilter.Speed.teamId"];
+          missionId?: parameters["rowFilter.Speed.missionId"];
           /** Filtering Columns */
-          select?: parameters['select']
+          select?: parameters["select"];
           /** Ordering */
-          order?: parameters['order']
+          order?: parameters["order"];
           /** Limiting and Pagination */
-          offset?: parameters['offset']
+          offset?: parameters["offset"];
           /** Limiting and Pagination */
-          limit?: parameters['limit']
-        }
+          limit?: parameters["limit"];
+        };
         header: {
           /** Limiting and Pagination */
-          Range?: parameters['range']
+          Range?: parameters["range"];
           /** Limiting and Pagination */
-          'Range-Unit'?: parameters['rangeUnit']
+          "Range-Unit"?: parameters["rangeUnit"];
           /** Preference */
-          Prefer?: parameters['preferCount']
-        }
-      }
+          Prefer?: parameters["preferCount"];
+        };
+      };
       responses: {
         /** OK */
         200: {
-          schema: definitions['Team'][]
-        }
+          schema: definitions["Speed"][];
+        };
         /** Partial Content */
-        206: unknown
-      }
-    }
+        206: unknown;
+      };
+    };
+    post: {
+      parameters: {
+        body: {
+          /** Speed */
+          Speed?: definitions["Speed"];
+        };
+        query: {
+          /** Filtering Columns */
+          select?: parameters["select"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** Created */
+        201: unknown;
+      };
+    };
+    delete: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Speed.id"];
+          completedAt?: parameters["rowFilter.Speed.completedAt"];
+          answer?: parameters["rowFilter.Speed.answer"];
+          createdAt?: parameters["rowFilter.Speed.createdAt"];
+          updatedAt?: parameters["rowFilter.Speed.updatedAt"];
+          teamId?: parameters["rowFilter.Speed.teamId"];
+          missionId?: parameters["rowFilter.Speed.missionId"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+    patch: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Speed.id"];
+          completedAt?: parameters["rowFilter.Speed.completedAt"];
+          answer?: parameters["rowFilter.Speed.answer"];
+          createdAt?: parameters["rowFilter.Speed.createdAt"];
+          updatedAt?: parameters["rowFilter.Speed.updatedAt"];
+          teamId?: parameters["rowFilter.Speed.teamId"];
+          missionId?: parameters["rowFilter.Speed.missionId"];
+        };
+        body: {
+          /** Speed */
+          Speed?: definitions["Speed"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+  };
+  "/Team": {
+    get: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Team.id"];
+          name?: parameters["rowFilter.Team.name"];
+          avatarUrl?: parameters["rowFilter.Team.avatarUrl"];
+          points?: parameters["rowFilter.Team.points"];
+          clusterId?: parameters["rowFilter.Team.clusterId"];
+          /** Filtering Columns */
+          select?: parameters["select"];
+          /** Ordering */
+          order?: parameters["order"];
+          /** Limiting and Pagination */
+          offset?: parameters["offset"];
+          /** Limiting and Pagination */
+          limit?: parameters["limit"];
+        };
+        header: {
+          /** Limiting and Pagination */
+          Range?: parameters["range"];
+          /** Limiting and Pagination */
+          "Range-Unit"?: parameters["rangeUnit"];
+          /** Preference */
+          Prefer?: parameters["preferCount"];
+        };
+      };
+      responses: {
+        /** OK */
+        200: {
+          schema: definitions["Team"][];
+        };
+        /** Partial Content */
+        206: unknown;
+      };
+    };
     post: {
       parameters: {
         body: {
           /** Team */
-          Team?: definitions['Team']
-        }
+          Team?: definitions["Team"];
+        };
         query: {
           /** Filtering Columns */
-          select?: parameters['select']
-        }
+          select?: parameters["select"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** Created */
-        201: unknown
-      }
-    }
+        201: unknown;
+      };
+    };
     delete: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Team.id']
-          name?: parameters['rowFilter.Team.name']
-          color?: parameters['rowFilter.Team.color']
-          points?: parameters['rowFilter.Team.points']
-          clusterId?: parameters['rowFilter.Team.clusterId']
-        }
+          id?: parameters["rowFilter.Team.id"];
+          name?: parameters["rowFilter.Team.name"];
+          avatarUrl?: parameters["rowFilter.Team.avatarUrl"];
+          points?: parameters["rowFilter.Team.points"];
+          clusterId?: parameters["rowFilter.Team.clusterId"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
+        204: never;
+      };
+    };
     patch: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.Team.id']
-          name?: parameters['rowFilter.Team.name']
-          color?: parameters['rowFilter.Team.color']
-          points?: parameters['rowFilter.Team.points']
-          clusterId?: parameters['rowFilter.Team.clusterId']
-        }
+          id?: parameters["rowFilter.Team.id"];
+          name?: parameters["rowFilter.Team.name"];
+          avatarUrl?: parameters["rowFilter.Team.avatarUrl"];
+          points?: parameters["rowFilter.Team.points"];
+          clusterId?: parameters["rowFilter.Team.clusterId"];
+        };
         body: {
           /** Team */
-          Team?: definitions['Team']
-        }
+          Team?: definitions["Team"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
-  }
-  '/TeamMission': {
+        204: never;
+      };
+    };
+  };
+  "/TeamMission": {
     get: {
       parameters: {
         query: {
-          teamId?: parameters['rowFilter.TeamMission.teamId']
-          missionId?: parameters['rowFilter.TeamMission.missionId']
+          teamId?: parameters["rowFilter.TeamMission.teamId"];
+          missionId?: parameters["rowFilter.TeamMission.missionId"];
           /** Filtering Columns */
-          select?: parameters['select']
+          select?: parameters["select"];
           /** Ordering */
-          order?: parameters['order']
+          order?: parameters["order"];
           /** Limiting and Pagination */
-          offset?: parameters['offset']
+          offset?: parameters["offset"];
           /** Limiting and Pagination */
-          limit?: parameters['limit']
-        }
+          limit?: parameters["limit"];
+        };
         header: {
           /** Limiting and Pagination */
-          Range?: parameters['range']
+          Range?: parameters["range"];
           /** Limiting and Pagination */
-          'Range-Unit'?: parameters['rangeUnit']
+          "Range-Unit"?: parameters["rangeUnit"];
           /** Preference */
-          Prefer?: parameters['preferCount']
-        }
-      }
+          Prefer?: parameters["preferCount"];
+        };
+      };
       responses: {
         /** OK */
         200: {
-          schema: definitions['TeamMission'][]
-        }
+          schema: definitions["TeamMission"][];
+        };
         /** Partial Content */
-        206: unknown
-      }
-    }
+        206: unknown;
+      };
+    };
     post: {
       parameters: {
         body: {
           /** TeamMission */
-          TeamMission?: definitions['TeamMission']
-        }
+          TeamMission?: definitions["TeamMission"];
+        };
         query: {
           /** Filtering Columns */
-          select?: parameters['select']
-        }
+          select?: parameters["select"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** Created */
-        201: unknown
-      }
-    }
+        201: unknown;
+      };
+    };
     delete: {
       parameters: {
         query: {
-          teamId?: parameters['rowFilter.TeamMission.teamId']
-          missionId?: parameters['rowFilter.TeamMission.missionId']
-        }
+          teamId?: parameters["rowFilter.TeamMission.teamId"];
+          missionId?: parameters["rowFilter.TeamMission.missionId"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
+        204: never;
+      };
+    };
     patch: {
       parameters: {
         query: {
-          teamId?: parameters['rowFilter.TeamMission.teamId']
-          missionId?: parameters['rowFilter.TeamMission.missionId']
-        }
+          teamId?: parameters["rowFilter.TeamMission.teamId"];
+          missionId?: parameters["rowFilter.TeamMission.missionId"];
+        };
         body: {
           /** TeamMission */
-          TeamMission?: definitions['TeamMission']
-        }
+          TeamMission?: definitions["TeamMission"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
-  }
-  '/User': {
+        204: never;
+      };
+    };
+  };
+  "/User": {
     get: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.User.id']
-          username?: parameters['rowFilter.User.username']
-          createdAt?: parameters['rowFilter.User.createdAt']
-          updatedAt?: parameters['rowFilter.User.updatedAt']
-          teamId?: parameters['rowFilter.User.teamId']
-          email?: parameters['rowFilter.User.email']
-          profileId?: parameters['rowFilter.User.profileId']
+          id?: parameters["rowFilter.User.id"];
+          username?: parameters["rowFilter.User.username"];
+          createdAt?: parameters["rowFilter.User.createdAt"];
+          updatedAt?: parameters["rowFilter.User.updatedAt"];
+          teamId?: parameters["rowFilter.User.teamId"];
+          email?: parameters["rowFilter.User.email"];
+          profileId?: parameters["rowFilter.User.profileId"];
           /** Filtering Columns */
-          select?: parameters['select']
+          select?: parameters["select"];
           /** Ordering */
-          order?: parameters['order']
+          order?: parameters["order"];
           /** Limiting and Pagination */
-          offset?: parameters['offset']
+          offset?: parameters["offset"];
           /** Limiting and Pagination */
-          limit?: parameters['limit']
-        }
+          limit?: parameters["limit"];
+        };
         header: {
           /** Limiting and Pagination */
-          Range?: parameters['range']
+          Range?: parameters["range"];
           /** Limiting and Pagination */
-          'Range-Unit'?: parameters['rangeUnit']
+          "Range-Unit"?: parameters["rangeUnit"];
           /** Preference */
-          Prefer?: parameters['preferCount']
-        }
-      }
+          Prefer?: parameters["preferCount"];
+        };
+      };
       responses: {
         /** OK */
         200: {
-          schema: definitions['User'][]
-        }
+          schema: definitions["User"][];
+        };
         /** Partial Content */
-        206: unknown
-      }
-    }
+        206: unknown;
+      };
+    };
     post: {
       parameters: {
         body: {
           /** User */
-          User?: definitions['User']
-        }
+          User?: definitions["User"];
+        };
         query: {
           /** Filtering Columns */
-          select?: parameters['select']
-        }
+          select?: parameters["select"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** Created */
-        201: unknown
-      }
-    }
+        201: unknown;
+      };
+    };
     delete: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.User.id']
-          username?: parameters['rowFilter.User.username']
-          createdAt?: parameters['rowFilter.User.createdAt']
-          updatedAt?: parameters['rowFilter.User.updatedAt']
-          teamId?: parameters['rowFilter.User.teamId']
-          email?: parameters['rowFilter.User.email']
-          profileId?: parameters['rowFilter.User.profileId']
-        }
+          id?: parameters["rowFilter.User.id"];
+          username?: parameters["rowFilter.User.username"];
+          createdAt?: parameters["rowFilter.User.createdAt"];
+          updatedAt?: parameters["rowFilter.User.updatedAt"];
+          teamId?: parameters["rowFilter.User.teamId"];
+          email?: parameters["rowFilter.User.email"];
+          profileId?: parameters["rowFilter.User.profileId"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
+        204: never;
+      };
+    };
     patch: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.User.id']
-          username?: parameters['rowFilter.User.username']
-          createdAt?: parameters['rowFilter.User.createdAt']
-          updatedAt?: parameters['rowFilter.User.updatedAt']
-          teamId?: parameters['rowFilter.User.teamId']
-          email?: parameters['rowFilter.User.email']
-          profileId?: parameters['rowFilter.User.profileId']
-        }
+          id?: parameters["rowFilter.User.id"];
+          username?: parameters["rowFilter.User.username"];
+          createdAt?: parameters["rowFilter.User.createdAt"];
+          updatedAt?: parameters["rowFilter.User.updatedAt"];
+          teamId?: parameters["rowFilter.User.teamId"];
+          email?: parameters["rowFilter.User.email"];
+          profileId?: parameters["rowFilter.User.profileId"];
+        };
         body: {
           /** User */
-          User?: definitions['User']
-        }
+          User?: definitions["User"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
-  }
-  '/UserDetailsView': {
+        204: never;
+      };
+    };
+  };
+  "/UserDetailsView": {
     get: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.UserDetailsView.id']
-          username?: parameters['rowFilter.UserDetailsView.username']
-          email?: parameters['rowFilter.UserDetailsView.email']
-          nameEng?: parameters['rowFilter.UserDetailsView.nameEng']
-          nameChi?: parameters['rowFilter.UserDetailsView.nameChi']
-          contact?: parameters['rowFilter.UserDetailsView.contact']
-          dob?: parameters['rowFilter.UserDetailsView.dob']
-          gender?: parameters['rowFilter.UserDetailsView.gender']
-          status?: parameters['rowFilter.UserDetailsView.status']
-          satellite?: parameters['rowFilter.UserDetailsView.satellite']
-          tngReceiptUrl?: parameters['rowFilter.UserDetailsView.tngReceiptUrl']
-          avatarUrl?: parameters['rowFilter.UserDetailsView.avatarUrl']
-          city?: parameters['rowFilter.UserDetailsView.city']
-          line1?: parameters['rowFilter.UserDetailsView.line1']
-          line2?: parameters['rowFilter.UserDetailsView.line2']
-          state?: parameters['rowFilter.UserDetailsView.state']
-          country?: parameters['rowFilter.UserDetailsView.country']
-          postalCode?: parameters['rowFilter.UserDetailsView.postalCode']
-          createdAt?: parameters['rowFilter.UserDetailsView.createdAt']
-          updatedAt?: parameters['rowFilter.UserDetailsView.updatedAt']
+          id?: parameters["rowFilter.UserDetailsView.id"];
+          username?: parameters["rowFilter.UserDetailsView.username"];
+          email?: parameters["rowFilter.UserDetailsView.email"];
+          nameEng?: parameters["rowFilter.UserDetailsView.nameEng"];
+          nameChi?: parameters["rowFilter.UserDetailsView.nameChi"];
+          contact?: parameters["rowFilter.UserDetailsView.contact"];
+          dob?: parameters["rowFilter.UserDetailsView.dob"];
+          gender?: parameters["rowFilter.UserDetailsView.gender"];
+          status?: parameters["rowFilter.UserDetailsView.status"];
+          satellite?: parameters["rowFilter.UserDetailsView.satellite"];
+          tngReceiptUrl?: parameters["rowFilter.UserDetailsView.tngReceiptUrl"];
+          avatarUrl?: parameters["rowFilter.UserDetailsView.avatarUrl"];
+          invitedBy?: parameters["rowFilter.UserDetailsView.invitedBy"];
+          city?: parameters["rowFilter.UserDetailsView.city"];
+          line1?: parameters["rowFilter.UserDetailsView.line1"];
+          line2?: parameters["rowFilter.UserDetailsView.line2"];
+          state?: parameters["rowFilter.UserDetailsView.state"];
+          country?: parameters["rowFilter.UserDetailsView.country"];
+          postalCode?: parameters["rowFilter.UserDetailsView.postalCode"];
+          createdAt?: parameters["rowFilter.UserDetailsView.createdAt"];
+          updatedAt?: parameters["rowFilter.UserDetailsView.updatedAt"];
           /** Filtering Columns */
-          select?: parameters['select']
+          select?: parameters["select"];
           /** Ordering */
-          order?: parameters['order']
+          order?: parameters["order"];
           /** Limiting and Pagination */
-          offset?: parameters['offset']
+          offset?: parameters["offset"];
           /** Limiting and Pagination */
-          limit?: parameters['limit']
-        }
+          limit?: parameters["limit"];
+        };
         header: {
           /** Limiting and Pagination */
-          Range?: parameters['range']
+          Range?: parameters["range"];
           /** Limiting and Pagination */
-          'Range-Unit'?: parameters['rangeUnit']
+          "Range-Unit"?: parameters["rangeUnit"];
           /** Preference */
-          Prefer?: parameters['preferCount']
-        }
-      }
+          Prefer?: parameters["preferCount"];
+        };
+      };
       responses: {
         /** OK */
         200: {
-          schema: definitions['UserDetailsView'][]
-        }
+          schema: definitions["UserDetailsView"][];
+        };
         /** Partial Content */
-        206: unknown
-      }
-    }
-  }
-  '/UserRole': {
+        206: unknown;
+      };
+    };
+  };
+  "/UserRole": {
     get: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.UserRole.id']
-          role?: parameters['rowFilter.UserRole.role']
-          userId?: parameters['rowFilter.UserRole.userId']
+          id?: parameters["rowFilter.UserRole.id"];
+          role?: parameters["rowFilter.UserRole.role"];
+          userId?: parameters["rowFilter.UserRole.userId"];
           /** Filtering Columns */
-          select?: parameters['select']
+          select?: parameters["select"];
           /** Ordering */
-          order?: parameters['order']
+          order?: parameters["order"];
           /** Limiting and Pagination */
-          offset?: parameters['offset']
+          offset?: parameters["offset"];
           /** Limiting and Pagination */
-          limit?: parameters['limit']
-        }
+          limit?: parameters["limit"];
+        };
         header: {
           /** Limiting and Pagination */
-          Range?: parameters['range']
+          Range?: parameters["range"];
           /** Limiting and Pagination */
-          'Range-Unit'?: parameters['rangeUnit']
+          "Range-Unit"?: parameters["rangeUnit"];
           /** Preference */
-          Prefer?: parameters['preferCount']
-        }
-      }
+          Prefer?: parameters["preferCount"];
+        };
+      };
       responses: {
         /** OK */
         200: {
-          schema: definitions['UserRole'][]
-        }
+          schema: definitions["UserRole"][];
+        };
         /** Partial Content */
-        206: unknown
-      }
-    }
+        206: unknown;
+      };
+    };
     post: {
       parameters: {
         body: {
           /** UserRole */
-          UserRole?: definitions['UserRole']
-        }
+          UserRole?: definitions["UserRole"];
+        };
         query: {
           /** Filtering Columns */
-          select?: parameters['select']
-        }
+          select?: parameters["select"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** Created */
-        201: unknown
-      }
-    }
+        201: unknown;
+      };
+    };
     delete: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.UserRole.id']
-          role?: parameters['rowFilter.UserRole.role']
-          userId?: parameters['rowFilter.UserRole.userId']
-        }
+          id?: parameters["rowFilter.UserRole.id"];
+          role?: parameters["rowFilter.UserRole.role"];
+          userId?: parameters["rowFilter.UserRole.userId"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
+        204: never;
+      };
+    };
     patch: {
       parameters: {
         query: {
-          id?: parameters['rowFilter.UserRole.id']
-          role?: parameters['rowFilter.UserRole.role']
-          userId?: parameters['rowFilter.UserRole.userId']
-        }
+          id?: parameters["rowFilter.UserRole.id"];
+          role?: parameters["rowFilter.UserRole.role"];
+          userId?: parameters["rowFilter.UserRole.userId"];
+        };
         body: {
           /** UserRole */
-          UserRole?: definitions['UserRole']
-        }
+          UserRole?: definitions["UserRole"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
-  }
-  '/_prisma_migrations': {
+        204: never;
+      };
+    };
+  };
+  "/_prisma_migrations": {
     get: {
       parameters: {
         query: {
-          id?: parameters['rowFilter._prisma_migrations.id']
-          checksum?: parameters['rowFilter._prisma_migrations.checksum']
-          finished_at?: parameters['rowFilter._prisma_migrations.finished_at']
-          migration_name?: parameters['rowFilter._prisma_migrations.migration_name']
-          logs?: parameters['rowFilter._prisma_migrations.logs']
-          rolled_back_at?: parameters['rowFilter._prisma_migrations.rolled_back_at']
-          started_at?: parameters['rowFilter._prisma_migrations.started_at']
-          applied_steps_count?: parameters['rowFilter._prisma_migrations.applied_steps_count']
+          id?: parameters["rowFilter._prisma_migrations.id"];
+          checksum?: parameters["rowFilter._prisma_migrations.checksum"];
+          finished_at?: parameters["rowFilter._prisma_migrations.finished_at"];
+          migration_name?: parameters["rowFilter._prisma_migrations.migration_name"];
+          logs?: parameters["rowFilter._prisma_migrations.logs"];
+          rolled_back_at?: parameters["rowFilter._prisma_migrations.rolled_back_at"];
+          started_at?: parameters["rowFilter._prisma_migrations.started_at"];
+          applied_steps_count?: parameters["rowFilter._prisma_migrations.applied_steps_count"];
           /** Filtering Columns */
-          select?: parameters['select']
+          select?: parameters["select"];
           /** Ordering */
-          order?: parameters['order']
+          order?: parameters["order"];
           /** Limiting and Pagination */
-          offset?: parameters['offset']
+          offset?: parameters["offset"];
           /** Limiting and Pagination */
-          limit?: parameters['limit']
-        }
+          limit?: parameters["limit"];
+        };
         header: {
           /** Limiting and Pagination */
-          Range?: parameters['range']
+          Range?: parameters["range"];
           /** Limiting and Pagination */
-          'Range-Unit'?: parameters['rangeUnit']
+          "Range-Unit"?: parameters["rangeUnit"];
           /** Preference */
-          Prefer?: parameters['preferCount']
-        }
-      }
+          Prefer?: parameters["preferCount"];
+        };
+      };
       responses: {
         /** OK */
         200: {
-          schema: definitions['_prisma_migrations'][]
-        }
+          schema: definitions["_prisma_migrations"][];
+        };
         /** Partial Content */
-        206: unknown
-      }
-    }
+        206: unknown;
+      };
+    };
     post: {
       parameters: {
         body: {
           /** _prisma_migrations */
-          _prisma_migrations?: definitions['_prisma_migrations']
-        }
+          _prisma_migrations?: definitions["_prisma_migrations"];
+        };
         query: {
           /** Filtering Columns */
-          select?: parameters['select']
-        }
+          select?: parameters["select"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** Created */
-        201: unknown
-      }
-    }
+        201: unknown;
+      };
+    };
     delete: {
       parameters: {
         query: {
-          id?: parameters['rowFilter._prisma_migrations.id']
-          checksum?: parameters['rowFilter._prisma_migrations.checksum']
-          finished_at?: parameters['rowFilter._prisma_migrations.finished_at']
-          migration_name?: parameters['rowFilter._prisma_migrations.migration_name']
-          logs?: parameters['rowFilter._prisma_migrations.logs']
-          rolled_back_at?: parameters['rowFilter._prisma_migrations.rolled_back_at']
-          started_at?: parameters['rowFilter._prisma_migrations.started_at']
-          applied_steps_count?: parameters['rowFilter._prisma_migrations.applied_steps_count']
-        }
+          id?: parameters["rowFilter._prisma_migrations.id"];
+          checksum?: parameters["rowFilter._prisma_migrations.checksum"];
+          finished_at?: parameters["rowFilter._prisma_migrations.finished_at"];
+          migration_name?: parameters["rowFilter._prisma_migrations.migration_name"];
+          logs?: parameters["rowFilter._prisma_migrations.logs"];
+          rolled_back_at?: parameters["rowFilter._prisma_migrations.rolled_back_at"];
+          started_at?: parameters["rowFilter._prisma_migrations.started_at"];
+          applied_steps_count?: parameters["rowFilter._prisma_migrations.applied_steps_count"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
+        204: never;
+      };
+    };
     patch: {
       parameters: {
         query: {
-          id?: parameters['rowFilter._prisma_migrations.id']
-          checksum?: parameters['rowFilter._prisma_migrations.checksum']
-          finished_at?: parameters['rowFilter._prisma_migrations.finished_at']
-          migration_name?: parameters['rowFilter._prisma_migrations.migration_name']
-          logs?: parameters['rowFilter._prisma_migrations.logs']
-          rolled_back_at?: parameters['rowFilter._prisma_migrations.rolled_back_at']
-          started_at?: parameters['rowFilter._prisma_migrations.started_at']
-          applied_steps_count?: parameters['rowFilter._prisma_migrations.applied_steps_count']
-        }
+          id?: parameters["rowFilter._prisma_migrations.id"];
+          checksum?: parameters["rowFilter._prisma_migrations.checksum"];
+          finished_at?: parameters["rowFilter._prisma_migrations.finished_at"];
+          migration_name?: parameters["rowFilter._prisma_migrations.migration_name"];
+          logs?: parameters["rowFilter._prisma_migrations.logs"];
+          rolled_back_at?: parameters["rowFilter._prisma_migrations.rolled_back_at"];
+          started_at?: parameters["rowFilter._prisma_migrations.started_at"];
+          applied_steps_count?: parameters["rowFilter._prisma_migrations.applied_steps_count"];
+        };
         body: {
           /** _prisma_migrations */
-          _prisma_migrations?: definitions['_prisma_migrations']
-        }
+          _prisma_migrations?: definitions["_prisma_migrations"];
+        };
         header: {
           /** Preference */
-          Prefer?: parameters['preferReturn']
-        }
-      }
+          Prefer?: parameters["preferReturn"];
+        };
+      };
       responses: {
         /** No Content */
-        204: never
-      }
-    }
-  }
+        204: never;
+      };
+    };
+  };
 }
 
 export interface definitions {
@@ -1377,368 +1918,530 @@ export interface definitions {
      * Note:
      * This is a Primary Key.<pk/>
      */
-    id: string
-    city: string
-    line1: string
-    line2?: string
-    state: string
-    country: string
-    postalCode: string
-  }
+    id: string;
+    city: string;
+    line1: string;
+    line2?: string;
+    state: string;
+    country: string;
+    postalCode: string;
+  };
   Cluster: {
     /**
      * Note:
      * This is a Primary Key.<pk/>
      */
-    id: string
-    name: string
-    color: string
-  }
+    id: string;
+    name: string;
+    color: string;
+  };
   Comment: {
     /**
      * Note:
      * This is a Primary Key.<pk/>
      */
-    id: string
-    content: string
-    created_at: string
-    updated_at: string
+    id: string;
+    content: string;
+    created_at: string;
+    updated_at: string;
     /**
      * Note:
      * This is a Foreign Key to `User.id`.<fk table='User' column='id'/>
      */
-    userId: string
+    userId: string;
     /**
      * Note:
      * This is a Foreign Key to `Post.id`.<fk table='Post' column='id'/>
      */
-    postId: string
-  }
+    postId: string;
+  };
   CommentLike: {
     /**
      * Note:
      * This is a Primary Key.<pk/>
      * This is a Foreign Key to `Comment.id`.<fk table='Comment' column='id'/>
      */
-    commentId: string
+    commentId: string;
     /**
      * Note:
      * This is a Primary Key.<pk/>
      * This is a Foreign Key to `User.id`.<fk table='User' column='id'/>
      */
-    userId: string
-  }
+    userId: string;
+  };
+  Discovery: {
+    /**
+     * Note:
+     * This is a Primary Key.<pk/>
+     */
+    id: string;
+    videoUrl?: string;
+    submittedAt?: string;
+    createdAt: string;
+    updatedAt: string;
+    /**
+     * Note:
+     * This is a Foreign Key to `Team.id`.<fk table='Team' column='id'/>
+     */
+    teamId: string;
+    /**
+     * Note:
+     * This is a Foreign Key to `Mission.id`.<fk table='Mission' column='id'/>
+     */
+    missionId: string;
+  };
+  Escape: {
+    /**
+     * Note:
+     * This is a Primary Key.<pk/>
+     */
+    id: string;
+    missionOne: boolean;
+    missionTwo: boolean;
+    missionThree: number;
+    /**
+     * Note:
+     * This is a Foreign Key to `Team.id`.<fk table='Team' column='id'/>
+     */
+    teamId: string;
+  };
+  Humanity: {
+    /**
+     * Note:
+     * This is a Primary Key.<pk/>
+     */
+    id: string;
+    photo1?: string;
+    photo2?: string;
+    photo3?: string;
+    createdAt: string;
+    updatedAt: string;
+    /**
+     * Note:
+     * This is a Foreign Key to `Team.id`.<fk table='Team' column='id'/>
+     */
+    teamId: string;
+    /**
+     * Note:
+     * This is a Foreign Key to `Mission.id`.<fk table='Mission' column='id'/>
+     */
+    missionId: string;
+    batch: number;
+    gatherLink: string;
+    submittedAt?: string;
+  };
+  Invitation: {
+    /**
+     * Note:
+     * This is a Primary Key.<pk/>
+     */
+    id: string;
+    /**
+     * Note:
+     * This is a Foreign Key to `User.id`.<fk table='User' column='id'/>
+     */
+    from?: string;
+    /**
+     * Note:
+     * This is a Foreign Key to `User.id`.<fk table='User' column='id'/>
+     */
+    userId: string;
+    /**
+     * Note:
+     * This is a Foreign Key to `Team.id`.<fk table='Team' column='id'/>
+     */
+    teamId: string;
+    createdAt: string;
+    updatedAt: string;
+  };
   Mission: {
     /**
      * Note:
      * This is a Primary Key.<pk/>
      */
-    id: string
-    title: string
-    description?: string
-    points: number
-    createdAt: string
-    updatedAt: string
-  }
+    id: string;
+    title: string;
+    description?: string;
+    points: number;
+    createdAt: string;
+    updatedAt: string;
+    startAt: string;
+    endAt: string;
+    slug: string;
+  };
   Post: {
     /**
      * Note:
      * This is a Primary Key.<pk/>
      */
-    id: string
-    content: string
-    images?: string
-    created_at: string
-    updated_at: string
+    id: string;
+    content: string;
+    images?: unknown[];
+    created_at: string;
+    updated_at: string;
     /**
      * Note:
      * This is a Foreign Key to `User.id`.<fk table='User' column='id'/>
      */
-    userId: string
-  }
+    userId: string;
+  };
   PostLike: {
     /**
      * Note:
      * This is a Primary Key.<pk/>
      * This is a Foreign Key to `Post.id`.<fk table='Post' column='id'/>
      */
-    postId: string
+    postId: string;
     /**
      * Note:
      * This is a Primary Key.<pk/>
      * This is a Foreign Key to `User.id`.<fk table='User' column='id'/>
      */
-    userId: string
-  }
+    userId: string;
+  };
   Profile: {
     /**
      * Note:
      * This is a Primary Key.<pk/>
      */
-    id: string
-    status?: 'PASTOR' | 'SCGL' | 'CGL' | 'PCGL' | 'ACGL' | 'OM' | 'NB' | 'NF'
-    gender: 'MALE' | 'FEMALE'
-    nameEng: string
-    contact: string
-    dob: string
-    tngReceiptUrl?: string
-    avatarUrl?: string
-    createdAt: string
-    updatedAt: string
+    id: string;
+    status?: "PASTOR" | "SCGL" | "CGL" | "PCGL" | "ACGL" | "OM" | "NB" | "NF";
+    gender: "MALE" | "FEMALE";
+    nameEng: string;
+    contact: string;
+    dob: string;
+    tngReceiptUrl?: string;
+    avatarUrl?: string;
+    createdAt: string;
+    updatedAt: string;
     /**
      * Note:
      * This is a Foreign Key to `Address.id`.<fk table='Address' column='id'/>
      */
-    addressId?: string
-    satellite?: 'FGASETAPAK' | 'FGARAWANG' | 'FGAPUCHONG' | 'FGAPJ' | 'FGAUSJ'
-    nameChi?: string
-    invitedBy?: string
-  }
+    addressId?: string;
+    satellite?: "FGASETAPAK" | "FGARAWANG" | "FGAPUCHONG" | "FGAPJ" | "FGAUSJ";
+    nameChi?: string;
+    invitedBy?: string;
+    bio?: string;
+  };
+  Speed: {
+    /**
+     * Note:
+     * This is a Primary Key.<pk/>
+     */
+    id: string;
+    completedAt?: string;
+    answer?: string;
+    createdAt: string;
+    updatedAt: string;
+    /**
+     * Note:
+     * This is a Foreign Key to `Team.id`.<fk table='Team' column='id'/>
+     */
+    teamId: string;
+    /**
+     * Note:
+     * This is a Foreign Key to `Mission.id`.<fk table='Mission' column='id'/>
+     */
+    missionId: string;
+  };
   Team: {
     /**
      * Note:
      * This is a Primary Key.<pk/>
      */
-    id: string
-    name?: string
-    color: string
-    points: number
+    id: string;
+    name?: string;
+    avatarUrl?: string;
+    points: number;
     /**
      * Note:
      * This is a Foreign Key to `Cluster.id`.<fk table='Cluster' column='id'/>
      */
-    clusterId?: string
-  }
+    clusterId?: string;
+  };
   TeamMission: {
     /**
      * Note:
      * This is a Primary Key.<pk/>
      * This is a Foreign Key to `Team.id`.<fk table='Team' column='id'/>
      */
-    teamId: string
+    teamId: string;
     /**
      * Note:
      * This is a Primary Key.<pk/>
      * This is a Foreign Key to `Mission.id`.<fk table='Mission' column='id'/>
      */
-    missionId: string
-  }
+    missionId: string;
+  };
   User: {
     /**
      * Note:
      * This is a Primary Key.<pk/>
      */
-    id: string
-    username: string
-    createdAt: string
-    updatedAt: string
+    id: string;
+    username: string;
+    createdAt: string;
+    updatedAt: string;
     /**
      * Note:
      * This is a Foreign Key to `Team.id`.<fk table='Team' column='id'/>
      */
-    teamId?: string
-    email: string
+    teamId?: string;
+    email: string;
     /**
      * Note:
      * This is a Foreign Key to `Profile.id`.<fk table='Profile' column='id'/>
      */
-    profileId: string
-  }
+    profileId: string;
+  };
   UserDetailsView: {
     /**
      * Note:
      * This is a Primary Key.<pk/>
      */
-    id?: string
-    username?: string
-    email?: string
-    nameEng?: string
-    nameChi?: string
-    contact?: string
-    dob?: string
-    gender?: 'MALE' | 'FEMALE'
-    status?: 'PASTOR' | 'SCGL' | 'CGL' | 'PCGL' | 'ACGL' | 'OM' | 'NB' | 'NF'
-    satellite?: 'FGASETAPAK' | 'FGARAWANG' | 'FGAPUCHONG' | 'FGAPJ' | 'FGAUSJ'
-    tngReceiptUrl?: string
-    avatarUrl?: string
-    city?: string
-    line1?: string
-    line2?: string
-    state?: string
-    country?: string
-    postalCode?: string
-    createdAt?: string
-    updatedAt?: string
-  }
+    id?: string;
+    username?: string;
+    email?: string;
+    nameEng?: string;
+    nameChi?: string;
+    contact?: string;
+    dob?: string;
+    gender?: "MALE" | "FEMALE";
+    status?: "PASTOR" | "SCGL" | "CGL" | "PCGL" | "ACGL" | "OM" | "NB" | "NF";
+    satellite?: "FGASETAPAK" | "FGARAWANG" | "FGAPUCHONG" | "FGAPJ" | "FGAUSJ";
+    tngReceiptUrl?: string;
+    avatarUrl?: string;
+    invitedBy?: string;
+    city?: string;
+    line1?: string;
+    line2?: string;
+    state?: string;
+    country?: string;
+    postalCode?: string;
+    createdAt?: string;
+    updatedAt?: string;
+  };
   UserRole: {
     /**
      * Note:
      * This is a Primary Key.<pk/>
      */
-    id: string
-    role: 'PLAYER' | 'TEAMLEADER' | 'CLUSTERLEADER' | 'CREW'
+    id: string;
+    role: "PLAYER" | "TEAMLEADER" | "CLUSTERLEADER" | "CREW";
     /**
      * Note:
      * This is a Foreign Key to `User.id`.<fk table='User' column='id'/>
      */
-    userId: string
-  }
+    userId: string;
+  };
   _prisma_migrations: {
     /**
      * Note:
      * This is a Primary Key.<pk/>
      */
-    id: string
-    checksum: string
-    finished_at?: string
-    migration_name: string
-    logs?: string
-    rolled_back_at?: string
-    started_at: string
-    applied_steps_count: number
-  }
+    id: string;
+    checksum: string;
+    finished_at?: string;
+    migration_name: string;
+    logs?: string;
+    rolled_back_at?: string;
+    started_at: string;
+    applied_steps_count: number;
+  };
 }
 
 export interface parameters {
   /** Preference */
-  preferParams: 'params=single-object'
+  preferParams: "params=single-object";
   /** Preference */
-  preferReturn: 'return=representation' | 'return=minimal' | 'return=none'
+  preferReturn: "return=representation" | "return=minimal" | "return=none";
   /** Preference */
-  preferCount: 'count=none'
+  preferCount: "count=none";
   /** Filtering Columns */
-  select: string
+  select: string;
   /** On Conflict */
-  on_conflict: string
+  on_conflict: string;
   /** Ordering */
-  order: string
+  order: string;
   /** Limiting and Pagination */
-  range: string
+  range: string;
   /** Limiting and Pagination */
-  rangeUnit: string
+  rangeUnit: string;
   /** Limiting and Pagination */
-  offset: string
+  offset: string;
   /** Limiting and Pagination */
-  limit: string
+  limit: string;
   /** Address */
-  'body.Address': definitions['Address']
-  'rowFilter.Address.id': string
-  'rowFilter.Address.city': string
-  'rowFilter.Address.line1': string
-  'rowFilter.Address.line2': string
-  'rowFilter.Address.state': string
-  'rowFilter.Address.country': string
-  'rowFilter.Address.postalCode': string
+  "body.Address": definitions["Address"];
+  "rowFilter.Address.id": string;
+  "rowFilter.Address.city": string;
+  "rowFilter.Address.line1": string;
+  "rowFilter.Address.line2": string;
+  "rowFilter.Address.state": string;
+  "rowFilter.Address.country": string;
+  "rowFilter.Address.postalCode": string;
   /** Cluster */
-  'body.Cluster': definitions['Cluster']
-  'rowFilter.Cluster.id': string
-  'rowFilter.Cluster.name': string
-  'rowFilter.Cluster.color': string
+  "body.Cluster": definitions["Cluster"];
+  "rowFilter.Cluster.id": string;
+  "rowFilter.Cluster.name": string;
+  "rowFilter.Cluster.color": string;
   /** Comment */
-  'body.Comment': definitions['Comment']
-  'rowFilter.Comment.id': string
-  'rowFilter.Comment.content': string
-  'rowFilter.Comment.created_at': string
-  'rowFilter.Comment.updated_at': string
-  'rowFilter.Comment.userId': string
-  'rowFilter.Comment.postId': string
+  "body.Comment": definitions["Comment"];
+  "rowFilter.Comment.id": string;
+  "rowFilter.Comment.content": string;
+  "rowFilter.Comment.created_at": string;
+  "rowFilter.Comment.updated_at": string;
+  "rowFilter.Comment.userId": string;
+  "rowFilter.Comment.postId": string;
   /** CommentLike */
-  'body.CommentLike': definitions['CommentLike']
-  'rowFilter.CommentLike.commentId': string
-  'rowFilter.CommentLike.userId': string
+  "body.CommentLike": definitions["CommentLike"];
+  "rowFilter.CommentLike.commentId": string;
+  "rowFilter.CommentLike.userId": string;
+  /** Discovery */
+  "body.Discovery": definitions["Discovery"];
+  "rowFilter.Discovery.id": string;
+  "rowFilter.Discovery.videoUrl": string;
+  "rowFilter.Discovery.submittedAt": string;
+  "rowFilter.Discovery.createdAt": string;
+  "rowFilter.Discovery.updatedAt": string;
+  "rowFilter.Discovery.teamId": string;
+  "rowFilter.Discovery.missionId": string;
+  /** Escape */
+  "body.Escape": definitions["Escape"];
+  "rowFilter.Escape.id": string;
+  "rowFilter.Escape.missionOne": string;
+  "rowFilter.Escape.missionTwo": string;
+  "rowFilter.Escape.missionThree": string;
+  "rowFilter.Escape.teamId": string;
+  /** Humanity */
+  "body.Humanity": definitions["Humanity"];
+  "rowFilter.Humanity.id": string;
+  "rowFilter.Humanity.photo1": string;
+  "rowFilter.Humanity.photo2": string;
+  "rowFilter.Humanity.photo3": string;
+  "rowFilter.Humanity.createdAt": string;
+  "rowFilter.Humanity.updatedAt": string;
+  "rowFilter.Humanity.teamId": string;
+  "rowFilter.Humanity.missionId": string;
+  "rowFilter.Humanity.batch": string;
+  "rowFilter.Humanity.gatherLink": string;
+  "rowFilter.Humanity.submittedAt": string;
+  /** Invitation */
+  "body.Invitation": definitions["Invitation"];
+  "rowFilter.Invitation.id": string;
+  "rowFilter.Invitation.from": string;
+  "rowFilter.Invitation.userId": string;
+  "rowFilter.Invitation.teamId": string;
+  "rowFilter.Invitation.createdAt": string;
+  "rowFilter.Invitation.updatedAt": string;
   /** Mission */
-  'body.Mission': definitions['Mission']
-  'rowFilter.Mission.id': string
-  'rowFilter.Mission.title': string
-  'rowFilter.Mission.description': string
-  'rowFilter.Mission.points': string
-  'rowFilter.Mission.createdAt': string
-  'rowFilter.Mission.updatedAt': string
+  "body.Mission": definitions["Mission"];
+  "rowFilter.Mission.id": string;
+  "rowFilter.Mission.title": string;
+  "rowFilter.Mission.description": string;
+  "rowFilter.Mission.points": string;
+  "rowFilter.Mission.createdAt": string;
+  "rowFilter.Mission.updatedAt": string;
+  "rowFilter.Mission.startAt": string;
+  "rowFilter.Mission.endAt": string;
+  "rowFilter.Mission.slug": string;
   /** Post */
-  'body.Post': definitions['Post']
-  'rowFilter.Post.id': string
-  'rowFilter.Post.content': string
-  'rowFilter.Post.images': string
-  'rowFilter.Post.created_at': string
-  'rowFilter.Post.updated_at': string
-  'rowFilter.Post.userId': string
+  "body.Post": definitions["Post"];
+  "rowFilter.Post.id": string;
+  "rowFilter.Post.content": string;
+  "rowFilter.Post.images": string;
+  "rowFilter.Post.created_at": string;
+  "rowFilter.Post.updated_at": string;
+  "rowFilter.Post.userId": string;
   /** PostLike */
-  'body.PostLike': definitions['PostLike']
-  'rowFilter.PostLike.postId': string
-  'rowFilter.PostLike.userId': string
+  "body.PostLike": definitions["PostLike"];
+  "rowFilter.PostLike.postId": string;
+  "rowFilter.PostLike.userId": string;
   /** Profile */
-  'body.Profile': definitions['Profile']
-  'rowFilter.Profile.id': string
-  'rowFilter.Profile.status': string
-  'rowFilter.Profile.gender': string
-  'rowFilter.Profile.nameEng': string
-  'rowFilter.Profile.contact': string
-  'rowFilter.Profile.dob': string
-  'rowFilter.Profile.tngReceiptUrl': string
-  'rowFilter.Profile.avatarUrl': string
-  'rowFilter.Profile.createdAt': string
-  'rowFilter.Profile.updatedAt': string
-  'rowFilter.Profile.addressId': string
-  'rowFilter.Profile.satellite': string
-  'rowFilter.Profile.nameChi': string
-  'rowFilter.Profile.invitedBy': string
+  "body.Profile": definitions["Profile"];
+  "rowFilter.Profile.id": string;
+  "rowFilter.Profile.status": string;
+  "rowFilter.Profile.gender": string;
+  "rowFilter.Profile.nameEng": string;
+  "rowFilter.Profile.contact": string;
+  "rowFilter.Profile.dob": string;
+  "rowFilter.Profile.tngReceiptUrl": string;
+  "rowFilter.Profile.avatarUrl": string;
+  "rowFilter.Profile.createdAt": string;
+  "rowFilter.Profile.updatedAt": string;
+  "rowFilter.Profile.addressId": string;
+  "rowFilter.Profile.satellite": string;
+  "rowFilter.Profile.nameChi": string;
+  "rowFilter.Profile.invitedBy": string;
+  "rowFilter.Profile.bio": string;
+  /** Speed */
+  "body.Speed": definitions["Speed"];
+  "rowFilter.Speed.id": string;
+  "rowFilter.Speed.completedAt": string;
+  "rowFilter.Speed.answer": string;
+  "rowFilter.Speed.createdAt": string;
+  "rowFilter.Speed.updatedAt": string;
+  "rowFilter.Speed.teamId": string;
+  "rowFilter.Speed.missionId": string;
   /** Team */
-  'body.Team': definitions['Team']
-  'rowFilter.Team.id': string
-  'rowFilter.Team.name': string
-  'rowFilter.Team.color': string
-  'rowFilter.Team.points': string
-  'rowFilter.Team.clusterId': string
+  "body.Team": definitions["Team"];
+  "rowFilter.Team.id": string;
+  "rowFilter.Team.name": string;
+  "rowFilter.Team.avatarUrl": string;
+  "rowFilter.Team.points": string;
+  "rowFilter.Team.clusterId": string;
   /** TeamMission */
-  'body.TeamMission': definitions['TeamMission']
-  'rowFilter.TeamMission.teamId': string
-  'rowFilter.TeamMission.missionId': string
+  "body.TeamMission": definitions["TeamMission"];
+  "rowFilter.TeamMission.teamId": string;
+  "rowFilter.TeamMission.missionId": string;
   /** User */
-  'body.User': definitions['User']
-  'rowFilter.User.id': string
-  'rowFilter.User.username': string
-  'rowFilter.User.createdAt': string
-  'rowFilter.User.updatedAt': string
-  'rowFilter.User.teamId': string
-  'rowFilter.User.email': string
-  'rowFilter.User.profileId': string
+  "body.User": definitions["User"];
+  "rowFilter.User.id": string;
+  "rowFilter.User.username": string;
+  "rowFilter.User.createdAt": string;
+  "rowFilter.User.updatedAt": string;
+  "rowFilter.User.teamId": string;
+  "rowFilter.User.email": string;
+  "rowFilter.User.profileId": string;
   /** UserDetailsView */
-  'body.UserDetailsView': definitions['UserDetailsView']
-  'rowFilter.UserDetailsView.id': string
-  'rowFilter.UserDetailsView.username': string
-  'rowFilter.UserDetailsView.email': string
-  'rowFilter.UserDetailsView.nameEng': string
-  'rowFilter.UserDetailsView.nameChi': string
-  'rowFilter.UserDetailsView.contact': string
-  'rowFilter.UserDetailsView.dob': string
-  'rowFilter.UserDetailsView.gender': string
-  'rowFilter.UserDetailsView.status': string
-  'rowFilter.UserDetailsView.satellite': string
-  'rowFilter.UserDetailsView.tngReceiptUrl': string
-  'rowFilter.UserDetailsView.avatarUrl': string
-  'rowFilter.UserDetailsView.city': string
-  'rowFilter.UserDetailsView.line1': string
-  'rowFilter.UserDetailsView.line2': string
-  'rowFilter.UserDetailsView.state': string
-  'rowFilter.UserDetailsView.country': string
-  'rowFilter.UserDetailsView.postalCode': string
-  'rowFilter.UserDetailsView.createdAt': string
-  'rowFilter.UserDetailsView.updatedAt': string
+  "body.UserDetailsView": definitions["UserDetailsView"];
+  "rowFilter.UserDetailsView.id": string;
+  "rowFilter.UserDetailsView.username": string;
+  "rowFilter.UserDetailsView.email": string;
+  "rowFilter.UserDetailsView.nameEng": string;
+  "rowFilter.UserDetailsView.nameChi": string;
+  "rowFilter.UserDetailsView.contact": string;
+  "rowFilter.UserDetailsView.dob": string;
+  "rowFilter.UserDetailsView.gender": string;
+  "rowFilter.UserDetailsView.status": string;
+  "rowFilter.UserDetailsView.satellite": string;
+  "rowFilter.UserDetailsView.tngReceiptUrl": string;
+  "rowFilter.UserDetailsView.avatarUrl": string;
+  "rowFilter.UserDetailsView.invitedBy": string;
+  "rowFilter.UserDetailsView.city": string;
+  "rowFilter.UserDetailsView.line1": string;
+  "rowFilter.UserDetailsView.line2": string;
+  "rowFilter.UserDetailsView.state": string;
+  "rowFilter.UserDetailsView.country": string;
+  "rowFilter.UserDetailsView.postalCode": string;
+  "rowFilter.UserDetailsView.createdAt": string;
+  "rowFilter.UserDetailsView.updatedAt": string;
   /** UserRole */
-  'body.UserRole': definitions['UserRole']
-  'rowFilter.UserRole.id': string
-  'rowFilter.UserRole.role': string
-  'rowFilter.UserRole.userId': string
+  "body.UserRole": definitions["UserRole"];
+  "rowFilter.UserRole.id": string;
+  "rowFilter.UserRole.role": string;
+  "rowFilter.UserRole.userId": string;
   /** _prisma_migrations */
-  'body._prisma_migrations': definitions['_prisma_migrations']
-  'rowFilter._prisma_migrations.id': string
-  'rowFilter._prisma_migrations.checksum': string
-  'rowFilter._prisma_migrations.finished_at': string
-  'rowFilter._prisma_migrations.migration_name': string
-  'rowFilter._prisma_migrations.logs': string
-  'rowFilter._prisma_migrations.rolled_back_at': string
-  'rowFilter._prisma_migrations.started_at': string
-  'rowFilter._prisma_migrations.applied_steps_count': string
+  "body._prisma_migrations": definitions["_prisma_migrations"];
+  "rowFilter._prisma_migrations.id": string;
+  "rowFilter._prisma_migrations.checksum": string;
+  "rowFilter._prisma_migrations.finished_at": string;
+  "rowFilter._prisma_migrations.migration_name": string;
+  "rowFilter._prisma_migrations.logs": string;
+  "rowFilter._prisma_migrations.rolled_back_at": string;
+  "rowFilter._prisma_migrations.started_at": string;
+  "rowFilter._prisma_migrations.applied_steps_count": string;
 }
 
 export interface operations {}

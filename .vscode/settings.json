@@ -1,14 +1,15 @@
 {
-    "sqltools.connections": [
-        {
-            "previewLimit": 50,
-            "server": "db.gnbavzhblfvrsopphqja.supabase.co",
-            "port": 6543,
-            "driver": "PostgreSQL",
-            "name": "thebox-supabase",
-            "database": "postgres",
-            "username": "postgres",
-            "password": "EEmc~]szAE4tuXR-"
-        }
-    ]
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "db.vfqzgsbgmlvglbygosna.supabase.co",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "thebox-supabase",
+      "database": "postgres",
+      "username": "postgres",
+      "password": "%3C5%3D%3DjJ%5Bn%7D%60L%3Bf%2Ctp",
+      "connectString": "postgresql://postgres:%3C5%3D%3DjJ%5Bn%7D%60L%3Bf%2Ctp@db.vfqzgsbgmlvglbygosna.supabase.co:6543/postgres?pgbouncer=true"
+    }
+  ]
 }

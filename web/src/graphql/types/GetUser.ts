@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { Role, PastoralStatus, Gender, Satellite } from "./globalTypes";
+import { Role, PastoralStatus, Gender, Satellite, Powercard } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetUser
@@ -52,6 +52,8 @@ export interface GetUser_user_team {
   name: string | null;
   avatarUrl: string | null;
   points: number;
+  powercard: Powercard | null;
+  eligiblePowercards: Powercard[];
   cluster: GetUser_user_team_cluster | null;
 }
 

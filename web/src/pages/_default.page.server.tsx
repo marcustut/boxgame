@@ -18,7 +18,7 @@ const makeApolloClient = (apolloInitialState?: NormalizedCacheObject) => {
 }
 
 // See https://vite-plugin-ssr.com/data-fetching
-export const passToClient = ['pageProps', 'urlPathname', 'apolloInitialState', 'redirectTo']
+export const passToClient = ['pageProps', 'urlPathname', 'apolloInitialState', 'redirectTo', 'routeParams']
 
 export const render = async (pageContext: PageContextBuiltIn & PageContext) => {
   // Get page context from server

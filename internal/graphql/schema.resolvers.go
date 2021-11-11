@@ -85,6 +85,10 @@ func (r *mutationResolver) CreateTeam(ctx context.Context, param model.NewTeam) 
 	return query.CreateTeam(ctx, r.db, &param)
 }
 
+func (r *mutationResolver) CreateBattlegroundRoom(ctx context.Context, param model.NewBattlegroundRoom) (*model.BattlegroundRoom, error) {
+	return query.CreateBattlegroundRoom(ctx, r.db, &param)
+}
+
 func (r *mutationResolver) UpdateUser(ctx context.Context, userID string, param model.UpdateUserInput) (*model.User, error) {
 	user, err := query.GetUniqueUser(ctx, r.db, postgresql.User.ID.Equals(userID))
 	if err != nil {
@@ -96,6 +100,10 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, userID string, param 
 
 func (r *mutationResolver) UpdateTeam(ctx context.Context, teamID string, param model.UpdateTeamInput) (*model.Team, error) {
 	return query.UpdateUniqueTeam(ctx, r.db, postgresql.Team.ID.Equals(teamID), &param)
+}
+
+func (r *mutationResolver) UpdateBattlegroundRoom(ctx context.Context, code string, param model.UpdateBattlegroundRoomInput) (*model.BattlegroundRoom, error) {
+	return query.UpdateUniqueBattlegroundRoom(ctx, r.db, postgresql.BattlegroundRoom.Code.Equals(code), &param)
 }
 
 func (r *mutationResolver) UpsertEscape(ctx context.Context, param model.UpsertEscapeInput) (*model.Escape, error) {
@@ -217,6 +225,14 @@ func (r *queryResolver) Missions(ctx context.Context, page model.PaginationInput
 	return query.GetManyMission(ctx, r.db, page)
 }
 
+func (r *queryResolver) BattlegroundRoom(ctx context.Context, code string) (*model.BattlegroundRoom, error) {
+	return query.GetUniqueBattlegroundRoom(ctx, r.db, postgresql.BattlegroundRoom.Code.Equals(code))
+}
+
+func (r *queryResolver) BattlegroundRooms(ctx context.Context, page model.PaginationInput) ([]*model.BattlegroundRoom, error) {
+	return query.GetManyBattlegrounRoom(ctx, r.db, page)
+}
+
 func (r *queryResolver) Post(ctx context.Context, postID string) (*model.Post, error) {
 	return query.GetUniquePost(ctx, r.db, postgresql.Post.ID.Equals(postID))
 }
@@ -325,13 +341,3 @@ type queryResolver struct{ *Resolver }
 type speedResolver struct{ *Resolver }
 type teamResolver struct{ *Resolver }
 type userResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *profileResolver) Bio(ctx context.Context, obj *model.Profile) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
-}

@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { PaginationInput, Role, PastoralStatus, Gender, Satellite } from "./globalTypes";
+import { PaginationInput, Role, PastoralStatus, Gender, Satellite, Powercard } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetUsers
@@ -52,6 +52,8 @@ export interface GetUsers_users_team {
   name: string | null;
   avatarUrl: string | null;
   points: number;
+  powercard: Powercard | null;
+  eligiblePowercards: Powercard[];
   cluster: GetUsers_users_team_cluster | null;
 }
 

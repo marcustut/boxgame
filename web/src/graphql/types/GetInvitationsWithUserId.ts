@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { PaginationInput, Role } from "./globalTypes";
+import { PaginationInput, Role, Powercard } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetInvitationsWithUserId
@@ -42,6 +42,8 @@ export interface GetInvitationsWithUserId_invitations_team {
   name: string | null;
   avatarUrl: string | null;
   points: number;
+  powercard: Powercard | null;
+  eligiblePowercards: Powercard[];
   cluster: GetInvitationsWithUserId_invitations_team_cluster | null;
 }
 

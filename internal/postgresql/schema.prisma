@@ -102,19 +102,21 @@ model Address {
 }
 
 model Team {
-  id          String        @id @db.Uuid
-  name        String?
-  avatarUrl   String?
-  points      Float         @default(0)
-  clusterId   String?       @db.Uuid
-  cluster     Cluster?      @relation(fields: [clusterId], references: [id])
-  Discovery   Discovery?
-  Escape      Escape?
-  Humanity    Humanity?
-  Invitation  Invitation[]
-  Speed       Speed?
-  teamMission TeamMission[]
-  members     User[]
+  id                 String        @id @db.Uuid
+  name               String?
+  avatarUrl          String?
+  points             Float         @default(0)
+  clusterId          String?       @db.Uuid
+  powercard          Powercard?
+  eligiblePowercards Powercard[]
+  cluster            Cluster?      @relation(fields: [clusterId], references: [id])
+  Discovery          Discovery?
+  Escape             Escape?
+  Humanity           Humanity?
+  Invitation         Invitation[]
+  Speed              Speed?
+  teamMission        TeamMission[]
+  members            User[]
 }
 
 model TeamMission {
@@ -219,6 +221,14 @@ model Discovery {
   Team        Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }
 
+model BattlegroundRoom {
+  code      String     @id @db.Char(4)
+  teamIds   String[]   @db.Uuid
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  status    RoomStatus @default(PREPARING)
+}
+
 enum Role {
   PLAYER
   TEAMLEADER
@@ -248,4 +258,16 @@ enum Satellite {
   FGAPUCHONG
   FGAPJ
   FGAUSJ
+}
+
+enum RoomStatus {
+  PREPARING
+  ONGOING
+  ENDED
+}
+
+enum Powercard {
+  REVERSE
+  BLOCK
+  ONEMORECHANCE
 }

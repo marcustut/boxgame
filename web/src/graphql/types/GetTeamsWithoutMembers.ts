@@ -6,17 +6,17 @@
 import { PaginationInput, Powercard } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: GetSpeeds
+// GraphQL query operation: GetTeamsWithoutMembers
 // ====================================================
 
-export interface GetSpeeds_speeds_team_cluster {
+export interface GetTeamsWithoutMembers_teams_cluster {
   __typename: "Cluster";
   id: string;
   name: string;
   color: string;
 }
 
-export interface GetSpeeds_speeds_team {
+export interface GetTeamsWithoutMembers_teams {
   __typename: "Team";
   id: string;
   name: string | null;
@@ -24,23 +24,13 @@ export interface GetSpeeds_speeds_team {
   points: number;
   powercard: Powercard | null;
   eligiblePowercards: Powercard[];
-  cluster: GetSpeeds_speeds_team_cluster | null;
+  cluster: GetTeamsWithoutMembers_teams_cluster | null;
 }
 
-export interface GetSpeeds_speeds {
-  __typename: "Speed";
-  id: string;
-  completedAt: TheBox.Time | null;
-  answer: string | null;
-  createdAt: TheBox.Time;
-  updatedAt: TheBox.Time;
-  team: GetSpeeds_speeds_team;
+export interface GetTeamsWithoutMembers {
+  teams: GetTeamsWithoutMembers_teams[];
 }
 
-export interface GetSpeeds {
-  speeds: GetSpeeds_speeds[];
-}
-
-export interface GetSpeedsVariables {
+export interface GetTeamsWithoutMembersVariables {
   page: PaginationInput;
 }
