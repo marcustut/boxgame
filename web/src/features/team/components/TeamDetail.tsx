@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client'
+import { Icon } from '@iconify/react'
 import { useSnackbar } from 'notistack'
 import React, { useEffect } from 'react'
 
@@ -51,7 +52,7 @@ export const TeamDetail: React.FC<TeamDetailProps> = ({ teamId }) => {
           <h3 className='self-start font-medium text-sm mt-4 mb-1'>Powercard</h3>
           <p className='self-start text-xs text-true-gray-400'>
             Powercard are special ability that you will be able to use during the final challenge.{' '}
-            {!team.data.team.powercard && (
+            {!team.data.team.powercard && team.data.team.eligiblePowercards.length !== 0 && (
               <>
                 <br /> Choose one if you have not already. Pick wisely, you can only choose once.
               </>
@@ -59,37 +60,54 @@ export const TeamDetail: React.FC<TeamDetailProps> = ({ teamId }) => {
           </p>
           <div className='flex justify-around mt-4'>
             {!team.data.team.powercard ? (
-              team.data.team.eligiblePowercards.map((p, idx) => (
-                <Powercard
-                  key={p}
-                  powercard={p}
-                  onClick={async () => {
-                    if (!team.data.team) return
+              team.data.team.eligiblePowercards.length !== 0 ? (
+                <div className='flex flex-col'>
+                  <div className='flex items-center'>
+                    {team.data.team.eligiblePowercards.map((p, idx) => (
+                      <Powercard
+                        key={p}
+                        powercard={p}
+                        onClick={async () => {
+                          if (!team.data.team) return
 
-                    if (
-                      window.confirm(`Are you sure you want to choose 《${cards[p].name}》?\nThere is no turning back`)
-                    ) {
-                      try {
-                        const { data, errors } = await updateTeam({
-                          variables: { team_id: team.data.team.id, param: { powercard: p } }
-                        })
-                        if (errors || !data) {
-                          enqueueSnackbar(`Unable to select powercard\n${errors}`, { variant: 'error' })
-                          console.error(errors)
-                          return
-                        }
-                        fetchTeam(team.data.team.id)
-                        enqueueSnackbar(`Successfully selected ${cards[p].name}`, { variant: 'success' })
-                      } catch (err) {
-                        enqueueSnackbar(`Unable to select powercard\n${err}`, { variant: 'error' })
-                        console.error(err)
-                        return
-                      }
-                    }
-                  }}
-                  utilities={{ m: idx !== 0 ? 'ml-4' : '' }}
-                />
-              ))
+                          if (
+                            window.confirm(
+                              `Are you sure you want to choose 《${cards[p].name}》?\nThere is no turning back`
+                            )
+                          ) {
+                            try {
+                              const { data, errors } = await updateTeam({
+                                variables: { team_id: team.data.team.id, param: { powercard: p } }
+                              })
+                              if (errors || !data) {
+                                enqueueSnackbar(`Unable to select powercard\n${errors}`, { variant: 'error' })
+                                console.error(errors)
+                                return
+                              }
+                              fetchTeam(team.data.team.id)
+                              enqueueSnackbar(`Successfully selected ${cards[p].name}`, { variant: 'success' })
+                            } catch (err) {
+                              enqueueSnackbar(`Unable to select powercard\n${err}`, { variant: 'error' })
+                              console.error(err)
+                              return
+                            }
+                          }
+                        }}
+                        utilities={{ m: idx !== 0 ? 'ml-4' : '' }}
+                      />
+                    ))}
+                  </div>
+                  <p className='mt-4 text-sm text-center text-true-gray-400'>
+                    Your team can pick one from {team.data.team.eligiblePowercards.length}{' '}
+                    {team.data.team.eligiblePowercards.length !== 0 ? 'powercards' : 'powercard'}
+                  </p>
+                </div>
+              ) : (
+                <div className='flex items-center'>
+                  Sorry, your team is not eligible for any powercards
+                  <Icon icon='noto:sad-but-relieved-face' className='ml-2' />
+                </div>
+              )
             ) : (
               <Powercard powercard={team.data.team.powercard} />
             )}
