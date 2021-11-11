@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { LoadingPage } from '@/components/Misc'
+import { CheckAuth, LoadingPage, LockPage } from '@/components/Misc'
 import { RoomControlPanel } from '@/features/battleground'
 import { usePageContext } from '@/hooks/usePageContext'
 
@@ -9,7 +9,13 @@ const BattlegroundRoomControlPanel: React.FC = () => {
 
   if (!pageContext) return <LoadingPage />
 
-  return <RoomControlPanel roomCode={pageContext.routeParams['roomCode']} />
+  return (
+    <CheckAuth>
+      <LockPage>
+        <RoomControlPanel roomCode={pageContext.routeParams['roomCode']} />
+      </LockPage>
+    </CheckAuth>
+  )
 }
 
 export default BattlegroundRoomControlPanel
