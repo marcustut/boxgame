@@ -113,6 +113,7 @@ export const UPDATE_TEAM = gql`
 export const UPDATE_USER = gql`
   ${CORE_USER_FIELDS}
   ${CORE_PROFILE_FIELDS}
+  ${CORE_TEAM_FIELDS}
   mutation UpdateUser($user_id: ID!, $param: UpdateUserInput!) {
     updateUser(user_id: $user_id, param: $param) {
       ...CoreUserFields
@@ -120,15 +121,7 @@ export const UPDATE_USER = gql`
         ...CoreProfileFields
       }
       team {
-        id
-        name
-        avatarUrl
-        points
-        cluster {
-          id
-          name
-          color
-        }
+        ...CoreTeamFields
       }
     }
   }

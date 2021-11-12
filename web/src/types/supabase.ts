@@ -117,6 +117,222 @@ export interface paths {
       };
     };
   };
+  "/BattlegroundRoom": {
+    get: {
+      parameters: {
+        query: {
+          code?: parameters["rowFilter.BattlegroundRoom.code"];
+          teamIds?: parameters["rowFilter.BattlegroundRoom.teamIds"];
+          createdAt?: parameters["rowFilter.BattlegroundRoom.createdAt"];
+          updatedAt?: parameters["rowFilter.BattlegroundRoom.updatedAt"];
+          status?: parameters["rowFilter.BattlegroundRoom.status"];
+          /** Filtering Columns */
+          select?: parameters["select"];
+          /** Ordering */
+          order?: parameters["order"];
+          /** Limiting and Pagination */
+          offset?: parameters["offset"];
+          /** Limiting and Pagination */
+          limit?: parameters["limit"];
+        };
+        header: {
+          /** Limiting and Pagination */
+          Range?: parameters["range"];
+          /** Limiting and Pagination */
+          "Range-Unit"?: parameters["rangeUnit"];
+          /** Preference */
+          Prefer?: parameters["preferCount"];
+        };
+      };
+      responses: {
+        /** OK */
+        200: {
+          schema: definitions["BattlegroundRoom"][];
+        };
+        /** Partial Content */
+        206: unknown;
+      };
+    };
+    post: {
+      parameters: {
+        body: {
+          /** BattlegroundRoom */
+          BattlegroundRoom?: definitions["BattlegroundRoom"];
+        };
+        query: {
+          /** Filtering Columns */
+          select?: parameters["select"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** Created */
+        201: unknown;
+      };
+    };
+    delete: {
+      parameters: {
+        query: {
+          code?: parameters["rowFilter.BattlegroundRoom.code"];
+          teamIds?: parameters["rowFilter.BattlegroundRoom.teamIds"];
+          createdAt?: parameters["rowFilter.BattlegroundRoom.createdAt"];
+          updatedAt?: parameters["rowFilter.BattlegroundRoom.updatedAt"];
+          status?: parameters["rowFilter.BattlegroundRoom.status"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+    patch: {
+      parameters: {
+        query: {
+          code?: parameters["rowFilter.BattlegroundRoom.code"];
+          teamIds?: parameters["rowFilter.BattlegroundRoom.teamIds"];
+          createdAt?: parameters["rowFilter.BattlegroundRoom.createdAt"];
+          updatedAt?: parameters["rowFilter.BattlegroundRoom.updatedAt"];
+          status?: parameters["rowFilter.BattlegroundRoom.status"];
+        };
+        body: {
+          /** BattlegroundRoom */
+          BattlegroundRoom?: definitions["BattlegroundRoom"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+  };
+  "/BattlegroundRound": {
+    get: {
+      parameters: {
+        query: {
+          code?: parameters["rowFilter.BattlegroundRound.code"];
+          round?: parameters["rowFilter.BattlegroundRound.round"];
+          attacker?: parameters["rowFilter.BattlegroundRound.attacker"];
+          defender?: parameters["rowFilter.BattlegroundRound.defender"];
+          attackerSelection?: parameters["rowFilter.BattlegroundRound.attackerSelection"];
+          defenderSelection?: parameters["rowFilter.BattlegroundRound.defenderSelection"];
+          attackerPowercard?: parameters["rowFilter.BattlegroundRound.attackerPowercard"];
+          defenderPowercard?: parameters["rowFilter.BattlegroundRound.defenderPowercard"];
+          effect?: parameters["rowFilter.BattlegroundRound.effect"];
+          createdAt?: parameters["rowFilter.BattlegroundRound.createdAt"];
+          updatedAt?: parameters["rowFilter.BattlegroundRound.updatedAt"];
+          /** Filtering Columns */
+          select?: parameters["select"];
+          /** Ordering */
+          order?: parameters["order"];
+          /** Limiting and Pagination */
+          offset?: parameters["offset"];
+          /** Limiting and Pagination */
+          limit?: parameters["limit"];
+        };
+        header: {
+          /** Limiting and Pagination */
+          Range?: parameters["range"];
+          /** Limiting and Pagination */
+          "Range-Unit"?: parameters["rangeUnit"];
+          /** Preference */
+          Prefer?: parameters["preferCount"];
+        };
+      };
+      responses: {
+        /** OK */
+        200: {
+          schema: definitions["BattlegroundRound"][];
+        };
+        /** Partial Content */
+        206: unknown;
+      };
+    };
+    post: {
+      parameters: {
+        body: {
+          /** BattlegroundRound */
+          BattlegroundRound?: definitions["BattlegroundRound"];
+        };
+        query: {
+          /** Filtering Columns */
+          select?: parameters["select"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** Created */
+        201: unknown;
+      };
+    };
+    delete: {
+      parameters: {
+        query: {
+          code?: parameters["rowFilter.BattlegroundRound.code"];
+          round?: parameters["rowFilter.BattlegroundRound.round"];
+          attacker?: parameters["rowFilter.BattlegroundRound.attacker"];
+          defender?: parameters["rowFilter.BattlegroundRound.defender"];
+          attackerSelection?: parameters["rowFilter.BattlegroundRound.attackerSelection"];
+          defenderSelection?: parameters["rowFilter.BattlegroundRound.defenderSelection"];
+          attackerPowercard?: parameters["rowFilter.BattlegroundRound.attackerPowercard"];
+          defenderPowercard?: parameters["rowFilter.BattlegroundRound.defenderPowercard"];
+          effect?: parameters["rowFilter.BattlegroundRound.effect"];
+          createdAt?: parameters["rowFilter.BattlegroundRound.createdAt"];
+          updatedAt?: parameters["rowFilter.BattlegroundRound.updatedAt"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+    patch: {
+      parameters: {
+        query: {
+          code?: parameters["rowFilter.BattlegroundRound.code"];
+          round?: parameters["rowFilter.BattlegroundRound.round"];
+          attacker?: parameters["rowFilter.BattlegroundRound.attacker"];
+          defender?: parameters["rowFilter.BattlegroundRound.defender"];
+          attackerSelection?: parameters["rowFilter.BattlegroundRound.attackerSelection"];
+          defenderSelection?: parameters["rowFilter.BattlegroundRound.defenderSelection"];
+          attackerPowercard?: parameters["rowFilter.BattlegroundRound.attackerPowercard"];
+          defenderPowercard?: parameters["rowFilter.BattlegroundRound.defenderPowercard"];
+          effect?: parameters["rowFilter.BattlegroundRound.effect"];
+          createdAt?: parameters["rowFilter.BattlegroundRound.createdAt"];
+          updatedAt?: parameters["rowFilter.BattlegroundRound.updatedAt"];
+        };
+        body: {
+          /** BattlegroundRound */
+          BattlegroundRound?: definitions["BattlegroundRound"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+  };
   "/Cluster": {
     get: {
       parameters: {
@@ -1371,6 +1587,8 @@ export interface paths {
           avatarUrl?: parameters["rowFilter.Team.avatarUrl"];
           points?: parameters["rowFilter.Team.points"];
           clusterId?: parameters["rowFilter.Team.clusterId"];
+          powercard?: parameters["rowFilter.Team.powercard"];
+          eligiblePowercards?: parameters["rowFilter.Team.eligiblePowercards"];
           /** Filtering Columns */
           select?: parameters["select"];
           /** Ordering */
@@ -1426,6 +1644,8 @@ export interface paths {
           avatarUrl?: parameters["rowFilter.Team.avatarUrl"];
           points?: parameters["rowFilter.Team.points"];
           clusterId?: parameters["rowFilter.Team.clusterId"];
+          powercard?: parameters["rowFilter.Team.powercard"];
+          eligiblePowercards?: parameters["rowFilter.Team.eligiblePowercards"];
         };
         header: {
           /** Preference */
@@ -1445,6 +1665,8 @@ export interface paths {
           avatarUrl?: parameters["rowFilter.Team.avatarUrl"];
           points?: parameters["rowFilter.Team.points"];
           clusterId?: parameters["rowFilter.Team.clusterId"];
+          powercard?: parameters["rowFilter.Team.powercard"];
+          eligiblePowercards?: parameters["rowFilter.Team.eligiblePowercards"];
         };
         body: {
           /** Team */
@@ -1926,6 +2148,62 @@ export interface definitions {
     country: string;
     postalCode: string;
   };
+  BattlegroundRoom: {
+    /**
+     * Note:
+     * This is a Primary Key.<pk/>
+     */
+    code: string;
+    teamIds: unknown[];
+    createdAt: string;
+    updatedAt: string;
+    status: "PREPARING" | "ONGOING" | "ENDED";
+  };
+  BattlegroundRound: {
+    /**
+     * Note:
+     * This is a Primary Key.<pk/>
+     */
+    code: string;
+    /**
+     * Note:
+     * This is a Primary Key.<pk/>
+     */
+    round: number;
+    /**
+     * Note:
+     * This is a Foreign Key to `User.username`.<fk table='User' column='username'/>
+     */
+    attacker?: string;
+    /**
+     * Note:
+     * This is a Foreign Key to `User.username`.<fk table='User' column='username'/>
+     */
+    defender?: string;
+    attackerSelection?: "KING" | "WITCH" | "KNIGHT";
+    defenderSelection?: "KING" | "WITCH" | "KNIGHT";
+    attackerPowercard?: "REVERSE" | "BLOCK" | "ONEMORECHANCE";
+    defenderPowercard?: "REVERSE" | "BLOCK" | "ONEMORECHANCE";
+    effect?:
+      | "ADD_50_PERCENT"
+      | "SUBTRACT_50_PERCENT"
+      | "STEAL_100"
+      | "GIVE_100"
+      | "ADD_90_PERCENT"
+      | "STEAL_150"
+      | "GIVE_150"
+      | "ADD_20_PERCENT"
+      | "SUBTRACT_20_PERCENT"
+      | "ADD_30_PERCENT"
+      | "SUBTRACT_30_PERCENT"
+      | "STEAL_80"
+      | "GIVE_80"
+      | "ADD_100_PERCENT"
+      | "STEAL_200"
+      | "GIVE_200";
+    createdAt: string;
+    updatedAt: string;
+  };
   Cluster: {
     /**
      * Note:
@@ -2159,6 +2437,8 @@ export interface definitions {
      * This is a Foreign Key to `Cluster.id`.<fk table='Cluster' column='id'/>
      */
     clusterId?: string;
+    powercard?: "REVERSE" | "BLOCK" | "ONEMORECHANCE";
+    eligiblePowercards: unknown[];
   };
   TeamMission: {
     /**
@@ -2281,6 +2561,26 @@ export interface parameters {
   "rowFilter.Address.state": string;
   "rowFilter.Address.country": string;
   "rowFilter.Address.postalCode": string;
+  /** BattlegroundRoom */
+  "body.BattlegroundRoom": definitions["BattlegroundRoom"];
+  "rowFilter.BattlegroundRoom.code": string;
+  "rowFilter.BattlegroundRoom.teamIds": string;
+  "rowFilter.BattlegroundRoom.createdAt": string;
+  "rowFilter.BattlegroundRoom.updatedAt": string;
+  "rowFilter.BattlegroundRoom.status": string;
+  /** BattlegroundRound */
+  "body.BattlegroundRound": definitions["BattlegroundRound"];
+  "rowFilter.BattlegroundRound.code": string;
+  "rowFilter.BattlegroundRound.round": string;
+  "rowFilter.BattlegroundRound.attacker": string;
+  "rowFilter.BattlegroundRound.defender": string;
+  "rowFilter.BattlegroundRound.attackerSelection": string;
+  "rowFilter.BattlegroundRound.defenderSelection": string;
+  "rowFilter.BattlegroundRound.attackerPowercard": string;
+  "rowFilter.BattlegroundRound.defenderPowercard": string;
+  "rowFilter.BattlegroundRound.effect": string;
+  "rowFilter.BattlegroundRound.createdAt": string;
+  "rowFilter.BattlegroundRound.updatedAt": string;
   /** Cluster */
   "body.Cluster": definitions["Cluster"];
   "rowFilter.Cluster.id": string;
@@ -2391,6 +2691,8 @@ export interface parameters {
   "rowFilter.Team.avatarUrl": string;
   "rowFilter.Team.points": string;
   "rowFilter.Team.clusterId": string;
+  "rowFilter.Team.powercard": string;
+  "rowFilter.Team.eligiblePowercards": string;
   /** TeamMission */
   "body.TeamMission": definitions["TeamMission"];
   "rowFilter.TeamMission.teamId": string;

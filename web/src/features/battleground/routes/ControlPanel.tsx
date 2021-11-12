@@ -2,23 +2,41 @@ import { useMutation } from '@apollo/client'
 import { Icon } from '@iconify/react'
 import { Formik, Form } from 'formik'
 import { useSnackbar } from 'notistack'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
-import { Button } from '@/components/Elements'
+import { Button, Spinner } from '@/components/Elements'
 import { LoadingPage } from '@/components/Misc'
-import { CREATE_BATTLEGROUND_ROOM, GET_TEAMS_WITHOUT_MEMBERS, useQueryWithTypes } from '@/graphql'
+import {
+  CREATE_BATTLEGROUND_ROOM,
+  GET_BATTLEGROUND_ROOMS,
+  GET_TEAMS_WITHOUT_MEMBERS,
+  RoomStatus,
+  useQueryWithTypes
+} from '@/graphql'
 import { CreateBattlegroundRoom, CreateBattlegroundRoomVariables } from '@/graphql/types/CreateBattlegroundRoom'
+import { GetBattlegroundRooms, GetBattlegroundRoomsVariables } from '@/graphql/types/GetBattlegroundRooms'
 import { GetTeamsWithoutMembers, GetTeamsWithoutMembersVariables } from '@/graphql/types/GetTeamsWithoutMembers'
 
 export const ControlPanel: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar()
-  const [selectedTeams, setSelectedTeams] = useState<Record<string, boolean>>({})
+  const { data: rooms, error: roomsErr } = useQueryWithTypes<GetBattlegroundRooms, GetBattlegroundRoomsVariables>(
+    GET_BATTLEGROUND_ROOMS,
+    { variables: { page: { limit: 50, offset: 0 } } }
+  )
   const [createBattlegroundRoom] = useMutation<CreateBattlegroundRoom, CreateBattlegroundRoomVariables>(
     CREATE_BATTLEGROUND_ROOM
   )
   const { data, error } = useQueryWithTypes<GetTeamsWithoutMembers, GetTeamsWithoutMembersVariables>(
     GET_TEAMS_WITHOUT_MEMBERS,
     { variables: { page: { limit: 50, offset: 0 } } }
+  )
+  const [selectedTeams, setSelectedTeams] = useState<Record<string, boolean>>({})
+
+  const ongoingTeams = useMemo(() => rooms && [...new Set(rooms.battlegroundRooms.flatMap(r => r.teamIds))], [rooms])
+
+  const ongoingRooms = useMemo(
+    () => rooms && [...rooms.battlegroundRooms].filter(r => r.status === RoomStatus.ONGOING),
+    [rooms]
   )
 
   useEffect(() => {
@@ -30,6 +48,23 @@ export const ControlPanel: React.FC = () => {
     <div className='container p-4 mx-auto'>
       <h2 className='font-bold text-2xl'>Battleground's Control Panel</h2>
       <p className='text-true-gray-400'>You can use the following place to create a room.</p>
+      <div className='bg-dark-300/50 rounded-lg p-4 mt-4'>
+        <p className='font-medium'>Ongoing Rooms</p>
+        {ongoingRooms ? (
+          <div className='grid grid-cols-3'>
+            {ongoingRooms.map(room => (
+              <div key={room.code} className='flex items-center mt-2 font-bold text-primary'>
+                <Icon icon='eos-icons:three-dots-loading' className='mr-1' />
+                {room.code}
+              </div>
+            ))}
+          </div>
+        ) : roomsErr ? (
+          <div>Error loading ongoing rooms</div>
+        ) : (
+          <Spinner />
+        )}
+      </div>
       <Formik
         initialValues={{}}
         onSubmit={async () => {
@@ -63,16 +98,17 @@ export const ControlPanel: React.FC = () => {
         }}
       >
         {({ isSubmitting }) => (
-          <Form className='mt-8'>
+          <Form className='mt-4'>
             <div className='grid grid-cols-3 gap-3'>
               {data ? (
                 data.teams.map(team => (
                   <button
                     type='button'
+                    disabled={ongoingTeams && ongoingTeams.includes(team.id)}
                     key={team.id}
                     className={`flex items-center rounded-lg px-4 py-3 ${
                       selectedTeams[team.id] ? 'bg-secondary' : 'bg-dark-300'
-                    }`}
+                    } ${ongoingTeams && ongoingTeams.includes(team.id) ? 'opacity-50 cursor-not-allowed' : ''}`}
                     onClick={() => setSelectedTeams({ ...selectedTeams, [team.id]: !selectedTeams[team.id] })}
                   >
                     <img

@@ -24,7 +24,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ teamIds, utilities, cl
   )
 
   useEffect(() => {
-    const userSubscription = supabase
+    const teamSubscription = supabase
       .from<definitions['Team']>('Team')
       .on('UPDATE', payload => {
         if (!teamIds.includes(payload.new.id)) return
@@ -33,7 +33,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ teamIds, utilities, cl
       })
       .subscribe()
     return () => {
-      supabase.removeSubscription(userSubscription)
+      supabase.removeSubscription(teamSubscription)
     }
   })
 

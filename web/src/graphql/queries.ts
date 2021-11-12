@@ -67,6 +67,24 @@ export const GET_TEAM = gql`
   }
 `
 
+export const GET_TEAMS = gql`
+  ${CORE_USER_FIELDS}
+  ${CORE_TEAM_FIELDS}
+  query GetTeams($page: PaginationInput!) {
+    teams(page: $page) {
+      ...CoreTeamFields
+      members {
+        ...CoreUserFields
+        profile {
+          nameEng
+          avatarUrl
+          gender
+        }
+      }
+    }
+  }
+`
+
 export const GET_TEAMS_WITHOUT_MEMBERS = gql`
   ${CORE_TEAM_FIELDS}
   query GetTeamsWithoutMembers($page: PaginationInput!) {
@@ -274,6 +292,40 @@ export const GET_BATTLEGROUND_ROOM = gql`
       code
       teamIds
       status
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+export const GET_BATTLEGROUND_ROOMS = gql`
+  query GetBattlegroundRooms($page: PaginationInput!) {
+    battlegroundRooms(page: $page) {
+      code
+      teamIds
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+export const GET_BATTLEGROUND_ROUND = gql`
+  query GetBattlegroundRound($code: String!, $round: Int!) {
+    battlegroundRound(code: $code, round: $round) {
+      code
+      round
+      attacker {
+        id
+      }
+      defender {
+        id
+      }
+      attackerSelection
+      defenderSelection
+      attackerPowercard
+      defenderPowercard
+      effect
       createdAt
       updatedAt
     }

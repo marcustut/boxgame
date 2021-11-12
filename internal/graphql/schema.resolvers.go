@@ -233,6 +233,10 @@ func (r *queryResolver) BattlegroundRooms(ctx context.Context, page model.Pagina
 	return query.GetManyBattlegrounRoom(ctx, r.db, page)
 }
 
+func (r *queryResolver) BattlegroundRound(ctx context.Context, code string, round int) (*model.BattlegroundRound, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *queryResolver) Post(ctx context.Context, postID string) (*model.Post, error) {
 	return query.GetUniquePost(ctx, r.db, postgresql.Post.ID.Equals(postID))
 }

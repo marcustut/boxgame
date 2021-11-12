@@ -7,6 +7,31 @@
 // START Enums and Input Objects
 //==============================================================
 
+export enum BattlegroundEffect {
+  ADD_100_PERCENT = "ADD_100_PERCENT",
+  ADD_20_PERCENT = "ADD_20_PERCENT",
+  ADD_30_PERCENT = "ADD_30_PERCENT",
+  ADD_50_PERCENT = "ADD_50_PERCENT",
+  ADD_90_PERCENT = "ADD_90_PERCENT",
+  GIVE_100 = "GIVE_100",
+  GIVE_150 = "GIVE_150",
+  GIVE_200 = "GIVE_200",
+  GIVE_80 = "GIVE_80",
+  STEAL_100 = "STEAL_100",
+  STEAL_150 = "STEAL_150",
+  STEAL_200 = "STEAL_200",
+  STEAL_80 = "STEAL_80",
+  SUBTRACT_20_PERCENT = "SUBTRACT_20_PERCENT",
+  SUBTRACT_30_PERCENT = "SUBTRACT_30_PERCENT",
+  SUBTRACT_50_PERCENT = "SUBTRACT_50_PERCENT",
+}
+
+export enum BattlegroundSelection {
+  KING = "KING",
+  KNIGHT = "KNIGHT",
+  WITCH = "WITCH",
+}
+
 export enum Gender {
   FEMALE = "FEMALE",
   MALE = "MALE",

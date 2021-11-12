@@ -33,13 +33,13 @@ export const RoomStatusToggler: React.FC<RoomStatusTogglerProps> = ({
   return (
     <Button
       color={currentStatus === RoomStatus.ONGOING ? 'secondary' : 'primary'}
-      className={`py-1 font-medium`}
+      className={`font-medium`}
       onClick={async () => {
         if (!currentStatus) return
         let toUpdate: RoomStatus = currentStatus
         if (currentStatus === RoomStatus.PREPARING) toUpdate = RoomStatus.ONGOING
         else if (currentStatus === RoomStatus.ONGOING) toUpdate = RoomStatus.ENDED
-        else if (currentStatus === RoomStatus.ENDED) toUpdate = RoomStatus.PREPARING
+        else if (currentStatus === RoomStatus.ENDED) toUpdate = RoomStatus.ONGOING
 
         try {
           const { data, errors } = await updateBattlegroundRoom({
@@ -62,7 +62,11 @@ export const RoomStatusToggler: React.FC<RoomStatusTogglerProps> = ({
         }
       }}
     >
-      {currentStatus === RoomStatus.PREPARING ? 'Start' : currentStatus === RoomStatus.ONGOING ? 'End' : 'Restart'}
+      {currentStatus === RoomStatus.PREPARING
+        ? 'Start Game'
+        : currentStatus === RoomStatus.ONGOING
+        ? 'End Game'
+        : 'Start Game'}
     </Button>
   )
 }

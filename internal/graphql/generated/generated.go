@@ -74,6 +74,20 @@ type ComplexityRoot struct {
 		UpdatedAt func(childComplexity int) int
 	}
 
+	BattlegroundRound struct {
+		Attacker          func(childComplexity int) int
+		AttackerPowercard func(childComplexity int) int
+		AttackerSelection func(childComplexity int) int
+		Code              func(childComplexity int) int
+		CreatedAt         func(childComplexity int) int
+		Defender          func(childComplexity int) int
+		DefenderPowercard func(childComplexity int) int
+		DefenderSelection func(childComplexity int) int
+		Effect            func(childComplexity int) int
+		Round             func(childComplexity int) int
+		UpdatedAt         func(childComplexity int) int
+	}
+
 	Cluster struct {
 		Color func(childComplexity int) int
 		ID    func(childComplexity int) int
@@ -200,6 +214,7 @@ type ComplexityRoot struct {
 	Query struct {
 		BattlegroundRoom  func(childComplexity int, code string) int
 		BattlegroundRooms func(childComplexity int, page model.PaginationInput) int
+		BattlegroundRound func(childComplexity int, code string, round int) int
 		Cluster           func(childComplexity int, clusterID string) int
 		Discovery         func(childComplexity int, teamID string) int
 		Escape            func(childComplexity int, teamID string) int
@@ -327,6 +342,7 @@ type QueryResolver interface {
 	Missions(ctx context.Context, page model.PaginationInput) ([]*model.Mission, error)
 	BattlegroundRoom(ctx context.Context, code string) (*model.BattlegroundRoom, error)
 	BattlegroundRooms(ctx context.Context, page model.PaginationInput) ([]*model.BattlegroundRoom, error)
+	BattlegroundRound(ctx context.Context, code string, round int) (*model.BattlegroundRound, error)
 	Post(ctx context.Context, postID string) (*model.Post, error)
 	Posts(ctx context.Context, page model.PaginationInput) ([]*model.Post, error)
 	Invitations(ctx context.Context, userID string, page model.PaginationInput) ([]*model.Invitation, error)
@@ -444,6 +460,83 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.BattlegroundRoom.UpdatedAt(childComplexity), true
+
+	case "BattlegroundRound.attacker":
+		if e.complexity.BattlegroundRound.Attacker == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRound.Attacker(childComplexity), true
+
+	case "BattlegroundRound.attackerPowercard":
+		if e.complexity.BattlegroundRound.AttackerPowercard == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRound.AttackerPowercard(childComplexity), true
+
+	case "BattlegroundRound.attackerSelection":
+		if e.complexity.BattlegroundRound.AttackerSelection == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRound.AttackerSelection(childComplexity), true
+
+	case "BattlegroundRound.code":
+		if e.complexity.BattlegroundRound.Code == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRound.Code(childComplexity), true
+
+	case "BattlegroundRound.createdAt":
+		if e.complexity.BattlegroundRound.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRound.CreatedAt(childComplexity), true
+
+	case "BattlegroundRound.defender":
+		if e.complexity.BattlegroundRound.Defender == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRound.Defender(childComplexity), true
+
+	case "BattlegroundRound.defenderPowercard":
+		if e.complexity.BattlegroundRound.DefenderPowercard == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRound.DefenderPowercard(childComplexity), true
+
+	case "BattlegroundRound.defenderSelection":
+		if e.complexity.BattlegroundRound.DefenderSelection == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRound.DefenderSelection(childComplexity), true
+
+	case "BattlegroundRound.effect":
+		if e.complexity.BattlegroundRound.Effect == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRound.Effect(childComplexity), true
+
+	case "BattlegroundRound.round":
+		if e.complexity.BattlegroundRound.Round == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRound.Round(childComplexity), true
+
+	case "BattlegroundRound.updatedAt":
+		if e.complexity.BattlegroundRound.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.BattlegroundRound.UpdatedAt(childComplexity), true
 
 	case "Cluster.color":
 		if e.complexity.Cluster.Color == nil {
@@ -1225,6 +1318,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.BattlegroundRooms(childComplexity, args["page"].(model.PaginationInput)), true
 
+	case "Query.battlegroundRound":
+		if e.complexity.Query.BattlegroundRound == nil {
+			break
+		}
+
+		args, err := ec.field_Query_battlegroundRound_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.BattlegroundRound(childComplexity, args["code"].(string), args["round"].(int)), true
+
 	case "Query.cluster":
 		if e.complexity.Query.Cluster == nil {
 			break
@@ -1710,6 +1815,31 @@ enum Powercard {
   ONEMORECHANCE
 }
 
+enum BattlegroundEffect {
+  ADD_50_PERCENT
+  SUBTRACT_50_PERCENT
+  STEAL_100
+  GIVE_100
+  ADD_90_PERCENT
+  STEAL_150
+  GIVE_150
+  ADD_20_PERCENT
+  SUBTRACT_20_PERCENT
+  ADD_30_PERCENT
+  SUBTRACT_30_PERCENT
+  STEAL_80
+  GIVE_80
+  ADD_100_PERCENT
+  STEAL_200
+  GIVE_200
+}
+
+enum BattlegroundSelection {
+  KING
+  WITCH
+  KNIGHT
+}
+
 type Cluster {
   id: ID!
   name: String!
@@ -1862,6 +1992,20 @@ type Comment {
   likes: Int!
 }
 
+type BattlegroundRound {
+  code: String!
+  round: Int!
+  attacker: User
+  defender: User
+  attackerSelection: BattlegroundSelection
+  defenderSelection: BattlegroundSelection
+  attackerPowercard: Powercard
+  defenderPowercard: Powercard
+  effect: BattlegroundEffect
+  createdAt: Time!
+  updatedAt: Time!
+}
+
 type Query {
   user(user_id: ID!): User
   users(page: PaginationInput!): [User!]!
@@ -1879,6 +2023,7 @@ type Query {
   missions(page: PaginationInput!): [Mission!]!
   battlegroundRoom(code: String!): BattlegroundRoom!
   battlegroundRooms(page: PaginationInput!): [BattlegroundRoom!]!
+  battlegroundRound(code: String!, round: Int!): BattlegroundRound!
   post(post_id: ID!): Post
   posts(page: PaginationInput!): [Post!]!
   invitations(user_id: ID!, page: PaginationInput!): [Invitation!]!
@@ -2431,6 +2576,30 @@ func (ec *executionContext) field_Query_battlegroundRooms_args(ctx context.Conte
 		}
 	}
 	args["page"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_battlegroundRound_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["code"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("code"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["code"] = arg0
+	var arg1 int
+	if tmp, ok := rawArgs["round"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("round"))
+		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["round"] = arg1
 	return args, nil
 }
 
@@ -3151,6 +3320,370 @@ func (ec *executionContext) _BattlegroundRoom_status(ctx context.Context, field 
 	res := resTmp.(model.RoomStatus)
 	fc.Result = res
 	return ec.marshalNRoomStatus2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐRoomStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRound_code(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRound) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRound",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRound_round(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRound) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRound",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Round, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRound_attacker(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRound) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRound",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Attacker, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalOUser2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRound_defender(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRound) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRound",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Defender, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalOUser2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRound_attackerSelection(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRound) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRound",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AttackerSelection, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.BattlegroundSelection)
+	fc.Result = res
+	return ec.marshalOBattlegroundSelection2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundSelection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRound_defenderSelection(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRound) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRound",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DefenderSelection, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.BattlegroundSelection)
+	fc.Result = res
+	return ec.marshalOBattlegroundSelection2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundSelection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRound_attackerPowercard(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRound) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRound",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AttackerPowercard, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Powercard)
+	fc.Result = res
+	return ec.marshalOPowercard2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPowercard(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRound_defenderPowercard(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRound) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRound",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DefenderPowercard, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Powercard)
+	fc.Result = res
+	return ec.marshalOPowercard2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐPowercard(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRound_effect(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRound) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRound",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Effect, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.BattlegroundEffect)
+	fc.Result = res
+	return ec.marshalOBattlegroundEffect2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundEffect(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRound_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRound) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRound",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BattlegroundRound_updatedAt(ctx context.Context, field graphql.CollectedField, obj *model.BattlegroundRound) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BattlegroundRound",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Cluster_id(ctx context.Context, field graphql.CollectedField, obj *model.Cluster) (ret graphql.Marshaler) {
@@ -7085,6 +7618,48 @@ func (ec *executionContext) _Query_battlegroundRooms(ctx context.Context, field 
 	return ec.marshalNBattlegroundRoom2ᚕᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundRoomᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_battlegroundRound(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_battlegroundRound_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().BattlegroundRound(rctx, args["code"].(string), args["round"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.BattlegroundRound)
+	fc.Result = res
+	return ec.marshalNBattlegroundRound2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundRound(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_post(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -10210,6 +10785,62 @@ func (ec *executionContext) _BattlegroundRoom(ctx context.Context, sel ast.Selec
 	return out
 }
 
+var battlegroundRoundImplementors = []string{"BattlegroundRound"}
+
+func (ec *executionContext) _BattlegroundRound(ctx context.Context, sel ast.SelectionSet, obj *model.BattlegroundRound) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, battlegroundRoundImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("BattlegroundRound")
+		case "code":
+			out.Values[i] = ec._BattlegroundRound_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "round":
+			out.Values[i] = ec._BattlegroundRound_round(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "attacker":
+			out.Values[i] = ec._BattlegroundRound_attacker(ctx, field, obj)
+		case "defender":
+			out.Values[i] = ec._BattlegroundRound_defender(ctx, field, obj)
+		case "attackerSelection":
+			out.Values[i] = ec._BattlegroundRound_attackerSelection(ctx, field, obj)
+		case "defenderSelection":
+			out.Values[i] = ec._BattlegroundRound_defenderSelection(ctx, field, obj)
+		case "attackerPowercard":
+			out.Values[i] = ec._BattlegroundRound_attackerPowercard(ctx, field, obj)
+		case "defenderPowercard":
+			out.Values[i] = ec._BattlegroundRound_defenderPowercard(ctx, field, obj)
+		case "effect":
+			out.Values[i] = ec._BattlegroundRound_effect(ctx, field, obj)
+		case "createdAt":
+			out.Values[i] = ec._BattlegroundRound_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "updatedAt":
+			out.Values[i] = ec._BattlegroundRound_updatedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var clusterImplementors = []string{"Cluster"}
 
 func (ec *executionContext) _Cluster(ctx context.Context, sel ast.SelectionSet, obj *model.Cluster) graphql.Marshaler {
@@ -11165,6 +11796,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "battlegroundRound":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_battlegroundRound(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "post":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -11759,6 +12404,20 @@ func (ec *executionContext) marshalNBattlegroundRoom2ᚖgithubᚗcomᚋmarcustut
 		return graphql.Null
 	}
 	return ec._BattlegroundRoom(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNBattlegroundRound2githubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundRound(ctx context.Context, sel ast.SelectionSet, v model.BattlegroundRound) graphql.Marshaler {
+	return ec._BattlegroundRound(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNBattlegroundRound2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundRound(ctx context.Context, sel ast.SelectionSet, v *model.BattlegroundRound) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._BattlegroundRound(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
@@ -12854,11 +13513,43 @@ func (ec *executionContext) marshalOAddress2ᚖgithubᚗcomᚋmarcustutᚋthebox
 	return ec._Address(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOBattlegroundEffect2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundEffect(ctx context.Context, v interface{}) (*model.BattlegroundEffect, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.BattlegroundEffect)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOBattlegroundEffect2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundEffect(ctx context.Context, sel ast.SelectionSet, v *model.BattlegroundEffect) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) marshalOBattlegroundRoom2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundRoom(ctx context.Context, sel ast.SelectionSet, v *model.BattlegroundRoom) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._BattlegroundRoom(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOBattlegroundSelection2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundSelection(ctx context.Context, v interface{}) (*model.BattlegroundSelection, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.BattlegroundSelection)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOBattlegroundSelection2ᚖgithubᚗcomᚋmarcustutᚋtheboxᚋinternalᚋgraphqlᚋmodelᚐBattlegroundSelection(ctx context.Context, sel ast.SelectionSet, v *model.BattlegroundSelection) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {

@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UpdateUserInput, Role, PastoralStatus, Gender, Satellite } from "./globalTypes";
+import { UpdateUserInput, Role, PastoralStatus, Gender, Satellite, Powercard } from "./globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: UpdateUser
@@ -52,6 +52,8 @@ export interface UpdateUser_updateUser_team {
   name: string | null;
   avatarUrl: string | null;
   points: number;
+  powercard: Powercard | null;
+  eligiblePowercards: Powercard[];
   cluster: UpdateUser_updateUser_team_cluster | null;
 }
 

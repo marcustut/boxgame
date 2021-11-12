@@ -9,6 +9,20 @@ import (
 	"time"
 )
 
+type BattlegroundRound struct {
+	Code              string                 `json:"code"`
+	Round             int                    `json:"round"`
+	Attacker          *User                  `json:"attacker"`
+	Defender          *User                  `json:"defender"`
+	AttackerSelection *BattlegroundSelection `json:"attackerSelection"`
+	DefenderSelection *BattlegroundSelection `json:"defenderSelection"`
+	AttackerPowercard *Powercard             `json:"attackerPowercard"`
+	DefenderPowercard *Powercard             `json:"defenderPowercard"`
+	Effect            *BattlegroundEffect    `json:"effect"`
+	CreatedAt         time.Time              `json:"createdAt"`
+	UpdatedAt         time.Time              `json:"updatedAt"`
+}
+
 type CommentLikeInput struct {
 	CommentID string `json:"commentId"`
 	UserID    string `json:"userId"`
@@ -138,6 +152,118 @@ type UpsertSpeedInput struct {
 	MissionID   string     `json:"missionId"`
 	CompletedAt *time.Time `json:"completedAt"`
 	Answer      *string    `json:"answer"`
+}
+
+type BattlegroundEffect string
+
+const (
+	BattlegroundEffectAdd50Percent      BattlegroundEffect = "ADD_50_PERCENT"
+	BattlegroundEffectSubtract50Percent BattlegroundEffect = "SUBTRACT_50_PERCENT"
+	BattlegroundEffectSteal100          BattlegroundEffect = "STEAL_100"
+	BattlegroundEffectGive100           BattlegroundEffect = "GIVE_100"
+	BattlegroundEffectAdd90Percent      BattlegroundEffect = "ADD_90_PERCENT"
+	BattlegroundEffectSteal150          BattlegroundEffect = "STEAL_150"
+	BattlegroundEffectGive150           BattlegroundEffect = "GIVE_150"
+	BattlegroundEffectAdd20Percent      BattlegroundEffect = "ADD_20_PERCENT"
+	BattlegroundEffectSubtract20Percent BattlegroundEffect = "SUBTRACT_20_PERCENT"
+	BattlegroundEffectAdd30Percent      BattlegroundEffect = "ADD_30_PERCENT"
+	BattlegroundEffectSubtract30Percent BattlegroundEffect = "SUBTRACT_30_PERCENT"
+	BattlegroundEffectSteal80           BattlegroundEffect = "STEAL_80"
+	BattlegroundEffectGive80            BattlegroundEffect = "GIVE_80"
+	BattlegroundEffectAdd100Percent     BattlegroundEffect = "ADD_100_PERCENT"
+	BattlegroundEffectSteal200          BattlegroundEffect = "STEAL_200"
+	BattlegroundEffectGive200           BattlegroundEffect = "GIVE_200"
+)
+
+var AllBattlegroundEffect = []BattlegroundEffect{
+	BattlegroundEffectAdd50Percent,
+	BattlegroundEffectSubtract50Percent,
+	BattlegroundEffectSteal100,
+	BattlegroundEffectGive100,
+	BattlegroundEffectAdd90Percent,
+	BattlegroundEffectSteal150,
+	BattlegroundEffectGive150,
+	BattlegroundEffectAdd20Percent,
+	BattlegroundEffectSubtract20Percent,
+	BattlegroundEffectAdd30Percent,
+	BattlegroundEffectSubtract30Percent,
+	BattlegroundEffectSteal80,
+	BattlegroundEffectGive80,
+	BattlegroundEffectAdd100Percent,
+	BattlegroundEffectSteal200,
+	BattlegroundEffectGive200,
+}
+
+func (e BattlegroundEffect) IsValid() bool {
+	switch e {
+	case BattlegroundEffectAdd50Percent, BattlegroundEffectSubtract50Percent, BattlegroundEffectSteal100, BattlegroundEffectGive100, BattlegroundEffectAdd90Percent, BattlegroundEffectSteal150, BattlegroundEffectGive150, BattlegroundEffectAdd20Percent, BattlegroundEffectSubtract20Percent, BattlegroundEffectAdd30Percent, BattlegroundEffectSubtract30Percent, BattlegroundEffectSteal80, BattlegroundEffectGive80, BattlegroundEffectAdd100Percent, BattlegroundEffectSteal200, BattlegroundEffectGive200:
+		return true
+	}
+	return false
+}
+
+func (e BattlegroundEffect) String() string {
+	return string(e)
+}
+
+func (e *BattlegroundEffect) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = BattlegroundEffect(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid BattlegroundEffect", str)
+	}
+	return nil
+}
+
+func (e BattlegroundEffect) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type BattlegroundSelection string
+
+const (
+	BattlegroundSelectionKing   BattlegroundSelection = "KING"
+	BattlegroundSelectionWitch  BattlegroundSelection = "WITCH"
+	BattlegroundSelectionKnight BattlegroundSelection = "KNIGHT"
+)
+
+var AllBattlegroundSelection = []BattlegroundSelection{
+	BattlegroundSelectionKing,
+	BattlegroundSelectionWitch,
+	BattlegroundSelectionKnight,
+}
+
+func (e BattlegroundSelection) IsValid() bool {
+	switch e {
+	case BattlegroundSelectionKing, BattlegroundSelectionWitch, BattlegroundSelectionKnight:
+		return true
+	}
+	return false
+}
+
+func (e BattlegroundSelection) String() string {
+	return string(e)
+}
+
+func (e *BattlegroundSelection) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = BattlegroundSelection(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid BattlegroundSelection", str)
+	}
+	return nil
+}
+
+func (e BattlegroundSelection) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 type Gender string
