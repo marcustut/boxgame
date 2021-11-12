@@ -87,7 +87,8 @@ export const ControlPanel: React.FC = () => {
 
             enqueueSnackbar('Room created successfully, redirecting to room...', { variant: 'success' })
             setTimeout(
-              () => (window.location.href = `${window.location.pathname}/room/${data.createBattlegroundRoom!.code}`),
+              () =>
+                (window.location.href = `${window.location.pathname}/room?code=${data.createBattlegroundRoom!.code}`),
               1000
             )
           } catch (err) {
