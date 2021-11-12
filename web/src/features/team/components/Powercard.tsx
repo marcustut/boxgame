@@ -7,17 +7,17 @@ import { constructClassName } from '@/utils'
 export const cards = {
   [PowercardEnum.REVERSE]: {
     name: 'Reverse',
-    description: 'hahaa',
+    description: '当A方向B方发出某个power card，B方可使用“reverse”power card反弹其功能回去给A方',
     img: 'https://vfqzgsbgmlvglbygosna.supabase.in/storage/v1/object/public/assets/Powercard/Reverse.png'
   },
   [PowercardEnum.BLOCK]: {
     name: 'Block',
-    description: 'hahaha',
+    description: '当A方向B方发出某个power card，B方可使用“Block”power card低档A方power card的功能',
     img: 'https://vfqzgsbgmlvglbygosna.supabase.in/storage/v1/object/public/assets/Powercard/Block.jpg'
   },
   [PowercardEnum.ONEMORECHANCE]: {
     name: 'One More Chance',
-    description: 'hahaha',
+    description: '当游戏即将结束时，拥有“One More Chance”power card的组可以使用该功能，获得多一次游戏机会',
     img: 'https://vfqzgsbgmlvglbygosna.supabase.in/storage/v1/object/public/assets/Powercard/OneMoreChance.png'
   }
 }
