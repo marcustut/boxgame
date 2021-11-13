@@ -51,8 +51,8 @@ export const Battleground: React.FC = () => {
   return (
     <MissionLayout isHall utilities={{ p: 'px-4 pt-4 pb-20', pos: 'relative' }}>
       {/* <Leaderboard teamIds={teamIds} /> */}
-      <h2 className='font-bold text-2xl'>You are now in {'fill in me soon'}'s Mission Page</h2>
-      <div className='w-full flex <sm:flex-col justify-center items-center mx-auto mt-12'>
+      <h2 className='font-bold text-2xl'>You are now in Battleground's Mission Page</h2>
+      {/* <div className='w-full flex <sm:flex-col justify-center items-center mx-auto mt-12'>
         <iframe
           src={INTRO_VIDEO}
           title='YouTube video player'
@@ -68,17 +68,17 @@ export const Battleground: React.FC = () => {
           allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
           allowFullScreen
           className='w-full h-80 <sm:h-64 <sm:mt-4 sm:ml-2'
-        /> */}
-      </div>
-      <div className='flex justify-center items-center text-lg mt-4'>
+        />
+      </div> */}
+      {/* <div className='flex justify-center items-center text-lg mt-4'>
         <Icon icon='emojione:index-pointing-up-medium-skin-tone' className='mr-2 transform' />
         <span className='text-true-gray-400'>Refer to the video if needed 若有需要请参阅视频</span>
-      </div>
+      </div> */}
 
       <h2 className='font-bold text-2xl mt-8'>Game Description</h2>
       <p className='text-true-gray-400 mt-1 whitespace-pre-wrap'>
-        {`In this mission, you will have to compete against the time, if you look on the bottom right, there is a countdown timer, when the timer reaches 0, the mission will close and no one will be able to submit their answer.
-在这个任务中，你必须与时间竞争，如果你看右下角，有一个倒数计时器，当计时器到0时，任务将关闭，不能再提交你们的答案`}
+        {`Ask game master for the room code
+从守护者获取以下的房间号码`}
       </p>
 
       <div className='my-32 flex flex-col justify-center items-center text-true-gray-500'>

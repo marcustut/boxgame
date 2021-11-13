@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useEffectOnce } from 'react-use'
 
-import { CheckAuth, LoadingPage, LockPage } from '@/components/Misc'
+import { CheckAuth, LoadingPage } from '@/components/Misc'
 import { RoomControlPanel } from '@/features/battleground'
 
 const BattlegroundRoomControlPanel: React.FC = () => {
@@ -16,9 +16,7 @@ const BattlegroundRoomControlPanel: React.FC = () => {
   if (!roomCode) return <LoadingPage />
   return (
     <CheckAuth>
-      <LockPage>
-        <RoomControlPanel roomCode={roomCode} />
-      </LockPage>
+      <RoomControlPanel roomCode={roomCode} />
     </CheckAuth>
   )
 }
