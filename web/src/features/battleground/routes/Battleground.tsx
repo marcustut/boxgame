@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react'
-import React, { useEffect } from 'react'
+import { useSnackbar } from 'notistack'
+import React, { useEffect, useState } from 'react'
 
 import { Button, Input } from '@/components/Elements'
 import { Leaderboard } from '@/features/battleground'
@@ -45,6 +46,8 @@ const teamIds = [
 const INTRO_VIDEO = 'https://www.youtube.com/embed/9edf-__ocLU'
 
 export const Battleground: React.FC = () => {
+  const { enqueueSnackbar } = useSnackbar()
+  const [inputCode, setInputCode] = useState<string>('')
   return (
     <MissionLayout isHall utilities={{ p: 'px-4 pt-4 pb-20', pos: 'relative' }}>
       {/* <Leaderboard teamIds={teamIds} /> */}
@@ -83,8 +86,37 @@ export const Battleground: React.FC = () => {
         <h2 className='font-bold text-2xl'>Battleground Room</h2>
         <p className='text-sm'>The room code will be given by your 守护者, be prepared and buckle up.</p>
         <div className='flex flex-col justify-center items-center mt-4'>
-          <Input className='text-white' placeholder='Enter room code...' maxLength={4} />
-          <Button size='small' className='mt-4 px-3 font-medium'>
+          <Input
+            className='text-white'
+            placeholder='Enter room code...'
+            maxLength={4}
+            onChange={e => setInputCode(e.target.value)}
+          />
+          <Button
+            size='small'
+            className='mt-4 px-3 font-medium'
+            onClick={async () => {
+              const { data, error, count } = await supabase
+                .from<definitions['BattlegroundRoom']>('BattlegroundRoom')
+                .select('code', { count: 'exact' })
+                .eq('code', inputCode)
+              if (error || !data) {
+                console.error(error)
+                enqueueSnackbar(`Something went wrong, ask for help\n${JSON.stringify(error, null, 2)}`, {
+                  variant: 'error'
+                })
+                return
+              }
+              if (count === 0) {
+                enqueueSnackbar(`No room found with code ${inputCode}`, {
+                  variant: 'error'
+                })
+                return
+              }
+              enqueueSnackbar(`Redirecting to Room ${inputCode}...`, { variant: 'success' })
+              setTimeout(() => (window.location.href = `${window.location.pathname}/room?code=${inputCode}`), 1000)
+            }}
+          >
             Enter
           </Button>
         </div>

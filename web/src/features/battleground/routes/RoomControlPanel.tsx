@@ -8,9 +8,19 @@ import { useEffectOnce } from 'react-use'
 
 import { Avatar, Button, Spinner } from '@/components/Elements'
 import { LoadingPage } from '@/components/Misc'
-import { DisableWrapper, EffectBox, Leaderboard, PlayerSelect, RoomStatusToggler } from '@/features/battleground'
+import {
+  DisableWrapper,
+  EffectBox,
+  Leaderboard,
+  MiniUserDetail,
+  PlayerSelect,
+  powercardEffects,
+  RoomStatusToggler
+} from '@/features/battleground'
+import { Powercard } from '@/features/team'
 import {
   BattlegroundEffect,
+  BattlegroundSelection,
   GET_BATTLEGROUND_ROOM,
   GET_TEAMS,
   RoomStatus,
@@ -30,11 +40,11 @@ export type RoundJoinedUserQuery = definitions['BattlegroundRound'] & {
   defenderUser: { team: { id: string; points: number } } | null
 }
 
-type RoomControlPanelProps = {
+export type RoomControlPanelProps = {
   roomCode: string
 }
 
-const roundJoinedUserQuery = `
+export const roundJoinedUserQuery = `
   *,
   attackerUser:User!attacker (
     team:Team!teamId (
@@ -69,6 +79,7 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
   const [nextRoundLoading, setNextRoundLoading] = useState<boolean>(false)
   const [allRounds, setAllRounds] = useState<RoundJoinedUserQuery[]>([])
   const [currentRound, setCurrentRound] = useState<RoundJoinedUserQuery>()
+  const [winner, setWinner] = useState<'attacker' | 'defender' | 'draw'>()
 
   const isOngoing = useMemo(() => room && room.battlegroundRoom.status === RoomStatus.ONGOING, [room])
 
@@ -89,12 +100,79 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
     [allRounds]
   )
 
+  const attacker = useMemo(() => {
+    if (!currentRound) return
+    if (!currentRound.attackerUser) return
+    if (teams.length === 0) return
+    const attackerUser = currentRound.attackerUser
+    const team = teams.find(t => t.id === attackerUser.team.id)
+    if (!team) return
+    const user = team.members.find(m => m.username === currentRound.attacker)
+    if (!user) return
+    return { ...user, team }
+  }, [currentRound, teams])
+
+  const defender = useMemo(() => {
+    if (!currentRound) return
+    if (!currentRound.defenderUser) return
+    if (teams.length === 0) return
+    const defenderUser = currentRound.defenderUser
+    const team = teams.find(t => t.id === defenderUser.team.id)
+    if (!team) return
+    const user = team.members.find(m => m.username === currentRound.defender)
+    if (!user) return
+    return { ...user, team }
+  }, [currentRound, teams])
+
   const setRounds = useCallback((rounds: RoundJoinedUserQuery[]) => {
     // set all rounds in ascending order
     setAllRounds([...rounds].sort((a, b) => a.round - b.round))
     // set the latest round
     setCurrentRound([...rounds].sort((a, b) => b.round - a.round)[0])
   }, [])
+
+  const checkResult = useCallback(
+    (aSelection: BattlegroundSelection, dSelection: BattlegroundSelection) => {
+      // draw
+      if (aSelection === dSelection) {
+        // TODO: THINK ABOUT THIS
+        setWinner('draw')
+        enqueueSnackbar('DRAW!')
+        return
+      }
+      // king wins (king vs knight)
+      if (aSelection === BattlegroundSelection.KING && dSelection === BattlegroundSelection.KNIGHT) {
+        setWinner('attacker')
+        enqueueSnackbar('Attacker wins!', { variant: 'success' })
+        return
+      } else if (dSelection === BattlegroundSelection.KING && aSelection === BattlegroundSelection.KNIGHT) {
+        setWinner('defender')
+        enqueueSnackbar('Defender wins!', { variant: 'success' })
+        return
+      }
+      // knight wins (knight vs witch)
+      if (aSelection === BattlegroundSelection.KNIGHT && dSelection === BattlegroundSelection.WITCH) {
+        setWinner('attacker')
+        enqueueSnackbar('Attacker wins!', { variant: 'success' })
+        return
+      } else if (dSelection === BattlegroundSelection.KNIGHT && aSelection === BattlegroundSelection.WITCH) {
+        setWinner('defender')
+        enqueueSnackbar('Defender wins!', { variant: 'success' })
+        return
+      }
+      // witch wins (witch vs king)
+      if (aSelection === BattlegroundSelection.WITCH && dSelection === BattlegroundSelection.KING) {
+        setWinner('attacker')
+        enqueueSnackbar('Attacker wins!', { variant: 'success' })
+        return
+      } else if (dSelection === BattlegroundSelection.WITCH && aSelection === BattlegroundSelection.KING) {
+        setWinner('defender')
+        enqueueSnackbar('Defender wins!', { variant: 'success' })
+        return
+      }
+    },
+    [enqueueSnackbar]
+  )
 
   useEffectOnce(() => {
     if (roomCode.length !== 4) throw new Error('Room Code must be 4 digits')
@@ -183,7 +261,7 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
     return () => {
       supabase.removeSubscription(roundSubscription)
     }
-  }, [roomCode, currentRound, setRounds, allRounds, enqueueSnackbar])
+  }, [allRounds, currentRound, enqueueSnackbar, roomCode, setRounds])
 
   if (error || allTeamsErr) {
     console.error(error)
@@ -294,62 +372,192 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
         {currentRound ? (
           <DisableWrapper disabled={!isOngoing} message='Room is not started!'>
             <div className={`my-8 px-6 py-4 rounded-lg bg-dark-50/50 flex`}>
-              <div className='flex flex-col items-center'>
-                <p className='mb-1 font-bold text-true-gray-200'>Attacker</p>
-                <PlayerSelect
-                  value={currentRound.attacker}
-                  onChange={async attacker => {
-                    const { data, error } = await supabase
-                      .from<RoundJoinedUserQuery>('BattlegroundRound')
-                      .update({ attacker })
-                      .eq('code', currentRound.code)
-                      .eq('round', currentRound.round)
-                      .select(roundJoinedUserQuery)
-                    if (error || !data) {
-                      console.error(error)
-                      enqueueSnackbar(`Something went wrong, ask for help\n${JSON.stringify(error, null, 2)}`, {
-                        variant: 'error'
-                      })
-                      return
-                    }
-                    setAllRounds(allRounds.map(r => (r.round === data[0].round ? data[0] : r)))
-                    setCurrentRound(data[0])
-                    enqueueSnackbar('Successfully selected attacker', { variant: 'success' })
-                  }}
-                  teams={teams}
-                />
+              <div className='flex flex-col justify-center items-center'>
+                <div className='flex items-center'>
+                  <div className='flex flex-col items-center self-center'>
+                    <p className='mb-1 font-bold text-true-gray-200'>Attacker</p>
+                    <PlayerSelect
+                      value={currentRound.attacker}
+                      onChange={async attacker => {
+                        const { data, error } = await supabase
+                          .from<RoundJoinedUserQuery>('BattlegroundRound')
+                          .update({ attacker })
+                          .eq('code', currentRound.code)
+                          .eq('round', currentRound.round)
+                          .select(roundJoinedUserQuery)
+                        if (error || !data) {
+                          console.error(error)
+                          enqueueSnackbar(`Something went wrong, ask for help\n${JSON.stringify(error, null, 2)}`, {
+                            variant: 'error'
+                          })
+                          return
+                        }
+                        setAllRounds(allRounds.map(r => (r.round === data[0].round ? data[0] : r)))
+                        setCurrentRound(data[0])
+                        enqueueSnackbar('Successfully selected attacker', { variant: 'success' })
+                      }}
+                      teams={teams}
+                    />
+                  </div>
+                  <div className='flex flex-col items-center ml-4 self-center'>
+                    <p className='mb-1 font-bold text-true-gray-200'>Defender</p>
+                    <PlayerSelect
+                      value={currentRound.defender}
+                      onChange={async defender => {
+                        const { data, error } = await supabase
+                          .from<RoundJoinedUserQuery>('BattlegroundRound')
+                          .update({ defender })
+                          .eq('code', currentRound.code)
+                          .eq('round', currentRound.round)
+                          .select(roundJoinedUserQuery)
+                        if (error || !data) {
+                          console.error(error)
+                          enqueueSnackbar(`Something went wrong, ask for help\n${JSON.stringify(error, null, 2)}`, {
+                            variant: 'error'
+                          })
+                          return
+                        }
+                        setAllRounds(allRounds.map(r => (r.round === data[0].round ? data[0] : r)))
+                        setCurrentRound(data[0])
+                        enqueueSnackbar('Successfully selected defender', { variant: 'success' })
+                      }}
+                      teams={teams}
+                    />
+                  </div>
+                </div>
+                <div className='flex items-center'>
+                  <Button
+                    className='mt-4 mr-1 px-3 py-2 text-sm font-medium'
+                    onClick={async () => {
+                      const { data, error } = await supabase
+                        .from<RoundJoinedUserQuery>('BattlegroundRound')
+                        .select(roundJoinedUserQuery)
+                        .eq('code', currentRound.code)
+                        .eq('round', currentRound.round)
+                      if (error || !data) {
+                        console.error(error)
+                        enqueueSnackbar(`Something went wrong, ask for help\n${JSON.stringify(error, null, 2)}`, {
+                          variant: 'error'
+                        })
+                        return
+                      }
+                      // check if both has selected
+                      if (!data[0].attackerSelection || !data[0].defenderSelection) {
+                        enqueueSnackbar('Not both has selected yet', { variant: 'warning' })
+                        return
+                      }
+                      checkResult(
+                        data[0].attackerSelection as BattlegroundSelection,
+                        data[0].defenderSelection as BattlegroundSelection
+                      )
+                    }}
+                  >
+                    Check Result
+                  </Button>
+                  <Button
+                    className='mt-4 ml-1 px-3 py-2 text-sm font-medium'
+                    disabled={!winner || winner === 'draw'}
+                    color='secondary'
+                    onClick={async () => {
+                      const { data, error } = await supabase
+                        .from<RoundJoinedUserQuery>('BattlegroundRound')
+                        .update({
+                          attackerSelection: null as unknown as undefined,
+                          defenderSelection: null as unknown as undefined
+                        })
+                        .eq('code', currentRound.code)
+                        .eq('round', currentRound.round)
+                      if (error || !data) {
+                        console.error(error)
+                        enqueueSnackbar(`Something went wrong, ask for help\n${JSON.stringify(error, null, 2)}`, {
+                          variant: 'error'
+                        })
+                        return
+                      }
+                      enqueueSnackbar('Successfully reset selection', { variant: 'success' })
+                    }}
+                  >
+                    Reset Selection
+                  </Button>
+                </div>
               </div>
-              <div className='flex flex-col items-center ml-4'>
-                <p className='mb-1 font-bold text-true-gray-200'>Defender</p>
-                <PlayerSelect
-                  value={currentRound.defender}
-                  onChange={async defender => {
-                    const { data, error } = await supabase
-                      .from<RoundJoinedUserQuery>('BattlegroundRound')
-                      .update({ defender })
-                      .eq('code', currentRound.code)
-                      .eq('round', currentRound.round)
-                      .select(roundJoinedUserQuery)
-                    if (error || !data) {
-                      console.error(error)
-                      enqueueSnackbar(`Something went wrong, ask for help\n${JSON.stringify(error, null, 2)}`, {
-                        variant: 'error'
-                      })
-                      return
-                    }
-                    setAllRounds(allRounds.map(r => (r.round === data[0].round ? data[0] : r)))
-                    setCurrentRound(data[0])
-                    enqueueSnackbar('Successfully selected defender', { variant: 'success' })
-                  }}
-                  teams={teams}
-                />
+              <div className='mx-auto flex justify-center items-center'>
+                {/* Replace with the one below */}
+                {attacker && attacker.team.powercard ? (
+                  <DisableWrapper disabled={!currentRound.effect} message={'Must first open a box'} fontSize={12}>
+                    <Powercard
+                      powercard={attacker.team.powercard}
+                      magnetic={false}
+                      disabled={!currentRound.effect ? true : false}
+                      utilities={{
+                        w: '',
+                        p: 'p-2',
+                        bg: `bg-dark-50/50 hover:bg-secondary`
+                      }}
+                      onClick={({ name }) => {
+                        if (!currentRound.effect) return
+                        const confirmed = window.confirm(
+                          `Are you sure you want to use ${name}?\nNOTE: You can only use it once.`
+                        )
+                        if (!confirmed) return
+
+                        // const applyEffect = powercardEffects[currentRound.effect]
+                      }}
+                      render={({ img, name }) => (
+                        <>
+                          <img src={img} alt={name} className='w-full h-32' />
+                          <p className='mt-1 -mb-1 text-sm text-true-gray-300 font-medium'>{name}</p>
+                        </>
+                      )}
+                    />
+                  </DisableWrapper>
+                ) : (
+                  <p className='text-true-gray-400'>no powercard</p>
+                )}
               </div>
-              <div className='flex justify-center items-center mx-auto'>
-                <div className='mx-4 font-bold'>{currentRound.attacker ? currentRound.attacker : 'not selected'}</div>
+              <div className='flex justify-center items-center px-8 rounded-md bg-dark-50/50'>
+                <div className='mr-8'>
+                  {attacker ? <MiniUserDetail win={winner === 'attacker'} user={attacker} /> : 'not selected'}
+                </div>
                 <span className='text-true-gray-400'>vs</span>
-                <div className='mx-4 font-bold'>{currentRound.defender ? currentRound.defender : 'not selected'}</div>
+                <div className='ml-8'>
+                  {defender ? <MiniUserDetail win={winner === 'defender'} user={defender} /> : 'not selected'}
+                </div>
               </div>
-              <p className='mt-4 text-2xl font-bold'>Round {currentRound.round}</p>
+              <div className='mx-auto flex justify-center items-center'>
+                {defender && defender.team.powercard ? (
+                  <DisableWrapper disabled={!currentRound.effect} message={'Must first open a box'} fontSize={12}>
+                    <Powercard
+                      powercard={defender.team.powercard}
+                      magnetic={false}
+                      disabled={!currentRound.effect ? true : false}
+                      utilities={{
+                        w: '',
+                        p: 'p-2',
+                        bg: `bg-dark-50/50 hover:bg-secondary`
+                      }}
+                      onClick={({ name }) => {
+                        if (!currentRound.effect) return
+                        const confirmed = window.confirm(
+                          `Are you sure you want to use ${name}?\nNOTE: You can only use it once.`
+                        )
+                        if (!confirmed) return
+
+                        // const applyEffect = powercardEffects[currentRound.effect]
+                      }}
+                      render={({ img, name }) => (
+                        <>
+                          <img src={img} alt={name} className='w-full h-32' />
+                          <p className='mt-1 -mb-1 text-sm text-true-gray-300 font-medium'>{name}</p>
+                        </>
+                      )}
+                    />
+                  </DisableWrapper>
+                ) : (
+                  <p className='text-true-gray-400'>no powercard</p>
+                )}
+              </div>
+              <p className='self-center text-2xl font-bold'>Round {currentRound.round}</p>
             </div>
           </DisableWrapper>
         ) : (

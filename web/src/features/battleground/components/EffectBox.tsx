@@ -9,7 +9,7 @@ import { BattlegroundEffect } from '@/graphql'
 
 type PointsCalculateFunc = (aPoints: number, dPoints: number) => { aPoints: number; dPoints: number }
 
-const effectMap: Record<BattlegroundEffect, PointsCalculateFunc> = {
+export const powercardEffects: Record<BattlegroundEffect, PointsCalculateFunc> = {
   [BattlegroundEffect.ADD_100_PERCENT]: (aPoints, dPoints) => ({ aPoints: aPoints * 2, dPoints }),
   [BattlegroundEffect.ADD_20_PERCENT]: (aPoints, dPoints) => ({ aPoints: aPoints * 1.2, dPoints }),
   [BattlegroundEffect.ADD_30_PERCENT]: (aPoints, dPoints) => ({ aPoints: aPoints * 1.3, dPoints }),
@@ -97,7 +97,7 @@ export const EffectBox: React.FC<EffectBoxProps> = ({ round, effect, opened, id,
                       return
                     }
                     setLoading(true)
-                    const { aPoints, dPoints } = effectMap[effect](
+                    const { aPoints, dPoints } = powercardEffects[effect](
                       round.attackerUser.team.points,
                       round.defenderUser.team.points
                     )

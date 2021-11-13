@@ -1,5 +1,7 @@
 export * from './Leaderboard'
 export * from './EffectBox'
 export * from './DisableWrapper'
+export * from './MiniUserDetail'
+export * from './SelectionButton'
 export * from './PlayerSelect'
 export * from './RoomStatusToggler'
