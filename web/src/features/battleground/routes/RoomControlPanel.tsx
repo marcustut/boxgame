@@ -23,6 +23,7 @@ import {
   BattlegroundSelection,
   GET_BATTLEGROUND_ROOM,
   GET_TEAMS,
+  Powercard as PowercardEnum,
   RoomStatus,
   UPDATE_BATTLEGROUND_ROOM,
   UPDATE_TEAM,
@@ -32,6 +33,7 @@ import { GetBattlegroundRoom, GetBattlegroundRoomVariables } from '@/graphql/typ
 import { GetTeams, GetTeamsVariables } from '@/graphql/types/GetTeams'
 import { UpdateBattlegroundRoom, UpdateBattlegroundRoomVariables } from '@/graphql/types/UpdateBattlegroundRoom'
 import { UpdateTeam, UpdateTeamVariables } from '@/graphql/types/UpdateTeam'
+import { useBattleground } from '@/hooks/stores'
 import { supabase } from '@/lib/supabase'
 import { definitions } from '@/types/supabase'
 
@@ -62,6 +64,7 @@ export const roundJoinedUserQuery = `
 
 export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) => {
   const { enqueueSnackbar } = useSnackbar()
+  const { appliedEffects } = useBattleground()
   const [updateTeam] = useMutation<UpdateTeam, UpdateTeamVariables>(UPDATE_TEAM)
   const [updateBattlegroundRoom] = useMutation<UpdateBattlegroundRoom, UpdateBattlegroundRoomVariables>(
     UPDATE_BATTLEGROUND_ROOM
@@ -80,6 +83,7 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
   const [allRounds, setAllRounds] = useState<RoundJoinedUserQuery[]>([])
   const [currentRound, setCurrentRound] = useState<RoundJoinedUserQuery>()
   const [winner, setWinner] = useState<'attacker' | 'defender' | 'draw'>()
+  const [applyTo, setApplyTo] = useState<'attacker' | 'defender'>('attacker')
 
   const isOngoing = useMemo(() => room && room.battlegroundRoom.status === RoomStatus.ONGOING, [room])
 
@@ -172,6 +176,70 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
       }
     },
     [enqueueSnackbar]
+  )
+
+  const gunaPowercard = useCallback(
+    async (powercard: PowercardEnum, round: number) => {
+      if (!attacker || !defender) {
+        enqueueSnackbar('Attacker or Defender has not been selected yet', { variant: 'error' })
+        return
+      }
+
+      const ae = appliedEffects[round]
+
+      if (powercard === PowercardEnum.REVERSE) {
+        console.log('old :', ae.aPointsOld, ae.dPointsOld)
+        const { aPoints, dPoints } = powercardEffects[ae.effect](ae.dPointsOld, ae.aPointsOld)
+        console.log('new :', aPoints, dPoints)
+        const { data: aTeam, errors: aTeamErr } = await updateTeam({
+          variables: { team_id: attacker.team.id, param: { points: aPoints } }
+        })
+        if (aTeamErr || !aTeam) {
+          console.error(aTeamErr)
+          enqueueSnackbar('Error updating points, contact Kai Yang immediately', { variant: 'error' })
+          return
+        }
+        const { data: dTeam, errors: dTeamErr } = await updateTeam({
+          variables: { team_id: defender.team.id, param: { points: dPoints } }
+        })
+        if (dTeamErr || !dTeam) {
+          console.error(dTeamErr)
+          enqueueSnackbar('Error updating points, contact Kai Yang immediately', { variant: 'error' })
+          return
+        }
+      } else if (powercard === PowercardEnum.BLOCK) {
+        const { data: aTeam, errors: aTeamErr } = await updateTeam({
+          variables: { team_id: attacker.team.id, param: { points: ae.aPointsOld } }
+        })
+        if (aTeamErr || !aTeam) {
+          console.error(aTeamErr)
+          enqueueSnackbar('Error updating points, contact Kai Yang immediately', { variant: 'error' })
+          return
+        }
+        const { data: dTeam, errors: dTeamErr } = await updateTeam({
+          variables: { team_id: defender.team.id, param: { points: ae.dPointsOld } }
+        })
+        if (dTeamErr || !dTeam) {
+          console.error(dTeamErr)
+          enqueueSnackbar('Error updating points, contact Kai Yang immediately', { variant: 'error' })
+          return
+        }
+      } else {
+        const { data, error } = await supabase
+          .from<definitions['BattlegroundRound']>('BattlegroundRound')
+          .update({ effect: null as unknown as undefined })
+          .eq('code', roomCode)
+          .eq('round', round)
+        if (error || !data) {
+          console.error(error)
+          enqueueSnackbar('Error using ONE MORE CHANCE, contact Kai Yang immediately', { variant: 'error' })
+          return
+        }
+      }
+
+      enqueueSnackbar('Powercard used successfully', { variant: 'success' })
+    },
+    [appliedEffects, attacker, defender, enqueueSnackbar, roomCode, updateTeam]
   )
 
   useEffectOnce(() => {
@@ -270,6 +338,8 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
   }
   if (!room || !allTeams) return <LoadingPage />
 
+  console.log(applyTo)
+
   return (
     <>
       <div className='container p-4 mx-auto relative'>
@@ -305,6 +375,7 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
                     round={currentRound}
                     effect={box.effect}
                     opened={box.selected}
+                    applyTo={applyTo}
                     applyEffect={async (aPoints, dPoints) => {
                       if (currentRound.effect) {
                         enqueueSnackbar('Already opened a box this round, go next round!', { variant: 'warning' })
@@ -315,48 +386,58 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
                         enqueueSnackbar('Make sure both attacker and defender are selected', { variant: 'error' })
                         return
                       }
+                      console.log('attacker', aPoints)
+                      console.log('defender', dPoints)
                       // only update is there's a difference
-                      if (currentRound.attackerUser.team.points !== aPoints) {
-                        const { data, errors } = await updateTeam({
-                          variables: { team_id: currentRound.attackerUser.team.id, param: { points: aPoints } }
-                        })
-                        if (errors || !data) {
-                          console.error(errors)
-                          enqueueSnackbar("Error updating attacker's points, refresh and try again", {
-                            variant: 'error'
-                          })
-                          return
+                      const { data, errors } = await updateTeam({
+                        variables: {
+                          team_id:
+                            applyTo === 'attacker'
+                              ? currentRound.attackerUser.team.id
+                              : currentRound.defenderUser.team.id,
+                          param: { points: aPoints }
                         }
+                      })
+                      if (errors || !data) {
+                        console.error(errors)
+                        enqueueSnackbar("Error updating attacker's points, refresh and try again", {
+                          variant: 'error'
+                        })
+                        return
                       }
-                      // only update is there's a difference
-                      if (currentRound.defenderUser.team.points !== dPoints) {
-                        const { data, errors } = await updateTeam({
-                          variables: { team_id: currentRound.defenderUser.team.id, param: { points: dPoints } }
-                        })
-                        if (errors || !data) {
-                          console.error(errors)
-                          enqueueSnackbar("Error updating defender's points, refresh and try again", {
-                            variant: 'error'
-                          })
-                          return
+                      // only update if there's a difference
+                      const { data: d, errors: err } = await updateTeam({
+                        variables: {
+                          team_id:
+                            applyTo === 'attacker'
+                              ? currentRound.defenderUser.team.id
+                              : currentRound.attackerUser.team.id,
+                          param: { points: dPoints }
                         }
+                      })
+                      if (err || !d) {
+                        console.error(err)
+                        enqueueSnackbar("Error updating defender's points, refresh and try again", {
+                          variant: 'error'
+                        })
+                        return
                       }
                       // update effect
-                      const { data, error } = await supabase
+                      const { data: d3, error: err3 } = await supabase
                         .from<RoundJoinedUserQuery>('BattlegroundRound')
                         .update({ effect: box.effect })
                         .eq('code', roomCode)
                         .eq('round', currentRound.round)
                         .select(roundJoinedUserQuery)
-                      if (error || !data) {
-                        console.error(error)
+                      if (err3 || !d3) {
+                        console.error(err3)
                         enqueueSnackbar(`Unable to apply box effect, ask for help\n${JSON.stringify(error, null, 2)}`, {
                           variant: 'error'
                         })
                         return
                       }
-                      setAllRounds(allRounds.map(r => (r.round === data[0].round ? data[0] : r)))
-                      setCurrentRound(data[0])
+                      setAllRounds(allRounds.map(r => (r.round === d3[0].round ? d3[0] : r)))
+                      setCurrentRound(d3[0])
                       enqueueSnackbar(`Successfully applied Box ${idx + 1} effect`, { variant: 'success' })
                     }}
                     id={idx + 1}
@@ -367,6 +448,32 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
           ) : (
             <Spinner />
           )}
+        </div>
+
+        <div className='w-full mx-auto mt-8'>
+          <p className='text-sm mb-2'>Apply to:</p>
+          <Listbox value={applyTo} onChange={value => setApplyTo(value)} as='div' className='flex flex-col'>
+            <Listbox.Button
+              data-blobity-magnetic='false'
+              className='relative flex justify-between items-center py-2 px-3 text-left text-true-gray-200 bg-dark-300 rounded-lg shadow-md text-sm hover:focus:ring-2 hover:focus:ring-secondary-ring'
+            >
+              <span className='block truncate'>{applyTo ? `${applyTo}` : 'not selected'}</span>
+              <Icon icon='heroicons-solid:selector' className='ml-4' />
+            </Listbox.Button>
+            <Listbox.Options className='w-full bg-dark-300/50 rounded-lg mt-3 px-2 py-2' as='div'>
+              {['attacker', 'defender'].map((v, i) => (
+                <Listbox.Option
+                  key={v}
+                  value={v}
+                  className={`flex items-center list-none text-sm px-2 py-2 rounded-md hover:bg-secondary ${
+                    i !== 0 ? 'mt-1' : ''
+                  }`}
+                >
+                  {v}
+                </Listbox.Option>
+              ))}
+            </Listbox.Options>
+          </Listbox>
         </div>
 
         {currentRound ? (
@@ -494,14 +601,23 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
                         p: 'p-2',
                         bg: `bg-dark-50/50 hover:bg-secondary`
                       }}
-                      onClick={({ name }) => {
+                      onClick={async ({ name }) => {
+                        if (!defender) return
                         if (!currentRound.effect) return
+                        if (!attacker.team.powercard) return
                         const confirmed = window.confirm(
                           `Are you sure you want to use ${name}?\nNOTE: You can only use it once.`
                         )
                         if (!confirmed) return
 
-                        // const applyEffect = powercardEffects[currentRound.effect]
+                        if (!(currentRound.round in appliedEffects)) {
+                          enqueueSnackbar(`Something wrong when applying effect, contact Kai Yang immediately`, {
+                            variant: 'error'
+                          })
+                          return
+                        }
+
+                        await gunaPowercard(attacker.team.powercard, currentRound.round)
                       }}
                       render={({ img, name }) => (
                         <>
@@ -536,14 +652,23 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
                         p: 'p-2',
                         bg: `bg-dark-50/50 hover:bg-secondary`
                       }}
-                      onClick={({ name }) => {
+                      onClick={async ({ name }) => {
+                        if (!defender) return
                         if (!currentRound.effect) return
+                        if (!defender.team.powercard) return
                         const confirmed = window.confirm(
                           `Are you sure you want to use ${name}?\nNOTE: You can only use it once.`
                         )
                         if (!confirmed) return
 
-                        // const applyEffect = powercardEffects[currentRound.effect]
+                        if (!(currentRound.round in appliedEffects)) {
+                          enqueueSnackbar(`Something wrong when applying effect, contact Kai Yang immediately`, {
+                            variant: 'error'
+                          })
+                          return
+                        }
+
+                        await gunaPowercard(defender.team.powercard, currentRound.round)
                       }}
                       render={({ img, name }) => (
                         <>

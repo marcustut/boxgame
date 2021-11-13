@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useEffectOnce } from 'react-use'
 
-import { Spinner } from '@/components/Elements'
+import { Button, Spinner } from '@/components/Elements'
 import { LoadingPage } from '@/components/Misc'
 import { DisableWrapper, Leaderboard, SelectionButton } from '@/features/battleground'
 import { BattlegroundSelection } from '@/graphql'
@@ -147,6 +147,10 @@ export const Room: React.FC<RoomProps> = ({ roomCode }) => {
           <Spinner className='text-secondary' />
         )}
       </div>
+
+      <Button className='mt-4 mx-auto' icon={<Icon icon='ic:sharp-refresh' />} onClick={() => window.location.reload()}>
+        Refresh
+      </Button>
 
       <div
         className={`w-full mt-8 font-bold text-2xl flex items-center justify-center ${

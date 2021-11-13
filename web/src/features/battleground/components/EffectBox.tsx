@@ -6,6 +6,7 @@ import React, { Fragment, useState } from 'react'
 import { Button } from '@/components/Elements'
 import { RoundJoinedUserQuery } from '@/features/battleground'
 import { BattlegroundEffect } from '@/graphql'
+import { useBattleground } from '@/hooks/stores'
 
 type PointsCalculateFunc = (aPoints: number, dPoints: number) => { aPoints: number; dPoints: number }
 
@@ -33,13 +34,15 @@ type EffectBoxProps = {
   effect: BattlegroundEffect
   opened: boolean
   id: number | string
+  applyTo: 'attacker' | 'defender'
   applyEffect?: (aPoints: number, dPoints: number) => Promise<void>
 }
 
-export const EffectBox: React.FC<EffectBoxProps> = ({ round, effect, opened, id, applyEffect }) => {
+export const EffectBox: React.FC<EffectBoxProps> = ({ round, effect, opened, id, applyTo, applyEffect }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [open, setOpen] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
+  const { setAppliedEffect } = useBattleground()
 
   return (
     <>
@@ -86,6 +89,8 @@ export const EffectBox: React.FC<EffectBoxProps> = ({ round, effect, opened, id,
           >
             <div className='bg-confetti-animated flex flex-col justify-center items-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 <sm:w-4/5 w-96 px-6 py-4 bg-dark-400/90 rounded-lg shadow-2xl'>
               <p className='mb-4 font-bold text-center'>Are you sure you want to open this box?</p>
+              {/* TODO: Add description */}
+              <p>{}</p>
               <div className='flex items-center'>
                 <Button
                   loading={loading}
@@ -97,10 +102,16 @@ export const EffectBox: React.FC<EffectBoxProps> = ({ round, effect, opened, id,
                       return
                     }
                     setLoading(true)
-                    const { aPoints, dPoints } = powercardEffects[effect](
-                      round.attackerUser.team.points,
-                      round.defenderUser.team.points
-                    )
+                    const a = applyTo === 'attacker' ? round.attackerUser.team.points : round.defenderUser.team.points
+                    const b = applyTo === 'attacker' ? round.defenderUser.team.points : round.attackerUser.team.points
+                    console.log(a, b)
+                    const { aPoints, dPoints } = powercardEffects[effect](a, b)
+                    applyEffect &&
+                      setAppliedEffect(round.round, {
+                        effect,
+                        aPointsOld: round.attackerUser.team.points,
+                        dPointsOld: round.defenderUser.team.points
+                      })
                     applyEffect && (await applyEffect(aPoints, dPoints))
                     setLoading(false)
                     setOpen(false)
