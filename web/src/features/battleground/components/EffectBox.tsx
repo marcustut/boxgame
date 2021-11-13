@@ -10,6 +10,25 @@ import { useBattleground } from '@/hooks/stores'
 
 type PointsCalculateFunc = (aPoints: number, dPoints: number) => { aPoints: number; dPoints: number }
 
+const effectsTitle: Record<BattlegroundEffect, string> = {
+  [BattlegroundEffect.ADD_100_PERCENT]: '增加现有分数100%。',
+  [BattlegroundEffect.ADD_20_PERCENT]: '增加现有分数20%。',
+  [BattlegroundEffect.ADD_30_PERCENT]: '增加现有分数30%。',
+  [BattlegroundEffect.ADD_50_PERCENT]: '增加现有分数50%。',
+  [BattlegroundEffect.ADD_90_PERCENT]: '增加现有分数90%。',
+  [BattlegroundEffect.GIVE_100]: '给予对方组100分。',
+  [BattlegroundEffect.GIVE_150]: '给予对方组150分。',
+  [BattlegroundEffect.GIVE_200]: '给予对方组200分。',
+  [BattlegroundEffect.GIVE_80]: '给予对方组80分。',
+  [BattlegroundEffect.STEAL_100]: '获取对方组的100分。',
+  [BattlegroundEffect.STEAL_150]: '获取对方组的150分。',
+  [BattlegroundEffect.STEAL_200]: '获取对方组的200分。',
+  [BattlegroundEffect.STEAL_80]: '获取对方组的80分。',
+  [BattlegroundEffect.SUBTRACT_20_PERCENT]: '扣除现有分数的20%。',
+  [BattlegroundEffect.SUBTRACT_30_PERCENT]: '扣除现有分数的30%。',
+  [BattlegroundEffect.SUBTRACT_50_PERCENT]: '扣除现有分数的50%。'
+}
+
 export const powercardEffects: Record<BattlegroundEffect, PointsCalculateFunc> = {
   [BattlegroundEffect.ADD_100_PERCENT]: (aPoints, dPoints) => ({ aPoints: aPoints * 2, dPoints }),
   [BattlegroundEffect.ADD_20_PERCENT]: (aPoints, dPoints) => ({ aPoints: aPoints * 1.2, dPoints }),
@@ -88,9 +107,8 @@ export const EffectBox: React.FC<EffectBoxProps> = ({ round, effect, opened, id,
             leaveTo='opacity-0 scale-95'
           >
             <div className='bg-confetti-animated flex flex-col justify-center items-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 <sm:w-4/5 w-96 px-6 py-4 bg-dark-400/90 rounded-lg shadow-2xl'>
-              <p className='mb-4 font-bold text-center'>Are you sure you want to open this box?</p>
-              {/* TODO: Add description */}
-              <p>{}</p>
+              <p className='mb-1 font-bold text-center'>Are you sure you want to open this box?</p>
+              <p className='mb-4'>{effectsTitle[effect]}</p>
               <div className='flex items-center'>
                 <Button
                   loading={loading}

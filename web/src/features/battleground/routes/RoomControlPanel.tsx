@@ -139,7 +139,6 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
     (aSelection: BattlegroundSelection, dSelection: BattlegroundSelection) => {
       // draw
       if (aSelection === dSelection) {
-        // TODO: THINK ABOUT THIS
         setWinner('draw')
         enqueueSnackbar('DRAW!')
         return
@@ -192,7 +191,10 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
         const { aPoints, dPoints } = powercardEffects[ae.effect](ae.dPointsOld, ae.aPointsOld)
         console.log('new :', aPoints, dPoints)
         const { data: aTeam, errors: aTeamErr } = await updateTeam({
-          variables: { team_id: attacker.team.id, param: { points: aPoints } }
+          variables: {
+            team_id: applyTo === 'attacker' ? defender.team.id : attacker.team.id,
+            param: { points: aPoints }
+          }
         })
         if (aTeamErr || !aTeam) {
           console.error(aTeamErr)
@@ -200,7 +202,10 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
           return
         }
         const { data: dTeam, errors: dTeamErr } = await updateTeam({
-          variables: { team_id: defender.team.id, param: { points: dPoints } }
+          variables: {
+            team_id: applyTo === 'attacker' ? attacker.team.id : defender.team.id,
+            param: { points: dPoints }
+          }
         })
         if (dTeamErr || !dTeam) {
           console.error(dTeamErr)
@@ -209,7 +214,10 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
         }
       } else if (powercard === PowercardEnum.BLOCK) {
         const { data: aTeam, errors: aTeamErr } = await updateTeam({
-          variables: { team_id: attacker.team.id, param: { points: ae.aPointsOld } }
+          variables: {
+            team_id: applyTo === 'attacker' ? attacker.team.id : defender.team.id,
+            param: { points: ae.aPointsOld }
+          }
         })
         if (aTeamErr || !aTeam) {
           console.error(aTeamErr)
@@ -217,7 +225,10 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
           return
         }
         const { data: dTeam, errors: dTeamErr } = await updateTeam({
-          variables: { team_id: defender.team.id, param: { points: ae.dPointsOld } }
+          variables: {
+            team_id: applyTo === 'attacker' ? defender.team.id : attacker.team.id,
+            param: { points: ae.dPointsOld }
+          }
         })
         if (dTeamErr || !dTeam) {
           console.error(dTeamErr)
