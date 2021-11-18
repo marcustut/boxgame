@@ -25,6 +25,8 @@ model User {
   commentLike                                        CommentLike[]
   Invitation_Invitation_fromToUser                   Invitation[]        @relation("Invitation_fromToUser")
   Invitation_Invitation_userIdToUser                 Invitation[]        @relation("Invitation_userIdToUser")
+  Mail_Mail_receiverToUser                           Mail[]              @relation("Mail_receiverToUser")
+  Mail_Mail_senderToUser                             Mail[]              @relation("Mail_senderToUser")
   post                                               Post[]
   like                                               PostLike[]
   userRole                                           UserRole[]
@@ -247,6 +249,19 @@ model BattlegroundRound {
   User_BattlegroundRound_defenderToUser User?                  @relation("BattlegroundRound_defenderToUser", fields: [defender], references: [username], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([code, round])
+}
+
+model Mail {
+  id                       String   @id @db.Uuid
+  text                     String?
+  attachment               String[]
+  read                     Boolean  @default(false)
+  sender                   String
+  receiver                 String
+  created_at               DateTime @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime @db.Timestamptz(6)
+  User_Mail_receiverToUser User     @relation("Mail_receiverToUser", fields: [receiver], references: [username], onDelete: NoAction, onUpdate: NoAction)
+  User_Mail_senderToUser   User     @relation("Mail_senderToUser", fields: [sender], references: [username], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum Role {

@@ -250,7 +250,7 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
 
       enqueueSnackbar('Powercard used successfully', { variant: 'success' })
     },
-    [appliedEffects, attacker, defender, enqueueSnackbar, roomCode, updateTeam]
+    [appliedEffects, applyTo, attacker, defender, enqueueSnackbar, roomCode, updateTeam]
   )
 
   useEffectOnce(() => {
@@ -388,10 +388,10 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
                     opened={box.selected}
                     applyTo={applyTo}
                     applyEffect={async (aPoints, dPoints) => {
-                      if (currentRound.effect) {
-                        enqueueSnackbar('Already opened a box this round, go next round!', { variant: 'warning' })
-                        return
-                      }
+                      // if (currentRound.effect) {
+                      //   enqueueSnackbar('Already opened a box this round, go next round!', { variant: 'warning' })
+                      //   return
+                      // }
                       // make sure both are selected
                       if (!currentRound.attackerUser || !currentRound.defenderUser) {
                         enqueueSnackbar('Make sure both attacker and defender are selected', { variant: 'error' })
@@ -574,7 +574,7 @@ export const RoomControlPanel: React.FC<RoomControlPanelProps> = ({ roomCode }) 
                   </Button>
                   <Button
                     className='mt-4 ml-1 px-3 py-2 text-sm font-medium'
-                    disabled={!winner || winner === 'draw'}
+                    // disabled={}
                     color='secondary'
                     onClick={async () => {
                       const { data, error } = await supabase

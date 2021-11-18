@@ -31,6 +31,7 @@ export function Select<TType>({
   return (
     <Listbox value={value} onChange={onChange}>
       <Listbox.Button
+        data-blobity-magnetic='false'
         className={`relative text-left w-full py-2 px-4 rounded-lg bg-dark-100 text-true-gray-50 focus:outline-none ${
           error ? `ring-2 ring-[#ff4d4d]` : `hover:ring-2 focus:ring-2 ring-primary-ring`
         } transition duration-200 ease-in-out ${className}`}

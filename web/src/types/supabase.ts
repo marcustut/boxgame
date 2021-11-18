@@ -1041,6 +1041,117 @@ export interface paths {
       };
     };
   };
+  "/Mail": {
+    get: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Mail.id"];
+          text?: parameters["rowFilter.Mail.text"];
+          attachment?: parameters["rowFilter.Mail.attachment"];
+          read?: parameters["rowFilter.Mail.read"];
+          sender?: parameters["rowFilter.Mail.sender"];
+          receiver?: parameters["rowFilter.Mail.receiver"];
+          created_at?: parameters["rowFilter.Mail.created_at"];
+          updated_at?: parameters["rowFilter.Mail.updated_at"];
+          title?: parameters["rowFilter.Mail.title"];
+          /** Filtering Columns */
+          select?: parameters["select"];
+          /** Ordering */
+          order?: parameters["order"];
+          /** Limiting and Pagination */
+          offset?: parameters["offset"];
+          /** Limiting and Pagination */
+          limit?: parameters["limit"];
+        };
+        header: {
+          /** Limiting and Pagination */
+          Range?: parameters["range"];
+          /** Limiting and Pagination */
+          "Range-Unit"?: parameters["rangeUnit"];
+          /** Preference */
+          Prefer?: parameters["preferCount"];
+        };
+      };
+      responses: {
+        /** OK */
+        200: {
+          schema: definitions["Mail"][];
+        };
+        /** Partial Content */
+        206: unknown;
+      };
+    };
+    post: {
+      parameters: {
+        body: {
+          /** Mail */
+          Mail?: definitions["Mail"];
+        };
+        query: {
+          /** Filtering Columns */
+          select?: parameters["select"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** Created */
+        201: unknown;
+      };
+    };
+    delete: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Mail.id"];
+          text?: parameters["rowFilter.Mail.text"];
+          attachment?: parameters["rowFilter.Mail.attachment"];
+          read?: parameters["rowFilter.Mail.read"];
+          sender?: parameters["rowFilter.Mail.sender"];
+          receiver?: parameters["rowFilter.Mail.receiver"];
+          created_at?: parameters["rowFilter.Mail.created_at"];
+          updated_at?: parameters["rowFilter.Mail.updated_at"];
+          title?: parameters["rowFilter.Mail.title"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+    patch: {
+      parameters: {
+        query: {
+          id?: parameters["rowFilter.Mail.id"];
+          text?: parameters["rowFilter.Mail.text"];
+          attachment?: parameters["rowFilter.Mail.attachment"];
+          read?: parameters["rowFilter.Mail.read"];
+          sender?: parameters["rowFilter.Mail.sender"];
+          receiver?: parameters["rowFilter.Mail.receiver"];
+          created_at?: parameters["rowFilter.Mail.created_at"];
+          updated_at?: parameters["rowFilter.Mail.updated_at"];
+          title?: parameters["rowFilter.Mail.title"];
+        };
+        body: {
+          /** Mail */
+          Mail?: definitions["Mail"];
+        };
+        header: {
+          /** Preference */
+          Prefer?: parameters["preferReturn"];
+        };
+      };
+      responses: {
+        /** No Content */
+        204: never;
+      };
+    };
+  };
   "/Mission": {
     get: {
       parameters: {
@@ -2332,6 +2443,29 @@ export interface definitions {
     createdAt: string;
     updatedAt: string;
   };
+  Mail: {
+    /**
+     * Note:
+     * This is a Primary Key.<pk/>
+     */
+    id: string;
+    text?: string;
+    attachment: unknown[];
+    read: boolean;
+    /**
+     * Note:
+     * This is a Foreign Key to `User.username`.<fk table='User' column='username'/>
+     */
+    sender: string;
+    /**
+     * Note:
+     * This is a Foreign Key to `User.username`.<fk table='User' column='username'/>
+     */
+    receiver: string;
+    created_at: string;
+    updated_at: string;
+    title: string;
+  };
   Mission: {
     /**
      * Note:
@@ -2635,6 +2769,17 @@ export interface parameters {
   "rowFilter.Invitation.teamId": string;
   "rowFilter.Invitation.createdAt": string;
   "rowFilter.Invitation.updatedAt": string;
+  /** Mail */
+  "body.Mail": definitions["Mail"];
+  "rowFilter.Mail.id": string;
+  "rowFilter.Mail.text": string;
+  "rowFilter.Mail.attachment": string;
+  "rowFilter.Mail.read": string;
+  "rowFilter.Mail.sender": string;
+  "rowFilter.Mail.receiver": string;
+  "rowFilter.Mail.created_at": string;
+  "rowFilter.Mail.updated_at": string;
+  "rowFilter.Mail.title": string;
   /** Mission */
   "body.Mission": definitions["Mission"];
   "rowFilter.Mission.id": string;
